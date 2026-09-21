@@ -1,0 +1,72 @@
+name: Docker Build
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+concurrency:
+  group: docker-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  IMAGE_NAME: coffee-home-blend
+
+jobs:
+  build:
+    name: Build & verify image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Cache Docker layers
+        uses: actions/cache@v4
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
+      - name: Build image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          tags: |
+            ${{ env.IMAGE_NAME }}:latest
+            ${{ env.IMAGE_NAME }}:${{ github.sha }}
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
+          load: true
+
+      - name: Run container
+        run: |
+          docker run -d \
+            --name ${{ env.IMAGE_NAME }}-test \
+            -p 8080:80 \
+            ${{ env.IMAGE_NAME }}:latest
+
+      - name: Wait for boot
+        run: sleep 8
+
+      - name: Health check
+        run: |
+          status=$(docker inspect --format='{{.State.Health.Status}}' ${{ env.IMAGE_NAME }}-test || echo "no-health")
+          echo "Container health: $status"
+          if [ "$status" = "no-health" ]; then
+            echo "Healthcheck not configured — falling back to HTTP probe"
+            curl -fsS http://127.0.0.1:8080/healthz || exit 1
+          fi
+
+      - name: Probe index page
+        run: |
+          curl -fsS -o /dev/null -w "HTTP %{http_code}\n" http://127.0.0.1:8080/
+
+      - name: Stop container
+        if: always()
+        run: docker rm -f ${{ env.IMAGE_NAME }}-test || true

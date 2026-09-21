@@ -1,0 +1,17 @@
+#!/bin/sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+commit_msg=$(cat "$1")
+pattern="^(feat|fix|docs|style|refactor|test|chore|perf|ci|build|revert)(\(.+\))?: .{1,50}"
+
+if ! echo "$commit_msg" | grep -qE "$pattern"; then
+  echo "Invalid commit message format. Please use conventional commits:"
+  echo "  feat: add new feature"
+  echo "  fix: resolve bug"
+  echo "  docs: update documentation"
+  echo "  style: code style changes"
+  echo "  refactor: code refactoring"
+  echo "  test: add or update tests"
+  echo "  chore: maintenance tasks"
+  exit 1
+fi
