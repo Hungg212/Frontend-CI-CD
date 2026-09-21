@@ -88,17 +88,18 @@ jobs:
       #     username: ${{ secrets.DOCKERHUB_USERNAME }}
       #     password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Deploy via SSH
-        uses: appleboy/ssh-action@v1
-        with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USER }}
-          key: ${{ secrets.VPS_SSH_KEY }}
-          script: |
-            cd /opt/coffee-home-blend
-            docker compose pull
-            docker compose up -d
-            docker image prune -f
+      # Option 2: VPS via SSH (uncomment + add secrets VPS_HOST, VPS_USER, VPS_SSH_KEY)
+      # - name: Deploy via SSH
+      #   uses: appleboy/ssh-action@v1
+      #   with:
+      #     host: ${{ secrets.VPS_HOST }}
+      #     username: ${{ secrets.VPS_USER }}
+      #     key: ${{ secrets.VPS_SSH_KEY }}
+      #     script: |
+      #       cd /opt/coffee-home-blend
+      #       docker compose pull
+      #       docker compose up -d
+      #       docker image prune -f
 
       # Option 3: AWS ECS
       # - name: Configure AWS credentials
