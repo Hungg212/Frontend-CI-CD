@@ -168,7 +168,7 @@ describe('orderStore', () => {
       const { result } = renderHook(() => useOrderStore());
       
       // Create order and verify it returns correct order
-      let createdOrder: ReturnType<typeof result.current.createOrder> | null = null;
+      let createdOrder: Order | null = null;
       
       act(() => {
         createdOrder = result.current.createOrder({

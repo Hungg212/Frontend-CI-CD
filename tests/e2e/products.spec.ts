@@ -50,11 +50,11 @@ test.describe('Products Page', () => {
       page.locator('button').first(),
     ];
 
-    let foundFilter = false;
+    let _foundFilter = false;
     for (const selector of categorySelectors) {
       try {
         await expect(selector).toBeVisible({ timeout: 3000 });
-        foundFilter = true;
+        _foundFilter = true;
         break;
       } catch {
         // Try next selector
