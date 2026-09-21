@@ -58,18 +58,21 @@ describe('cartStore', () => {
   describe('addItem', () => {
     it('should add a new item to the cart', () => {
       const { result } = renderHook(() => useCartStore());
-      
+
       act(() => {
-        result.current.addItem({
-          id: 'item-1',
-          productId: 'prod-1',
-          name: 'Cà Phê Arabica',
-          slug: 'ca-phe-arabica',
-          image: '/arabica.jpg',
-          price: 200000,
-          weight: '250g',
-          product: mockProduct,
-        }, 2);
+        result.current.addItem(
+          {
+            id: 'item-1',
+            productId: 'prod-1',
+            name: 'Cà Phê Arabica',
+            slug: 'ca-phe-arabica',
+            image: '/arabica.jpg',
+            price: 200000,
+            weight: '250g',
+            product: mockProduct,
+          },
+          2
+        );
       });
 
       expect(result.current.items).toHaveLength(1);
@@ -79,28 +82,34 @@ describe('cartStore', () => {
 
     it('should increase quantity if item already exists', () => {
       const { result } = renderHook(() => useCartStore());
-      
+
       act(() => {
-        result.current.addItem({
-          id: 'item-1',
-          productId: 'prod-1',
-          name: 'Cà Phê Arabica',
-          slug: 'ca-phe-arabica',
-          image: '/arabica.jpg',
-          price: 200000,
-          weight: '250g',
-          product: mockProduct,
-        }, 1);
-        result.current.addItem({
-          id: 'item-1',
-          productId: 'prod-1',
-          name: 'Cà Phê Arabica',
-          slug: 'ca-phe-arabica',
-          image: '/arabica.jpg',
-          price: 200000,
-          weight: '250g',
-          product: mockProduct,
-        }, 2);
+        result.current.addItem(
+          {
+            id: 'item-1',
+            productId: 'prod-1',
+            name: 'Cà Phê Arabica',
+            slug: 'ca-phe-arabica',
+            image: '/arabica.jpg',
+            price: 200000,
+            weight: '250g',
+            product: mockProduct,
+          },
+          1
+        );
+        result.current.addItem(
+          {
+            id: 'item-1',
+            productId: 'prod-1',
+            name: 'Cà Phê Arabica',
+            slug: 'ca-phe-arabica',
+            image: '/arabica.jpg',
+            price: 200000,
+            weight: '250g',
+            product: mockProduct,
+          },
+          2
+        );
       });
 
       expect(result.current.items).toHaveLength(1);
@@ -111,7 +120,7 @@ describe('cartStore', () => {
   describe('addProduct', () => {
     it('should add a product to the cart', () => {
       const { result } = renderHook(() => useCartStore());
-      
+
       act(() => {
         result.current.addProduct(mockProduct, 1);
       });
@@ -123,7 +132,7 @@ describe('cartStore', () => {
 
     it('should use salePrice when available', () => {
       const { result } = renderHook(() => useCartStore());
-      
+
       act(() => {
         result.current.addProduct(mockProduct, 1);
       });
@@ -135,18 +144,21 @@ describe('cartStore', () => {
   describe('removeItem', () => {
     it('should remove an item from the cart', () => {
       const { result } = renderHook(() => useCartStore());
-      
+
       act(() => {
-        result.current.addItem({
-          id: 'item-1',
-          productId: 'prod-1',
-          name: 'Cà Phê Arabica',
-          slug: 'ca-phe-arabica',
-          image: '/arabica.jpg',
-          price: 200000,
-          weight: '250g',
-          product: mockProduct,
-        }, 1);
+        result.current.addItem(
+          {
+            id: 'item-1',
+            productId: 'prod-1',
+            name: 'Cà Phê Arabica',
+            slug: 'ca-phe-arabica',
+            image: '/arabica.jpg',
+            price: 200000,
+            weight: '250g',
+            product: mockProduct,
+          },
+          1
+        );
         result.current.removeItem('item-1');
       });
 
@@ -157,18 +169,21 @@ describe('cartStore', () => {
   describe('updateQuantity', () => {
     it('should update item quantity', () => {
       const { result } = renderHook(() => useCartStore());
-      
+
       act(() => {
-        result.current.addItem({
-          id: 'item-1',
-          productId: 'prod-1',
-          name: 'Cà Phê Arabica',
-          slug: 'ca-phe-arabica',
-          image: '/arabica.jpg',
-          price: 200000,
-          weight: '250g',
-          product: mockProduct,
-        }, 1);
+        result.current.addItem(
+          {
+            id: 'item-1',
+            productId: 'prod-1',
+            name: 'Cà Phê Arabica',
+            slug: 'ca-phe-arabica',
+            image: '/arabica.jpg',
+            price: 200000,
+            weight: '250g',
+            product: mockProduct,
+          },
+          1
+        );
         result.current.updateQuantity('item-1', 5);
       });
 
@@ -177,18 +192,21 @@ describe('cartStore', () => {
 
     it('should remove item if quantity is 0 or less', () => {
       const { result } = renderHook(() => useCartStore());
-      
+
       act(() => {
-        result.current.addItem({
-          id: 'item-1',
-          productId: 'prod-1',
-          name: 'Cà Phê Arabica',
-          slug: 'ca-phe-arabica',
-          image: '/arabica.jpg',
-          price: 200000,
-          weight: '250g',
-          product: mockProduct,
-        }, 1);
+        result.current.addItem(
+          {
+            id: 'item-1',
+            productId: 'prod-1',
+            name: 'Cà Phê Arabica',
+            slug: 'ca-phe-arabica',
+            image: '/arabica.jpg',
+            price: 200000,
+            weight: '250g',
+            product: mockProduct,
+          },
+          1
+        );
         result.current.updateQuantity('item-1', 0);
       });
 
@@ -199,28 +217,34 @@ describe('cartStore', () => {
   describe('clearCart', () => {
     it('should clear all items from the cart', () => {
       const { result } = renderHook(() => useCartStore());
-      
+
       act(() => {
-        result.current.addItem({
-          id: 'item-1',
-          productId: 'prod-1',
-          name: 'Cà Phê Arabica',
-          slug: 'ca-phe-arabica',
-          image: '/arabica.jpg',
-          price: 200000,
-          weight: '250g',
-          product: mockProduct,
-        }, 2);
-        result.current.addItem({
-          id: 'item-2',
-          productId: 'prod-2',
-          name: 'Cà Phê Robusta',
-          slug: 'ca-phe-robusta',
-          image: '/robusta.jpg',
-          price: 150000,
-          weight: '250g',
-          product: mockProduct,
-        }, 1);
+        result.current.addItem(
+          {
+            id: 'item-1',
+            productId: 'prod-1',
+            name: 'Cà Phê Arabica',
+            slug: 'ca-phe-arabica',
+            image: '/arabica.jpg',
+            price: 200000,
+            weight: '250g',
+            product: mockProduct,
+          },
+          2
+        );
+        result.current.addItem(
+          {
+            id: 'item-2',
+            productId: 'prod-2',
+            name: 'Cà Phê Robusta',
+            slug: 'ca-phe-robusta',
+            image: '/robusta.jpg',
+            price: 150000,
+            weight: '250g',
+            product: mockProduct,
+          },
+          1
+        );
         result.current.clearCart();
       });
 
@@ -231,19 +255,22 @@ describe('cartStore', () => {
   describe('applyCoupon', () => {
     it('should apply a valid coupon', async () => {
       const { result } = renderHook(() => useCartStore());
-      
+
       // First add items to cart
       act(() => {
-        result.current.addItem({
-          id: 'item-1',
-          productId: 'prod-1',
-          name: 'Cà Phê Arabica',
-          slug: 'ca-phe-arabica',
-          image: '/arabica.jpg',
-          price: 200000,
-          weight: '250g',
-          product: mockProduct,
-        }, 1);
+        result.current.addItem(
+          {
+            id: 'item-1',
+            productId: 'prod-1',
+            name: 'Cà Phê Arabica',
+            slug: 'ca-phe-arabica',
+            image: '/arabica.jpg',
+            price: 200000,
+            weight: '250g',
+            product: mockProduct,
+          },
+          1
+        );
       });
 
       // Apply WELCOME10 coupon (10% off, min order 200000)
@@ -256,19 +283,22 @@ describe('cartStore', () => {
 
     it('should reject coupon when subtotal is below minimum', async () => {
       const { result } = renderHook(() => useCartStore());
-      
+
       // Add a cheap item
       act(() => {
-        result.current.addItem({
-          id: 'item-1',
-          productId: 'prod-1',
-          name: 'Cà Phê Arabica',
-          slug: 'ca-phe-arabica',
-          image: '/arabica.jpg',
-          price: 50000,
-          weight: '250g',
-          product: mockProduct,
-        }, 1);
+        result.current.addItem(
+          {
+            id: 'item-1',
+            productId: 'prod-1',
+            name: 'Cà Phê Arabica',
+            slug: 'ca-phe-arabica',
+            image: '/arabica.jpg',
+            price: 50000,
+            weight: '250g',
+            product: mockProduct,
+          },
+          1
+        );
       });
 
       // Apply WELCOME10 coupon (min order 200000)
@@ -282,7 +312,7 @@ describe('cartStore', () => {
 
     it('should reject non-existent coupon', async () => {
       const { result } = renderHook(() => useCartStore());
-      
+
       const response = await act(async () => {
         return result.current.applyCoupon('INVALID');
       });
@@ -294,28 +324,34 @@ describe('cartStore', () => {
   describe('getSubtotal', () => {
     it('should calculate correct subtotal', () => {
       const { result } = renderHook(() => useCartStore());
-      
+
       act(() => {
-        result.current.addItem({
-          id: 'item-1',
-          productId: 'prod-1',
-          name: 'Cà Phê Arabica',
-          slug: 'ca-phe-arabica',
-          image: '/arabica.jpg',
-          price: 200000,
-          weight: '250g',
-          product: mockProduct,
-        }, 2); // 2 x 200000 = 400000
-        result.current.addItem({
-          id: 'item-2',
-          productId: 'prod-2',
-          name: 'Cà Phê Robusta',
-          slug: 'ca-phe-robusta',
-          image: '/robusta.jpg',
-          price: 150000,
-          weight: '250g',
-          product: mockProduct,
-        }, 1); // 1 x 150000 = 150000
+        result.current.addItem(
+          {
+            id: 'item-1',
+            productId: 'prod-1',
+            name: 'Cà Phê Arabica',
+            slug: 'ca-phe-arabica',
+            image: '/arabica.jpg',
+            price: 200000,
+            weight: '250g',
+            product: mockProduct,
+          },
+          2
+        ); // 2 x 200000 = 400000
+        result.current.addItem(
+          {
+            id: 'item-2',
+            productId: 'prod-2',
+            name: 'Cà Phê Robusta',
+            slug: 'ca-phe-robusta',
+            image: '/robusta.jpg',
+            price: 150000,
+            weight: '250g',
+            product: mockProduct,
+          },
+          1
+        ); // 1 x 150000 = 150000
       });
 
       expect(result.current.getSubtotal()).toBe(550000);
@@ -330,18 +366,21 @@ describe('cartStore', () => {
   describe('getTotal', () => {
     it('should include shipping fee when subtotal is below 500000', () => {
       const { result } = renderHook(() => useCartStore());
-      
+
       act(() => {
-        result.current.addItem({
-          id: 'item-1',
-          productId: 'prod-1',
-          name: 'Cà Phê Arabica',
-          slug: 'ca-phe-arabica',
-          image: '/arabica.jpg',
-          price: 200000,
-          weight: '250g',
-          product: mockProduct,
-        }, 2); // 400000 - no free shipping
+        result.current.addItem(
+          {
+            id: 'item-1',
+            productId: 'prod-1',
+            name: 'Cà Phê Arabica',
+            slug: 'ca-phe-arabica',
+            image: '/arabica.jpg',
+            price: 200000,
+            weight: '250g',
+            product: mockProduct,
+          },
+          2
+        ); // 400000 - no free shipping
       });
 
       expect(result.current.getSubtotal()).toBe(400000);
@@ -351,18 +390,21 @@ describe('cartStore', () => {
 
     it('should have free shipping when subtotal >= 500000', () => {
       const { result } = renderHook(() => useCartStore());
-      
+
       act(() => {
-        result.current.addItem({
-          id: 'item-1',
-          productId: 'prod-1',
-          name: 'Cà Phê Arabica',
-          slug: 'ca-phe-arabica',
-          image: '/arabica.jpg',
-          price: 200000,
-          weight: '250g',
-          product: mockProduct,
-        }, 3); // 600000 - free shipping
+        result.current.addItem(
+          {
+            id: 'item-1',
+            productId: 'prod-1',
+            name: 'Cà Phê Arabica',
+            slug: 'ca-phe-arabica',
+            image: '/arabica.jpg',
+            price: 200000,
+            weight: '250g',
+            product: mockProduct,
+          },
+          3
+        ); // 600000 - free shipping
       });
 
       expect(result.current.getSubtotal()).toBe(600000);
@@ -374,28 +416,34 @@ describe('cartStore', () => {
   describe('getItemCount', () => {
     it('should return total number of items', () => {
       const { result } = renderHook(() => useCartStore());
-      
+
       act(() => {
-        result.current.addItem({
-          id: 'item-1',
-          productId: 'prod-1',
-          name: 'Cà Phê Arabica',
-          slug: 'ca-phe-arabica',
-          image: '/arabica.jpg',
-          price: 200000,
-          weight: '250g',
-          product: mockProduct,
-        }, 2);
-        result.current.addItem({
-          id: 'item-2',
-          productId: 'prod-2',
-          name: 'Cà Phê Robusta',
-          slug: 'ca-phe-robusta',
-          image: '/robusta.jpg',
-          price: 150000,
-          weight: '250g',
-          product: mockProduct,
-        }, 3);
+        result.current.addItem(
+          {
+            id: 'item-1',
+            productId: 'prod-1',
+            name: 'Cà Phê Arabica',
+            slug: 'ca-phe-arabica',
+            image: '/arabica.jpg',
+            price: 200000,
+            weight: '250g',
+            product: mockProduct,
+          },
+          2
+        );
+        result.current.addItem(
+          {
+            id: 'item-2',
+            productId: 'prod-2',
+            name: 'Cà Phê Robusta',
+            slug: 'ca-phe-robusta',
+            image: '/robusta.jpg',
+            price: 150000,
+            weight: '250g',
+            product: mockProduct,
+          },
+          3
+        );
       });
 
       expect(result.current.getItemCount()).toBe(5);

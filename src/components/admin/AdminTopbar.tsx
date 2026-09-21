@@ -33,9 +33,7 @@ export default function AdminTopbar() {
         <div className="flex items-center gap-2 border-l border-warm-200 pl-3 dark:border-coffee-800">
           <div className="h-9 w-9 rounded-full bg-coffee-gradient" />
           <div className="hidden text-left sm:block">
-            <p className="text-sm font-semibold">
-              {user?.name ?? 'Administrator'}
-            </p>
+            <p className="text-sm font-semibold">{user?.name ?? 'Administrator'}</p>
             <p className="text-xs text-coffee-500 dark:text-cream-300">
               {user?.email ?? 'admin@coffeehomeblend.com'}
             </p>

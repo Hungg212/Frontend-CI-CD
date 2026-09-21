@@ -21,7 +21,10 @@ const orderStatusOptions = [
   { value: 'CANCELLED', label: 'Đã hủy' },
 ];
 
-const _statusVariant: Record<AdminOrder['status'], 'warning' | 'info' | 'primary' | 'success' | 'danger'> = {
+const _statusVariant: Record<
+  AdminOrder['status'],
+  'warning' | 'info' | 'primary' | 'success' | 'danger'
+> = {
   PENDING: 'warning',
   CONFIRMED: 'info',
   PROCESSING: 'primary',
@@ -46,7 +49,10 @@ const paymentLabel: Record<AdminOrder['paymentStatus'], string> = {
   REFUNDED: 'Hoàn tiền',
 };
 
-const paymentVariant: Record<AdminOrder['paymentStatus'], 'warning' | 'success' | 'danger' | 'info'> = {
+const paymentVariant: Record<
+  AdminOrder['paymentStatus'],
+  'warning' | 'success' | 'danger' | 'info'
+> = {
   PENDING: 'warning',
   PAID: 'success',
   FAILED: 'danger',
@@ -107,31 +113,33 @@ export default function AdminOrders() {
   return (
     <AdminLayout title="Quản Lý Đơn Hàng" subtitle="Danh sách và xử lý đơn hàng">
       {/* Mini stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+      <div className="mb-4 grid grid-cols-2 gap-4 md:grid-cols-4">
         <Card className="p-4">
           <p className="text-xs text-stone-500 dark:text-stone-400">Tổng đơn</p>
-          <p className="text-2xl font-bold text-stone-800 dark:text-stone-100 mt-1">{stats.total}</p>
+          <p className="mt-1 text-2xl font-bold text-stone-800 dark:text-stone-100">
+            {stats.total}
+          </p>
         </Card>
         <Card className="p-4">
           <p className="text-xs text-stone-500 dark:text-stone-400">Chờ xử lý</p>
-          <p className="text-2xl font-bold text-amber-600 mt-1">{stats.pending}</p>
+          <p className="mt-1 text-2xl font-bold text-amber-600">{stats.pending}</p>
         </Card>
         <Card className="p-4">
           <p className="text-xs text-stone-500 dark:text-stone-400">Đang giao</p>
-          <p className="text-2xl font-bold text-blue-600 mt-1">{stats.shipping}</p>
+          <p className="mt-1 text-2xl font-bold text-blue-600">{stats.shipping}</p>
         </Card>
         <Card className="p-4">
           <p className="text-xs text-stone-500 dark:text-stone-400">Hoàn thành</p>
-          <p className="text-2xl font-bold text-emerald-600 mt-1">{stats.completed}</p>
+          <p className="mt-1 text-2xl font-bold text-emerald-600">{stats.completed}</p>
         </Card>
       </div>
 
-      <Card className="p-0 overflow-hidden">
-        <div className="p-4 border-b border-stone-200 dark:border-zinc-700 grid grid-cols-1 md:grid-cols-4 gap-3">
+      <Card className="overflow-hidden p-0">
+        <div className="grid grid-cols-1 gap-3 border-b border-stone-200 p-4 md:grid-cols-4 dark:border-zinc-700">
           <Input
             type="search"
             placeholder="Tìm mã đơn, khách hàng..."
-            leftIcon={<Search className="w-4 h-4" />}
+            leftIcon={<Search className="h-4 w-4" />}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -145,7 +153,7 @@ export default function AdminOrders() {
             value={dateFrom}
             onChange={(e) => setDateFrom(e.target.value)}
             placeholder="Từ ngày"
-            leftIcon={<Calendar className="w-4 h-4" />}
+            leftIcon={<Calendar className="h-4 w-4" />}
           />
           <Input
             value={dateTo}
@@ -164,18 +172,24 @@ export default function AdminOrders() {
                 <th className="px-4 py-3 font-semibold">Tổng tiền</th>
                 <th className="px-4 py-3 font-semibold">Trạng thái</th>
                 <th className="px-4 py-3 font-semibold">Thanh toán</th>
-                <th className="px-4 py-3 font-semibold text-right">Hành động</th>
+                <th className="px-4 py-3 text-right font-semibold">Hành động</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-stone-100 dark:divide-zinc-700">
               {filtered.map((o) => (
                 <tr key={o.id} className="hover:bg-stone-50 dark:hover:bg-zinc-700/30">
                   <td className="px-4 py-3">
-                    <p className="font-medium text-amber-700 dark:text-amber-400">{o.orderNumber}</p>
-                    <p className="text-xs text-stone-500 dark:text-stone-400">{o.items.length} sản phẩm</p>
+                    <p className="font-medium text-amber-700 dark:text-amber-400">
+                      {o.orderNumber}
+                    </p>
+                    <p className="text-xs text-stone-500 dark:text-stone-400">
+                      {o.items.length} sản phẩm
+                    </p>
                   </td>
                   <td className="px-4 py-3">
-                    <p className="font-medium text-stone-800 dark:text-stone-100">{o.customerName}</p>
+                    <p className="font-medium text-stone-800 dark:text-stone-100">
+                      {o.customerName}
+                    </p>
                     <p className="text-xs text-stone-500 dark:text-stone-400">{o.customerEmail}</p>
                   </td>
                   <td className="px-4 py-3 text-stone-600 dark:text-stone-400">
@@ -188,7 +202,9 @@ export default function AdminOrders() {
                     <Select
                       options={quickStatus.map((s) => ({ value: s, label: statusLabel[s] }))}
                       value={o.status}
-                      onChange={(e) => handleStatusChange(o.id, e.target.value as AdminOrder['status'])}
+                      onChange={(e) =>
+                        handleStatusChange(o.id, e.target.value as AdminOrder['status'])
+                      }
                       className="min-w-[140px]"
                     />
                   </td>
@@ -202,10 +218,10 @@ export default function AdminOrders() {
                       <button
                         type="button"
                         onClick={() => navigate(`/admin/orders/${o.id}`)}
-                        className="p-1.5 rounded-lg text-stone-500 hover:bg-stone-100 dark:hover:bg-zinc-700 hover:text-amber-700"
+                        className="rounded-lg p-1.5 text-stone-500 hover:bg-stone-100 hover:text-amber-700 dark:hover:bg-zinc-700"
                         aria-label="Xem"
                       >
-                        <Eye className="w-4 h-4" />
+                        <Eye className="h-4 w-4" />
                       </button>
                     </div>
                   </td>
@@ -214,7 +230,7 @@ export default function AdminOrders() {
               {filtered.length === 0 && (
                 <tr>
                   <td colSpan={7} className="px-4 py-12 text-center">
-                    <ShoppingBag className="w-12 h-12 mx-auto text-stone-300 mb-2" />
+                    <ShoppingBag className="mx-auto mb-2 h-12 w-12 text-stone-300" />
                     <p className="text-stone-500">Không tìm thấy đơn hàng nào</p>
                   </td>
                 </tr>
@@ -223,9 +239,13 @@ export default function AdminOrders() {
           </table>
         </div>
 
-        <div className="flex items-center justify-between p-4 border-t border-stone-200 dark:border-zinc-700 text-sm">
+        <div className="flex items-center justify-between border-t border-stone-200 p-4 text-sm dark:border-zinc-700">
           <p className="text-stone-500 dark:text-stone-400">
-            Hiển thị <span className="font-semibold text-stone-800 dark:text-stone-100">{filtered.length}</span> / {orders.length} đơn
+            Hiển thị{' '}
+            <span className="font-semibold text-stone-800 dark:text-stone-100">
+              {filtered.length}
+            </span>{' '}
+            / {orders.length} đơn
           </p>
           <Button variant="outline" size="sm" onClick={() => navigate('/admin/analytics')}>
             Xem phân tích chi tiết

@@ -7,9 +7,15 @@ const localStorageMock = (() => {
   let store: Record<string, string> = {};
   return {
     getItem: (key: string) => store[key] || null,
-    setItem: (key: string, value: string) => { store[key] = value; },
-    removeItem: (key: string) => { delete store[key]; },
-    clear: () => { store = {}; },
+    setItem: (key: string, value: string) => {
+      store[key] = value;
+    },
+    removeItem: (key: string) => {
+      delete store[key];
+    },
+    clear: () => {
+      store = {};
+    },
   };
 })();
 
@@ -27,9 +33,9 @@ describe('authStore', () => {
   describe('login', () => {
     it('should login successfully with valid credentials', async () => {
       const { result } = renderHook(() => useAuthStore());
-      
+
       let loginResult: { success: boolean; message?: string; user?: unknown } = { success: false };
-      
+
       // Use correct demo user email from users.ts
       await act(async () => {
         loginResult = await result.current.login('admin@coffee.com', 'admin123');
@@ -42,7 +48,7 @@ describe('authStore', () => {
 
     it('should fail login with invalid email', async () => {
       const { result } = renderHook(() => useAuthStore());
-      
+
       await act(async () => {
         await result.current.login('nonexistent@coffeehome.vn', '123456');
       });
@@ -53,7 +59,7 @@ describe('authStore', () => {
 
     it('should fail login with wrong password', async () => {
       const { result } = renderHook(() => useAuthStore());
-      
+
       await act(async () => {
         await result.current.login('admin@coffee.com', 'wrongpassword');
       });
@@ -64,9 +70,9 @@ describe('authStore', () => {
 
     it('should set loading state during login', async () => {
       const { result } = renderHook(() => useAuthStore());
-      
+
       let _isLoadingDuringRequest = false;
-      
+
       act(() => {
         const loginPromise = result.current.login('admin@coffeehome.vn', '123456');
         _isLoadingDuringRequest = result.current.isLoading;
@@ -81,10 +87,10 @@ describe('authStore', () => {
   describe('logout', () => {
     it('should logout and clear user state', async () => {
       const { result } = renderHook(() => useAuthStore());
-      
+
       // First register (works with isolated state)
       const uniqueEmail = `logouttest${Date.now()}@example.com`;
-      
+
       await act(async () => {
         await result.current.register({
           name: 'Logout Test',
@@ -95,7 +101,7 @@ describe('authStore', () => {
 
       // Verify user is authenticated
       expect(result.current.user).not.toBeNull();
-      
+
       // Then logout
       act(() => {
         result.current.logout();
@@ -109,11 +115,13 @@ describe('authStore', () => {
   describe('register', () => {
     it('should register a new user successfully', async () => {
       const { result } = renderHook(() => useAuthStore());
-      
+
       const uniqueEmail = `testuser${Date.now()}@example.com`;
-      
-      let registerResult: { success: boolean; message?: string; user?: unknown } = { success: false };
-      
+
+      let registerResult: { success: boolean; message?: string; user?: unknown } = {
+        success: false,
+      };
+
       await act(async () => {
         registerResult = await result.current.register({
           name: 'Test User',
@@ -131,7 +139,7 @@ describe('authStore', () => {
 
     it('should fail to register with existing email', async () => {
       const { result } = renderHook(() => useAuthStore());
-      
+
       // Register first user
       await act(async () => {
         await result.current.register({
@@ -155,7 +163,7 @@ describe('authStore', () => {
 
     it('should generate avatar URL for new user', async () => {
       const { result } = renderHook(() => useAuthStore());
-      
+
       await act(async () => {
         await result.current.register({
           name: 'Avatar Test',
@@ -172,7 +180,7 @@ describe('authStore', () => {
   describe('updateUser', () => {
     it('should update user information', async () => {
       const { result } = renderHook(() => useAuthStore());
-      
+
       await act(async () => {
         await result.current.register({
           name: 'Original Name',
@@ -192,14 +200,14 @@ describe('authStore', () => {
   describe('clearError', () => {
     it('should clear error state', async () => {
       const { result } = renderHook(() => useAuthStore());
-      
+
       // Trigger an error
       await act(async () => {
         await result.current.login('nonexistent@example.com', '123456');
       });
 
       expect(result.current.error).toBeTruthy();
-      
+
       act(() => {
         result.current.clearError();
       });
@@ -211,7 +219,7 @@ describe('authStore', () => {
   describe('address management', () => {
     it('should add an address', async () => {
       const { result } = renderHook(() => useAuthStore());
-      
+
       await act(async () => {
         await result.current.register({
           name: 'Address Test',
@@ -240,7 +248,7 @@ describe('authStore', () => {
 
     it('should update an address', async () => {
       const { result } = renderHook(() => useAuthStore());
-      
+
       await act(async () => {
         await result.current.register({
           name: 'Update Address Test',
@@ -269,7 +277,7 @@ describe('authStore', () => {
 
     it('should remove an address', async () => {
       const { result } = renderHook(() => useAuthStore());
-      
+
       await act(async () => {
         await result.current.register({
           name: 'Remove Address Test',
@@ -298,7 +306,7 @@ describe('authStore', () => {
 
     it('should set default address', async () => {
       const { result } = renderHook(() => useAuthStore());
-      
+
       await act(async () => {
         await result.current.register({
           name: 'Default Address Test',
@@ -333,8 +341,8 @@ describe('authStore', () => {
         result.current.setDefaultAddress('addr-2');
       });
 
-      expect(result.current.user?.addresses.find(a => a.id === 'addr-1')?.isDefault).toBe(false);
-      expect(result.current.user?.addresses.find(a => a.id === 'addr-2')?.isDefault).toBe(true);
+      expect(result.current.user?.addresses.find((a) => a.id === 'addr-1')?.isDefault).toBe(false);
+      expect(result.current.user?.addresses.find((a) => a.id === 'addr-2')?.isDefault).toBe(true);
     });
   });
 });

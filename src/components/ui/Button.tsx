@@ -23,10 +23,8 @@ const variantClasses: Record<ButtonVariant, string> = {
     'bg-amber-900 hover:bg-amber-950 text-white shadow-sm dark:bg-amber-800 dark:hover:bg-amber-900 dark:text-white',
   outline:
     'border-2 border-amber-700 text-amber-700 hover:bg-amber-50 dark:border-amber-500 dark:text-amber-500 dark:hover:bg-amber-950',
-  ghost:
-    'text-stone-700 hover:bg-stone-100 dark:text-stone-300 dark:hover:bg-zinc-800',
-  danger:
-    'bg-red-500 hover:bg-red-600 text-white shadow-sm dark:bg-red-600 dark:hover:bg-red-700',
+  ghost: 'text-stone-700 hover:bg-stone-100 dark:text-stone-300 dark:hover:bg-zinc-800',
+  danger: 'bg-red-500 hover:bg-red-600 text-white shadow-sm dark:bg-red-600 dark:hover:bg-red-700',
 };
 
 const sizeClasses: Record<ButtonSize, string> = {
@@ -124,7 +122,7 @@ export function LinkButton({
         variantClasses[variant],
         sizeClasses[size],
         fullWidth && 'w-full',
-        className,
+        className
       )}
       {...props}
     >

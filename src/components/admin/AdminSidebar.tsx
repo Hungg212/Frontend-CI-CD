@@ -18,9 +18,14 @@ interface AdminSidebarProps {
   onToggle?: () => void;
 }
 
-export default function AdminSidebar({ collapsed = false, onToggle: _onToggle }: AdminSidebarProps = {}) {
+export default function AdminSidebar({
+  collapsed = false,
+  onToggle: _onToggle,
+}: AdminSidebarProps = {}) {
   return (
-    <aside className={`hidden w-64 shrink-0 border-r border-warm-200 bg-white dark:border-coffee-800 dark:bg-coffee-900 md:block transition-all duration-300 ${collapsed ? 'w-20' : ''}`}>
+    <aside
+      className={`hidden w-64 shrink-0 border-r border-warm-200 bg-white transition-all duration-300 md:block dark:border-coffee-800 dark:bg-coffee-900 ${collapsed ? 'w-20' : ''}`}
+    >
       <div className="sticky top-0 flex h-screen flex-col">
         <div className="flex h-16 items-center border-b border-warm-200 px-6 dark:border-coffee-800">
           <span className="font-display text-lg font-bold text-coffee-700 dark:text-cream-100">
@@ -38,7 +43,7 @@ export default function AdminSidebar({ collapsed = false, onToggle: _onToggle }:
                   'block rounded-md px-3 py-2 text-sm font-medium transition-colors',
                   isActive
                     ? 'bg-coffee-700 text-cream-50'
-                    : 'text-coffee-700 hover:bg-warm-100 dark:text-cream-200 dark:hover:bg-coffee-800',
+                    : 'text-coffee-700 hover:bg-warm-100 dark:text-cream-200 dark:hover:bg-coffee-800'
                 )
               }
             >

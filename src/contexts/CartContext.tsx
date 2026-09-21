@@ -30,10 +30,7 @@ export interface CartContextValue {
 const CART_STORAGE_KEY = 'coffee-home-blend-cart';
 
 const calculateTotals = (items: CartItemData[]) => {
-  const subtotal = items.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0
-  );
+  const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const originalTotal = items.reduce(
     (sum, item) => sum + (item.originalPrice ?? item.price) * item.quantity,
     0
@@ -49,14 +46,14 @@ const calculateTotals = (items: CartItemData[]) => {
 
 const CartContext = React.createContext<CartContextValue | null>(null);
 
-export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [items, setItems] = React.useState<CartItemData[]>(() => {
     try {
       const stored = localStorage.getItem(CART_STORAGE_KEY);
       if (stored) return JSON.parse(stored);
-    } catch (_e) { /* ignore */ }
+    } catch (_e) {
+      /* ignore */
+    }
     return [];
   });
   const [isOpen, setIsOpen] = React.useState(false);
@@ -64,17 +61,17 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
   React.useEffect(() => {
     try {
       localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
-    } catch (_e) { /* ignore storage errors */ }
+    } catch (_e) {
+      /* ignore storage errors */
+    }
   }, [items]);
 
   const addItem = (item: CartItemData) => {
-    setItems(prev => {
-      const existing = prev.find(i => i.productId === item.productId);
+    setItems((prev) => {
+      const existing = prev.find((i) => i.productId === item.productId);
       if (existing) {
-        return prev.map(i =>
-          i.productId === item.productId
-            ? { ...i, quantity: i.quantity + item.quantity }
-            : i
+        return prev.map((i) =>
+          i.productId === item.productId ? { ...i, quantity: i.quantity + item.quantity } : i
         );
       }
       return [...prev, item];
@@ -83,7 +80,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const removeItem = (id: string) => {
-    setItems(prev => prev.filter(i => i.id !== id));
+    setItems((prev) => prev.filter((i) => i.id !== id));
   };
 
   const updateQuantity = (id: string, quantity: number) => {
@@ -91,9 +88,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
       removeItem(id);
       return;
     }
-    setItems(prev =>
-      prev.map(i => (i.id === id ? { ...i, quantity } : i))
-    );
+    setItems((prev) => prev.map((i) => (i.id === id ? { ...i, quantity } : i)));
   };
 
   const clearCart = () => setItems([]);

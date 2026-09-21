@@ -9,7 +9,7 @@ export default function SearchPage() {
     ? products.filter(
         (p) =>
           p.name.toLowerCase().includes(query.toLowerCase()) ||
-          p.description.toLowerCase().includes(query.toLowerCase()),
+          p.description.toLowerCase().includes(query.toLowerCase())
       )
     : [];
 
@@ -18,7 +18,7 @@ export default function SearchPage() {
       <h1 className="font-display text-3xl font-bold">
         {query ? `Results for "${query}"` : 'Search'}
       </h1>
-      <p className="mt-2 mb-8 text-coffee-700 dark:text-cream-300">
+      <p className="mb-8 mt-2 text-coffee-700 dark:text-cream-300">
         {results.length} {results.length === 1 ? 'result' : 'results'}
       </p>
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">

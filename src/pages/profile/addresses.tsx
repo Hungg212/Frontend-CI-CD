@@ -37,9 +37,9 @@ const addressSchema = z.object({
 type AddressFormData = z.infer<typeof addressSchema>;
 
 const labelIcon: Record<Address['label'], React.ReactNode> = {
-  home: <HomeIcon className="w-4 h-4" />,
-  office: <Briefcase className="w-4 h-4" />,
-  other: <MapPin className="w-4 h-4" />,
+  home: <HomeIcon className="h-4 w-4" />,
+  office: <Briefcase className="h-4 w-4" />,
+  other: <MapPin className="h-4 w-4" />,
 };
 
 const labelText: Record<Address['label'], string> = {
@@ -111,19 +111,24 @@ const AddressFormModal: React.FC<{
       size="lg"
     >
       <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <Input label="Họ và tên *" {...register('name')} error={errors.name?.message} />
-          <Input label="Số điện thoại *" type="tel" {...register('phone')} error={errors.phone?.message} />
+          <Input
+            label="Số điện thoại *"
+            type="tel"
+            {...register('phone')}
+            error={errors.phone?.message}
+          />
         </div>
         <div>
-          <label className="block text-sm font-medium text-stone-700 dark:text-stone-200 mb-2">
+          <label className="mb-2 block text-sm font-medium text-stone-700 dark:text-stone-200">
             Loại địa chỉ
           </label>
-          <div className="flex gap-2 flex-wrap">
+          <div className="flex flex-wrap gap-2">
             {(['home', 'office', 'other'] as const).map((l) => (
               <label
                 key={l}
-                className="inline-flex items-center gap-2 px-3 py-2 border border-stone-200 dark:border-zinc-700 rounded-lg cursor-pointer hover:bg-stone-50 dark:hover:bg-zinc-700"
+                className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-stone-200 px-3 py-2 hover:bg-stone-50 dark:border-zinc-700 dark:hover:bg-zinc-700"
               >
                 <input
                   type="radio"
@@ -131,14 +136,14 @@ const AddressFormModal: React.FC<{
                   {...register('label')}
                   className="text-amber-600 focus:ring-amber-500"
                 />
-                <span className="text-sm inline-flex items-center gap-1">
+                <span className="inline-flex items-center gap-1 text-sm">
                   {labelIcon[l]} {labelText[l]}
                 </span>
               </label>
             ))}
           </div>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
           <Select
             label="Tỉnh/Thành phố *"
             {...register('province')}
@@ -172,12 +177,23 @@ const AddressFormModal: React.FC<{
             disabled={!district}
           />
         </div>
-        <Input label="Địa chỉ chi tiết *" {...register('detail')} error={errors.detail?.message} placeholder="Số nhà, tên đường..." />
-        <div className="flex justify-end gap-2 pt-3 border-t border-stone-200 dark:border-zinc-700">
+        <Input
+          label="Địa chỉ chi tiết *"
+          {...register('detail')}
+          error={errors.detail?.message}
+          placeholder="Số nhà, tên đường..."
+        />
+        <div className="flex justify-end gap-2 border-t border-stone-200 pt-3 dark:border-zinc-700">
           <Button type="button" variant="ghost" onClick={onClose} disabled={isSubmitting}>
             Hủy
           </Button>
-          <Button type="submit" variant="primary" isLoading={isSubmitting} disabled={isSubmitting} leftIcon={isSubmitting ? <Loader2 className="w-4 h-4" /> : undefined}>
+          <Button
+            type="submit"
+            variant="primary"
+            isLoading={isSubmitting}
+            disabled={isSubmitting}
+            leftIcon={isSubmitting ? <Loader2 className="h-4 w-4" /> : undefined}
+          >
             {initial ? 'Cập nhật' : 'Thêm'}
           </Button>
         </div>
@@ -217,7 +233,8 @@ const AddressesPage: React.FC = () => {
   const handleSubmit = async (data: AddressFormData) => {
     await new Promise((r) => setTimeout(r, 400));
     const provinceLabel = PROVINCES.find((p) => p.value === data.province)?.label ?? data.province;
-    const districtLabel = DISTRICTS[data.province]?.find((d) => d.value === data.district)?.label ?? data.district;
+    const districtLabel =
+      DISTRICTS[data.province]?.find((d) => d.value === data.district)?.label ?? data.district;
     const wardLabel = WARDS[data.district]?.find((w) => w.value === data.ward)?.label ?? data.ward;
 
     if (editing) {
@@ -227,7 +244,11 @@ const AddressesPage: React.FC = () => {
         district: districtLabel,
         ward: wardLabel,
       });
-      pushNotification({ type: 'success', title: 'Đã cập nhật', message: 'Địa chỉ đã được cập nhật.' });
+      pushNotification({
+        type: 'success',
+        title: 'Đã cập nhật',
+        message: 'Địa chỉ đã được cập nhật.',
+      });
     } else {
       addAddress({
         id: `addr-${Date.now()}`,
@@ -256,23 +277,27 @@ const AddressesPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-stone-50 dark:bg-zinc-900 py-8">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <nav className="flex items-center gap-1 text-sm text-stone-500 dark:text-stone-400 mb-2">
-          <Link to="/" className="hover:text-amber-700 dark:hover:text-amber-500">Trang chủ</Link>
-          <ChevronRight className="w-3 h-3" />
-          <Link to="/profile" className="hover:text-amber-700 dark:hover:text-amber-500">Tài khoản</Link>
-          <ChevronRight className="w-3 h-3" />
+    <div className="min-h-screen bg-stone-50 py-8 dark:bg-zinc-900">
+      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+        <nav className="mb-2 flex items-center gap-1 text-sm text-stone-500 dark:text-stone-400">
+          <Link to="/" className="hover:text-amber-700 dark:hover:text-amber-500">
+            Trang chủ
+          </Link>
+          <ChevronRight className="h-3 w-3" />
+          <Link to="/profile" className="hover:text-amber-700 dark:hover:text-amber-500">
+            Tài khoản
+          </Link>
+          <ChevronRight className="h-3 w-3" />
           <span className="text-stone-700 dark:text-stone-200">Sổ địa chỉ</span>
         </nav>
-        <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
+        <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
           <div>
             <h1 className="text-3xl font-bold text-stone-800 dark:text-stone-100">Sổ Địa Chỉ</h1>
-            <p className="text-stone-600 dark:text-stone-400 mt-1">
+            <p className="mt-1 text-stone-600 dark:text-stone-400">
               Quản lý địa chỉ giao hàng của bạn
             </p>
           </div>
-          <Button variant="primary" leftIcon={<Plus className="w-4 h-4" />} onClick={handleOpenAdd}>
+          <Button variant="primary" leftIcon={<Plus className="h-4 w-4" />} onClick={handleOpenAdd}>
             Thêm địa chỉ
           </Button>
         </div>
@@ -280,16 +305,20 @@ const AddressesPage: React.FC = () => {
         {user.addresses.length === 0 ? (
           <Card padding="lg" className="text-center">
             <div className="flex flex-col items-center py-8">
-              <div className="w-20 h-20 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center mb-4">
-                <MapPin className="w-10 h-10 text-emerald-600 dark:text-emerald-400" />
+              <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/30">
+                <MapPin className="h-10 w-10 text-emerald-600 dark:text-emerald-400" />
               </div>
-              <h2 className="text-xl font-bold text-stone-800 dark:text-stone-100 mb-2">
+              <h2 className="mb-2 text-xl font-bold text-stone-800 dark:text-stone-100">
                 Chưa có địa chỉ nào
               </h2>
-              <p className="text-stone-600 dark:text-stone-400 mb-4">
+              <p className="mb-4 text-stone-600 dark:text-stone-400">
                 Thêm địa chỉ giao hàng để thanh toán nhanh hơn
               </p>
-              <Button variant="primary" leftIcon={<Plus className="w-4 h-4" />} onClick={handleOpenAdd}>
+              <Button
+                variant="primary"
+                leftIcon={<Plus className="h-4 w-4" />}
+                onClick={handleOpenAdd}
+              >
                 Thêm địa chỉ đầu tiên
               </Button>
             </div>
@@ -298,28 +327,30 @@ const AddressesPage: React.FC = () => {
           <div className="space-y-3">
             {user.addresses.map((addr) => (
               <Card key={addr.id} padding="md">
-                <div className="flex items-start justify-between gap-3 flex-wrap">
-                  <div className="flex items-start gap-3 flex-1 min-w-0">
-                    <div className="w-10 h-10 rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-500 flex items-center justify-center flex-shrink-0">
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div className="flex min-w-0 flex-1 items-start gap-3">
+                    <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-500">
                       {labelIcon[addr.label]}
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span className="font-semibold text-stone-800 dark:text-stone-100">{addr.name}</span>
-                        <span className="inline-flex items-center gap-1 text-xs px-2 py-0.5 bg-stone-100 dark:bg-zinc-700 rounded-full text-stone-600 dark:text-stone-300">
+                    <div className="min-w-0 flex-1">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="font-semibold text-stone-800 dark:text-stone-100">
+                          {addr.name}
+                        </span>
+                        <span className="inline-flex items-center gap-1 rounded-full bg-stone-100 px-2 py-0.5 text-xs text-stone-600 dark:bg-zinc-700 dark:text-stone-300">
                           {labelText[addr.label]}
                         </span>
                         {addr.isDefault && (
-                          <span className="inline-flex items-center gap-1 text-xs px-2 py-0.5 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 rounded-full">
-                            <CheckCircle2 className="w-3 h-3" />
+                          <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2 py-0.5 text-xs text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">
+                            <CheckCircle2 className="h-3 w-3" />
                             Mặc định
                           </span>
                         )}
                       </div>
-                      <p className="text-sm text-stone-600 dark:text-stone-400 mt-1 flex items-center gap-1">
-                        <Phone className="w-3.5 h-3.5" /> {addr.phone}
+                      <p className="mt-1 flex items-center gap-1 text-sm text-stone-600 dark:text-stone-400">
+                        <Phone className="h-3.5 w-3.5" /> {addr.phone}
                       </p>
-                      <p className="text-sm text-stone-700 dark:text-stone-300 mt-1">
+                      <p className="mt-1 text-sm text-stone-700 dark:text-stone-300">
                         {addr.detail}, {addr.ward}, {addr.district}, {addr.province}
                       </p>
                     </div>
@@ -329,7 +360,7 @@ const AddressesPage: React.FC = () => {
                       <button
                         type="button"
                         onClick={() => setDefaultAddress(addr.id)}
-                        className="text-xs text-stone-500 hover:text-amber-700 dark:hover:text-amber-500 px-2 py-1"
+                        className="px-2 py-1 text-xs text-stone-500 hover:text-amber-700 dark:hover:text-amber-500"
                       >
                         Đặt mặc định
                       </button>
@@ -340,7 +371,7 @@ const AddressesPage: React.FC = () => {
                       className="p-2 text-stone-500 hover:text-amber-700 dark:hover:text-amber-500"
                       aria-label="Chỉnh sửa"
                     >
-                      <Edit3 className="w-4 h-4" />
+                      <Edit3 className="h-4 w-4" />
                     </button>
                     <button
                       type="button"
@@ -348,7 +379,7 @@ const AddressesPage: React.FC = () => {
                       className="p-2 text-stone-500 hover:text-red-500"
                       aria-label="Xóa"
                     >
-                      <Trash2 className="w-4 h-4" />
+                      <Trash2 className="h-4 w-4" />
                     </button>
                   </div>
                 </div>
@@ -366,14 +397,20 @@ const AddressesPage: React.FC = () => {
       />
 
       <Modal isOpen={!!deleteId} onClose={() => setDeleteId(null)} title="Xóa địa chỉ" size="sm">
-        <p className="text-stone-700 dark:text-stone-300 mb-4">
+        <p className="mb-4 text-stone-700 dark:text-stone-300">
           Bạn có chắc chắn muốn xóa địa chỉ này không?
         </p>
         <div className="flex justify-end gap-2">
           <Button variant="ghost" onClick={() => setDeleteId(null)} disabled={deleting}>
             Hủy
           </Button>
-          <Button variant="danger" onClick={handleDelete} isLoading={deleting} disabled={deleting} leftIcon={deleting ? <Loader2 className="w-4 h-4" /> : undefined}>
+          <Button
+            variant="danger"
+            onClick={handleDelete}
+            isLoading={deleting}
+            disabled={deleting}
+            leftIcon={deleting ? <Loader2 className="h-4 w-4" /> : undefined}
+          >
             Xóa
           </Button>
         </div>

@@ -39,10 +39,10 @@ export function OrderCard({ order, className = '' }: OrderCardProps) {
       transition={{ duration: 0.2 }}
     >
       <Card hover className={`${className}`}>
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-stone-200 dark:border-zinc-700">
-          <div className="flex items-center gap-3 flex-wrap">
+        <div className="flex flex-col justify-between gap-3 border-b border-stone-200 pb-3 sm:flex-row sm:items-center dark:border-zinc-700">
+          <div className="flex flex-wrap items-center gap-3">
             <div className="flex items-center gap-2">
-              <Package className="w-4 h-4 text-amber-600" />
+              <Package className="h-4 w-4 text-amber-600" />
               <span className="font-semibold text-stone-800 dark:text-stone-100">
                 #{order.orderNumber}
               </span>
@@ -50,28 +50,23 @@ export function OrderCard({ order, className = '' }: OrderCardProps) {
             <OrderStatusBadge status={order.status} />
           </div>
           <div className="flex items-center gap-1.5 text-sm text-stone-500 dark:text-stone-400">
-            <Calendar className="w-3.5 h-3.5" />
+            <Calendar className="h-3.5 w-3.5" />
             {formatDate(order.createdAt)}
           </div>
         </div>
 
-        <div className="py-3 flex items-center gap-3">
+        <div className="flex items-center gap-3 py-3">
           <div className="flex -space-x-2">
             {firstImages.map((img, idx) => (
               <div
                 key={idx}
-                className="w-12 h-12 rounded-lg overflow-hidden border-2 border-white dark:border-zinc-800 bg-stone-100 dark:bg-zinc-700"
+                className="h-12 w-12 overflow-hidden rounded-lg border-2 border-white bg-stone-100 dark:border-zinc-800 dark:bg-zinc-700"
               >
-                <img
-                  src={img}
-                  alt=""
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                />
+                <img src={img} alt="" className="h-full w-full object-cover" loading="lazy" />
               </div>
             ))}
             {order.items.length > 3 && (
-              <div className="w-12 h-12 rounded-lg border-2 border-white dark:border-zinc-800 bg-stone-100 dark:bg-zinc-700 flex items-center justify-center text-xs font-medium text-stone-600 dark:text-stone-300">
+              <div className="flex h-12 w-12 items-center justify-center rounded-lg border-2 border-white bg-stone-100 text-xs font-medium text-stone-600 dark:border-zinc-800 dark:bg-zinc-700 dark:text-stone-300">
                 +{order.items.length - 3}
               </div>
             )}
@@ -87,15 +82,15 @@ export function OrderCard({ order, className = '' }: OrderCardProps) {
           </div>
         </div>
 
-        <div className="pt-3 border-t border-stone-200 dark:border-zinc-700 flex items-center justify-between gap-3 flex-wrap">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-stone-200 pt-3 dark:border-zinc-700">
           <PaymentStatusBadge status={order.paymentStatus} />
           <Link
             to={`/orders/${order.id}`}
-            className="inline-flex items-center gap-1 text-sm font-medium text-amber-700 dark:text-amber-500 hover:text-amber-800 dark:hover:text-amber-400 transition-colors"
+            className="inline-flex items-center gap-1 text-sm font-medium text-amber-700 transition-colors hover:text-amber-800 dark:text-amber-500 dark:hover:text-amber-400"
             aria-label={`Xem chi tiết đơn hàng ${order.orderNumber}`}
           >
             Xem Chi Tiết
-            <ChevronRight className="w-4 h-4" />
+            <ChevronRight className="h-4 w-4" />
           </Link>
         </div>
       </Card>

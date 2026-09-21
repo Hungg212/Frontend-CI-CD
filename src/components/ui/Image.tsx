@@ -98,13 +98,5 @@ export function ResponsiveImage({
   srcSet?: string;
   sizes?: string;
 }) {
-  return (
-    <Image
-      src={src ?? ''}
-      alt={alt}
-      srcSet={srcSet}
-      sizes={sizes}
-      {...props}
-    />
-  );
+  return <Image src={src ?? ''} alt={alt} srcSet={srcSet} sizes={sizes} {...props} />;
 }

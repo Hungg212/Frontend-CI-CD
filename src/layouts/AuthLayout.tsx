@@ -2,10 +2,10 @@ import { Outlet, Link } from 'react-router-dom';
 
 export default function AuthLayout() {
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-stone-50 dark:bg-zinc-900">
+    <div className="flex min-h-screen items-center justify-center bg-stone-50 p-4 dark:bg-zinc-900">
       <div className="w-full max-w-md">
         {/* Logo */}
-        <Link to="/" className="flex items-center justify-center gap-2 mb-8">
+        <Link to="/" className="mb-8 flex items-center justify-center gap-2">
           <svg
             viewBox="0 0 40 40"
             className="h-12 w-12 text-amber-700 dark:text-amber-500"

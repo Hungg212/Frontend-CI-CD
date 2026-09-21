@@ -1,15 +1,15 @@
 import { describe, it, expect } from 'vitest';
 import { cn } from './utils';
-import { 
-  formatCurrency, 
-  formatNumber, 
-  formatDate, 
+import {
+  formatCurrency,
+  formatNumber,
+  formatDate,
   formatDateTime,
   formatRelativeTime,
   truncateText,
   generateOrderNumber,
   generateId,
-  slugify 
+  slugify,
 } from '../utils/formatters';
 
 describe('utils', () => {
@@ -44,7 +44,7 @@ describe('utils', () => {
     });
 
     it('should handle object inputs', () => {
-      const result = cn({ 'active': true, 'disabled': false });
+      const result = cn({ active: true, disabled: false });
       expect(result).toContain('active');
       expect(result).not.toContain('disabled');
     });
@@ -137,7 +137,8 @@ describe('utils', () => {
 
   describe('truncateText', () => {
     it('should truncate long text', () => {
-      const longText = 'This is a very long text that should be truncated because it exceeds the maximum length allowed.';
+      const longText =
+        'This is a very long text that should be truncated because it exceeds the maximum length allowed.';
       const result = truncateText(longText, 50);
       expect(result.length).toBeLessThanOrEqual(53); // 50 + '...'
       expect(result).toContain('...');

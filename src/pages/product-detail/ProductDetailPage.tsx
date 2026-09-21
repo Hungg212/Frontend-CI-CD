@@ -10,12 +10,8 @@ export default function ProductDetailPage() {
   return (
     <div className="container mx-auto px-4 py-10 lg:px-8">
       <h1 className="font-display text-3xl font-bold">{product.name}</h1>
-      <p className="mt-4 text-coffee-700 dark:text-cream-300">
-        {product.description}
-      </p>
-      <div className="mt-6 text-2xl font-bold">
-        ${product.salePrice ?? product.price}
-      </div>
+      <p className="mt-4 text-coffee-700 dark:text-cream-300">{product.description}</p>
+      <div className="mt-6 text-2xl font-bold">${product.salePrice ?? product.price}</div>
     </div>
   );
 }

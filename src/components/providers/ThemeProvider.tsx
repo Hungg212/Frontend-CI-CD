@@ -27,9 +27,7 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
     toggleTheme,
   };
 
-  return (
-    <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
-  );
+  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 }
 
 interface ThemeContextValue {

@@ -18,9 +18,7 @@ export default function AdminDashboard() {
             className="rounded-xl border border-warm-200 bg-white p-6 dark:border-coffee-800 dark:bg-coffee-900"
           >
             <div className="mb-3 flex items-center justify-between">
-              <span className="text-sm text-coffee-700 dark:text-cream-300">
-                {s.label}
-              </span>
+              <span className="text-sm text-coffee-700 dark:text-cream-300">{s.label}</span>
               <s.icon className="h-5 w-5 text-coffee-500" />
             </div>
             <p className="font-display text-2xl font-bold">{s.value}</p>

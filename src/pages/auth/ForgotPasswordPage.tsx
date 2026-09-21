@@ -30,19 +30,19 @@ const ForgotPasswordPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 to-stone-100 dark:from-zinc-900 dark:to-zinc-800 flex items-center justify-center py-12 px-4">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-amber-50 to-stone-100 px-4 py-12 dark:from-zinc-900 dark:to-zinc-800">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
         className="w-full max-w-md"
       >
-        <div className="text-center mb-6">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-amber-700 text-white mb-3">
-            <Coffee className="w-8 h-8" />
+        <div className="mb-6 text-center">
+          <div className="mb-3 inline-flex h-16 w-16 items-center justify-center rounded-full bg-amber-700 text-white">
+            <Coffee className="h-8 w-8" />
           </div>
           <h1 className="text-3xl font-bold text-stone-800 dark:text-stone-100">Quên Mật Khẩu?</h1>
-          <p className="text-stone-600 dark:text-stone-400 mt-1">
+          <p className="mt-1 text-stone-600 dark:text-stone-400">
             Nhập email để nhận liên kết đặt lại mật khẩu
           </p>
         </div>
@@ -55,19 +55,21 @@ const ForgotPasswordPage: React.FC = () => {
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
-                className="text-center py-4"
+                className="py-4 text-center"
               >
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-emerald-100 dark:bg-emerald-900/30 mb-4">
-                  <CheckCircle2 className="w-10 h-10 text-emerald-600 dark:text-emerald-400" />
+                <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/30">
+                  <CheckCircle2 className="h-10 w-10 text-emerald-600 dark:text-emerald-400" />
                 </div>
-                <h2 className="text-xl font-bold text-stone-800 dark:text-stone-100 mb-2">
+                <h2 className="mb-2 text-xl font-bold text-stone-800 dark:text-stone-100">
                   Kiểm Tra Email Của Bạn
                 </h2>
-                <p className="text-sm text-stone-600 dark:text-stone-400 mb-1">
+                <p className="mb-1 text-sm text-stone-600 dark:text-stone-400">
                   Chúng tôi đã gửi liên kết đặt lại mật khẩu đến
                 </p>
-                <p className="font-semibold text-amber-700 dark:text-amber-500 mb-6">{submittedEmail}</p>
-                <p className="text-xs text-stone-500 dark:text-stone-400 mb-6">
+                <p className="mb-6 font-semibold text-amber-700 dark:text-amber-500">
+                  {submittedEmail}
+                </p>
+                <p className="mb-6 text-xs text-stone-500 dark:text-stone-400">
                   Vui lòng kiểm tra hộp thư đến (hoặc thư rác) trong vòng vài phút.
                 </p>
                 <div className="space-y-2">
@@ -77,7 +79,7 @@ const ForgotPasswordPage: React.FC = () => {
                     </Button>
                   </Link>
                   <Link to="/auth/login" className="block">
-                    <Button variant="ghost" fullWidth leftIcon={<ArrowLeft className="w-4 h-4" />}>
+                    <Button variant="ghost" fullWidth leftIcon={<ArrowLeft className="h-4 w-4" />}>
                       Quay lại đăng nhập
                     </Button>
                   </Link>
@@ -96,7 +98,7 @@ const ForgotPasswordPage: React.FC = () => {
                   label="Email"
                   type="email"
                   placeholder="email@example.com"
-                  leftIcon={<Mail className="w-4 h-4" />}
+                  leftIcon={<Mail className="h-4 w-4" />}
                   {...register('email')}
                   error={errors.email?.message}
                   autoComplete="email"
@@ -108,12 +110,17 @@ const ForgotPasswordPage: React.FC = () => {
                   fullWidth
                   isLoading={isSubmitting}
                   disabled={isSubmitting}
-                  leftIcon={isSubmitting ? undefined : <Send className="w-4 h-4" />}
+                  leftIcon={isSubmitting ? undefined : <Send className="h-4 w-4" />}
                 >
                   {isSubmitting ? 'Đang gửi...' : 'Gửi Link Đặt Lại Mật Khẩu'}
                 </Button>
                 <Link to="/auth/login" className="block">
-                  <Button type="button" variant="ghost" fullWidth leftIcon={<ArrowLeft className="w-4 h-4" />}>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    fullWidth
+                    leftIcon={<ArrowLeft className="h-4 w-4" />}
+                  >
                     Quay lại đăng nhập
                   </Button>
                 </Link>

@@ -35,7 +35,7 @@ export function Header() {
     <>
       <header
         className={cn(
-          'fixed top-0 left-0 right-0 z-40 transition-all duration-300',
+          'fixed left-0 right-0 top-0 z-40 transition-all duration-300',
           isScrolled
             ? 'bg-white/95 shadow-sm backdrop-blur-md dark:bg-zinc-900/95'
             : 'bg-transparent'
@@ -97,7 +97,7 @@ export function Header() {
                 ) : (
                   <button
                     onClick={() => setIsSearchOpen(true)}
-                    className="rounded-lg p-2 text-stone-600 hover:bg-stone-100 dark:text-stone-300 dark:hover:bg-zinc-800 lg:hidden"
+                    className="rounded-lg p-2 text-stone-600 hover:bg-stone-100 lg:hidden dark:text-stone-300 dark:hover:bg-zinc-800"
                     aria-label="Search"
                   >
                     <Search className="h-5 w-5" />
@@ -105,7 +105,7 @@ export function Header() {
                 )}
                 <button
                   onClick={() => setIsSearchOpen(true)}
-                  className="hidden rounded-lg p-2 text-stone-600 hover:bg-stone-100 dark:text-stone-300 dark:hover:bg-zinc-800 lg:block"
+                  className="hidden rounded-lg p-2 text-stone-600 hover:bg-stone-100 lg:block dark:text-stone-300 dark:hover:bg-zinc-800"
                   aria-label="Search"
                 >
                   <Search className="h-5 w-5" />
@@ -185,7 +185,7 @@ export function Header() {
               {/* Mobile Menu Toggle */}
               <button
                 onClick={() => setIsMobileMenuOpen(true)}
-                className="rounded-lg p-2 text-stone-600 hover:bg-stone-100 dark:text-stone-300 dark:hover:bg-zinc-800 lg:hidden"
+                className="rounded-lg p-2 text-stone-600 hover:bg-stone-100 lg:hidden dark:text-stone-300 dark:hover:bg-zinc-800"
                 aria-label="Open menu"
               >
                 <Menu className="h-6 w-6" />

@@ -79,9 +79,7 @@ export function Rating({
         </span>
       )}
       {reviewCount !== undefined && (
-        <span className="text-sm text-stone-500 dark:text-stone-400">
-          ({reviewCount})
-        </span>
+        <span className="text-sm text-stone-500 dark:text-stone-400">({reviewCount})</span>
       )}
     </div>
   );

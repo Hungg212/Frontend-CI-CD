@@ -15,7 +15,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
         {label && (
           <label
             htmlFor={textareaId}
-            className="block text-sm font-medium text-stone-700 dark:text-stone-200 mb-1.5"
+            className="mb-1.5 block text-sm font-medium text-stone-700 dark:text-stone-200"
           >
             {label}
           </label>
@@ -27,19 +27,9 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
           aria-describedby={
             error ? `${textareaId}-error` : helperText ? `${textareaId}-helper` : undefined
           }
-          className={`
-            w-full rounded-lg border bg-white dark:bg-zinc-800
-            text-stone-800 dark:text-stone-100
-            placeholder:text-stone-400 dark:placeholder:text-stone-500
-            transition-all duration-200
-            focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent
-            disabled:bg-stone-100 dark:disabled:bg-zinc-700 disabled:cursor-not-allowed
-            ${error
-              ? 'border-red-500 focus:ring-red-500'
-              : 'border-stone-200 dark:border-zinc-700'
-            }
-            px-4 py-2.5 min-h-[100px] resize-y
-          `}
+          className={`w-full rounded-lg border bg-white text-stone-800 transition-all duration-200 placeholder:text-stone-400 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-amber-500 disabled:cursor-not-allowed disabled:bg-stone-100 dark:bg-zinc-800 dark:text-stone-100 dark:placeholder:text-stone-500 dark:disabled:bg-zinc-700 ${
+            error ? 'border-red-500 focus:ring-red-500' : 'border-stone-200 dark:border-zinc-700'
+          } min-h-[100px] resize-y px-4 py-2.5`}
           {...props}
         />
         {error && (
@@ -48,7 +38,10 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
           </p>
         )}
         {helperText && !error && (
-          <p id={`${textareaId}-helper`} className="mt-1.5 text-sm text-stone-500 dark:text-stone-400">
+          <p
+            id={`${textareaId}-helper`}
+            className="mt-1.5 text-sm text-stone-500 dark:text-stone-400"
+          >
             {helperText}
           </p>
         )}

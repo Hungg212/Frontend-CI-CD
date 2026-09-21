@@ -232,7 +232,8 @@ export const mockAdminOrders: AdminOrder[] = [
       {
         productId: '1',
         productName: 'Cà Phê Arabica Cầu Đất',
-        productImage: 'https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=200&h=200&fit=crop',
+        productImage:
+          'https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=200&h=200&fit=crop',
         quantity: 2,
         price: 285000,
         subtotal: 570000,
@@ -240,7 +241,8 @@ export const mockAdminOrders: AdminOrder[] = [
       {
         productId: '6',
         productName: 'Cà Phê Bột Rang Mộc Cầu Đất',
-        productImage: 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=200&h=200&fit=crop',
+        productImage:
+          'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=200&h=200&fit=crop',
         quantity: 1,
         price: 195000,
         subtotal: 195000,
@@ -265,9 +267,7 @@ export const mockAdminOrders: AdminOrder[] = [
     note: 'Giao hàng giờ hành chính',
     createdAt: '2026-09-21T10:23:00',
     updatedAt: '2026-09-21T10:23:00',
-    timeline: [
-      { status: 'PENDING', timestamp: '2026-09-21T10:23:00', note: 'Đơn hàng được tạo' },
-    ],
+    timeline: [{ status: 'PENDING', timestamp: '2026-09-21T10:23:00', note: 'Đơn hàng được tạo' }],
   },
   {
     id: '2',
@@ -280,7 +280,8 @@ export const mockAdminOrders: AdminOrder[] = [
       {
         productId: '2',
         productName: 'Cà Phê Robusta Buôn Ma Thuột',
-        productImage: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=200&h=200&fit=crop',
+        productImage:
+          'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=200&h=200&fit=crop',
         quantity: 2,
         price: 145000,
         subtotal: 290000,
@@ -288,7 +289,8 @@ export const mockAdminOrders: AdminOrder[] = [
       {
         productId: '5',
         productName: 'Cà Phê Espresso Blend',
-        productImage: 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=200&h=200&fit=crop',
+        productImage:
+          'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=200&h=200&fit=crop',
         quantity: 1,
         price: 135000,
         subtotal: 135000,
@@ -328,7 +330,8 @@ export const mockAdminOrders: AdminOrder[] = [
       {
         productId: '1',
         productName: 'Cà Phê Arabica Cầu Đất',
-        productImage: 'https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=200&h=200&fit=crop',
+        productImage:
+          'https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=200&h=200&fit=crop',
         quantity: 3,
         price: 285000,
         subtotal: 855000,
@@ -336,7 +339,8 @@ export const mockAdminOrders: AdminOrder[] = [
       {
         productId: '3',
         productName: 'Cà Phê Mokka Cần Thơ',
-        productImage: 'https://images.unsplash.com/photo-1497935586351-b67a49e012bf?w=200&h=200&fit=crop',
+        productImage:
+          'https://images.unsplash.com/photo-1497935586351-b67a49e012bf?w=200&h=200&fit=crop',
         quantity: 1,
         price: 320000,
         subtotal: 320000,
@@ -344,7 +348,8 @@ export const mockAdminOrders: AdminOrder[] = [
       {
         productId: '7',
         productName: 'Cà Phê Pha Máy Chuyên Dụng',
-        productImage: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=200&h=200&fit=crop',
+        productImage:
+          'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=200&h=200&fit=crop',
         quantity: 1,
         price: 350000,
         subtotal: 350000,
@@ -386,7 +391,8 @@ export const mockAdminOrders: AdminOrder[] = [
       {
         productId: '4',
         productName: 'Cà Phê Hữu Cơ Sapa',
-        productImage: 'https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=200&h=200&fit=crop',
+        productImage:
+          'https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=200&h=200&fit=crop',
         quantity: 1,
         price: 420000,
         subtotal: 420000,
@@ -429,7 +435,8 @@ export const mockAdminOrders: AdminOrder[] = [
       {
         productId: '5',
         productName: 'Cà Phê Espresso Blend',
-        productImage: 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=200&h=200&fit=crop',
+        productImage:
+          'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=200&h=200&fit=crop',
         quantity: 4,
         price: 265000,
         subtotal: 1060000,
@@ -470,7 +477,8 @@ export const mockAdminOrders: AdminOrder[] = [
       {
         productId: '8',
         productName: 'Cà Phê Cherry Sơn La',
-        productImage: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=200&h=200&fit=crop',
+        productImage:
+          'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=200&h=200&fit=crop',
         quantity: 2,
         price: 385000,
         subtotal: 770000,
@@ -749,7 +757,8 @@ export const mockAdminReviews: AdminReview[] = [
     id: 'r1',
     productId: '1',
     productName: 'Cà Phê Arabica Cầu Đất',
-    productImage: 'https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=200&h=200&fit=crop',
+    productImage:
+      'https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=200&h=200&fit=crop',
     userId: 'c1',
     userName: 'Nguyễn Văn Minh',
     userAvatar: 'https://i.pravatar.cc/100?img=1',
@@ -763,12 +772,14 @@ export const mockAdminReviews: AdminReview[] = [
     id: 'r2',
     productId: '1',
     productName: 'Cà Phê Arabica Cầu Đất',
-    productImage: 'https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=200&h=200&fit=crop',
+    productImage:
+      'https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=200&h=200&fit=crop',
     userId: 'c2',
     userName: 'Trần Thị Lan',
     userAvatar: 'https://i.pravatar.cc/100?img=2',
     rating: 5,
-    comment: 'Mình đã thử nhiều loại cà phê nhưng Arabica Cầu Đất là ngon nhất. Hương vị đậm đà, không bị đắng.',
+    comment:
+      'Mình đã thử nhiều loại cà phê nhưng Arabica Cầu Đất là ngon nhất. Hương vị đậm đà, không bị đắng.',
     createdAt: '2026-09-08',
     isVerified: true,
     status: 'APPROVED',
@@ -777,7 +788,8 @@ export const mockAdminReviews: AdminReview[] = [
     id: 'r3',
     productId: '1',
     productName: 'Cà Phê Arabica Cầu Đất',
-    productImage: 'https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=200&h=200&fit=crop',
+    productImage:
+      'https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=200&h=200&fit=crop',
     userId: 'c3',
     userName: 'Lê Hoàng Nam',
     userAvatar: 'https://i.pravatar.cc/100?img=3',
@@ -791,7 +803,8 @@ export const mockAdminReviews: AdminReview[] = [
     id: 'r4',
     productId: '2',
     productName: 'Cà Phê Robusta Buôn Ma Thuột',
-    productImage: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=200&h=200&fit=crop',
+    productImage:
+      'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=200&h=200&fit=crop',
     userId: 'c4',
     userName: 'Phạm Thu Hà',
     userAvatar: 'https://i.pravatar.cc/100?img=4',
@@ -805,12 +818,14 @@ export const mockAdminReviews: AdminReview[] = [
     id: 'r5',
     productId: '3',
     productName: 'Cà Phê Mokka Cần Thơ',
-    productImage: 'https://images.unsplash.com/photo-1497935586351-b67a49e012bf?w=200&h=200&fit=crop',
+    productImage:
+      'https://images.unsplash.com/photo-1497935586351-b67a49e012bf?w=200&h=200&fit=crop',
     userId: 'c5',
     userName: 'Hoàng Đức Anh',
     userAvatar: 'https://i.pravatar.cc/100?img=5',
     rating: 5,
-    comment: 'Cà phê Mokka Cần Thơ thơm lắm! Mình rất thích vị chua dịu của nó. Khuyên mọi người nên thử.',
+    comment:
+      'Cà phê Mokka Cần Thơ thơm lắm! Mình rất thích vị chua dịu của nó. Khuyên mọi người nên thử.',
     createdAt: '2026-09-11',
     isVerified: true,
     status: 'APPROVED',
@@ -819,7 +834,8 @@ export const mockAdminReviews: AdminReview[] = [
     id: 'r6',
     productId: '5',
     productName: 'Cà Phê Espresso Blend',
-    productImage: 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=200&h=200&fit=crop',
+    productImage:
+      'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=200&h=200&fit=crop',
     userId: 'c6',
     userName: 'Vũ Thị Mai',
     userAvatar: 'https://i.pravatar.cc/100?img=6',
@@ -833,7 +849,8 @@ export const mockAdminReviews: AdminReview[] = [
     id: 'r7',
     productId: '7',
     productName: 'Cà Phê Pha Máy Chuyên Dụng',
-    productImage: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=200&h=200&fit=crop',
+    productImage:
+      'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=200&h=200&fit=crop',
     userId: 'c7',
     userName: 'Đặng Văn Hùng',
     userAvatar: 'https://i.pravatar.cc/100?img=7',

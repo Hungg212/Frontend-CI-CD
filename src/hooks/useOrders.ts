@@ -89,10 +89,12 @@ export function useOrders(pageSize = 5): UseOrdersReturn {
         JSON.stringify({
           state: { items: merged, isLoading: false },
           version: cartData.version || 0,
-        }),
+        })
       );
       window.location.href = '/cart';
-    } catch (_e) { /* ignore */ }
+    } catch (_e) {
+      /* ignore */
+    }
   };
 
   return {

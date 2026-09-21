@@ -4,8 +4,7 @@ import {
   getCategoryBySlug as findCategoryBySlug,
 } from '../data/categories';
 
-const simulateDelay = (ms: number = 300) =>
-  new Promise((resolve) => setTimeout(resolve, ms));
+const simulateDelay = (ms: number = 300) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export const categoryService = {
   async getCategories(): Promise<Category[]> {

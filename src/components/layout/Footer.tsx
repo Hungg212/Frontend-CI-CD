@@ -63,19 +63,15 @@ export function Footer() {
           {/* About */}
           <div>
             <Link to="/" className="flex items-center gap-2">
-              <svg
-                viewBox="0 0 40 40"
-                className="h-10 w-10 text-amber-500"
-                fill="currentColor"
-              >
+              <svg viewBox="0 0 40 40" className="h-10 w-10 text-amber-500" fill="currentColor">
                 <path d="M8 8h24v4c0 8.837-7.163 16-16 16S0 20.837 0 12V8h8zm0 4v4h24V12H8zm2 8v16c0 6.627 5.373 12 12 12s12-5.373 12-12V20H10z" />
                 <circle cx="20" cy="20" r="6" fill="none" stroke="currentColor" strokeWidth="2" />
               </svg>
               <span className="font-display text-xl font-bold text-white">Coffee Home Blend</span>
             </Link>
             <p className="mt-4 text-sm leading-relaxed text-stone-400">
-              Mang đến cho bạn những hạt cà phê chất lượng nhất từ những vùng trồng nổi tiếng Việt Nam.
-              Hương vị đậm đà, tinh túy từng ly.
+              Mang đến cho bạn những hạt cà phê chất lượng nhất từ những vùng trồng nổi tiếng Việt
+              Nam. Hương vị đậm đà, tinh túy từng ly.
             </p>
             {/* Social Links */}
             <div className="mt-6 flex gap-3">
@@ -100,10 +96,7 @@ export function Footer() {
             <ul className="space-y-3">
               {quickLinks.map((link) => (
                 <li key={link.href}>
-                  <Link
-                    to={link.href}
-                    className="text-sm transition-colors hover:text-amber-500"
-                  >
+                  <Link to={link.href} className="text-sm transition-colors hover:text-amber-500">
                     {link.label}
                   </Link>
                 </li>
@@ -149,7 +142,7 @@ export function Footer() {
                   placeholder="Email của bạn"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="flex-1 bg-stone-800 border-stone-700 text-white placeholder:text-stone-500"
+                  className="flex-1 border-stone-700 bg-stone-800 text-white placeholder:text-stone-500"
                 />
                 <Button type="submit" size="sm" disabled={subscribed}>
                   {subscribed ? '✓' : <Send className="h-4 w-4" />}

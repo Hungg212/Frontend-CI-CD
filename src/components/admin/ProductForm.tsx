@@ -3,15 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useForm, Controller, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import {
-  ArrowLeft,
-  Save,
-  X,
-  Upload,
-  Trash2,
-  Plus,
-  Image as ImageIcon,
-} from 'lucide-react';
+import { ArrowLeft, Save, X, Upload, Trash2, Plus, Image as ImageIcon } from 'lucide-react';
 import AdminLayout from '@/components/admin/AdminLayout';
 import { Card } from '@/components/ui';
 import { Input } from '@/components/ui';
@@ -190,7 +182,10 @@ export function ProductForm({ initial, mode }: ProductFormProps) {
           salePrice: data.salePrice || undefined,
           category: data.categoryName,
           categorySlug: data.categorySlug,
-          images: images.length > 0 ? images : ['https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=400'],
+          images:
+            images.length > 0
+              ? images
+              : ['https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=400'],
           rating: 0,
           reviewCount: 0,
           stock: data.stock,
@@ -265,37 +260,29 @@ export function ProductForm({ initial, mode }: ProductFormProps) {
           <Button
             type="button"
             variant="ghost"
-            leftIcon={<ArrowLeft className="w-4 h-4" />}
+            leftIcon={<ArrowLeft className="h-4 w-4" />}
             onClick={() => navigate('/admin/products')}
           >
             Quay lại
           </Button>
           <div className="flex gap-2">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => navigate('/admin/products')}
-            >
+            <Button type="button" variant="outline" onClick={() => navigate('/admin/products')}>
               Hủy
             </Button>
-            <Button
-              type="submit"
-              isLoading={isSubmitting}
-              leftIcon={<Save className="w-4 h-4" />}
-            >
+            <Button type="submit" isLoading={isSubmitting} leftIcon={<Save className="h-4 w-4" />}>
               {mode === 'create' ? 'Tạo sản phẩm' : 'Lưu thay đổi'}
             </Button>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 space-y-6">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+          <div className="space-y-6 lg:col-span-2">
             {/* Basic info */}
             <Card className="p-5">
-              <h2 className="font-semibold text-stone-800 dark:text-stone-100 mb-4">
+              <h2 className="mb-4 font-semibold text-stone-800 dark:text-stone-100">
                 Thông Tin Cơ Bản
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <Input
                   label="Tên sản phẩm"
                   {...register('name')}
@@ -354,8 +341,8 @@ export function ProductForm({ initial, mode }: ProductFormProps) {
 
             {/* Images */}
             <Card className="p-5">
-              <h2 className="font-semibold text-stone-800 dark:text-stone-100 mb-4">Hình Ảnh</h2>
-              <div className="flex flex-col sm:flex-row gap-3 mb-4">
+              <h2 className="mb-4 font-semibold text-stone-800 dark:text-stone-100">Hình Ảnh</h2>
+              <div className="mb-4 flex flex-col gap-3 sm:flex-row">
                 <Input
                   placeholder="Dán URL hình ảnh..."
                   value={imageUrl}
@@ -367,13 +354,17 @@ export function ProductForm({ initial, mode }: ProductFormProps) {
                     }
                   }}
                 />
-                <Button type="button" onClick={handleAddImage} leftIcon={<Plus className="w-4 h-4" />}>
+                <Button
+                  type="button"
+                  onClick={handleAddImage}
+                  leftIcon={<Plus className="h-4 w-4" />}
+                >
                   Thêm URL
                 </Button>
               </div>
-              <div className="flex items-center gap-3 mb-4">
-                <label className="flex items-center gap-2 px-4 py-2 bg-stone-100 dark:bg-zinc-800 hover:bg-stone-200 dark:hover:bg-zinc-700 rounded-lg cursor-pointer transition-colors">
-                  <Upload className="w-4 h-4 text-stone-600 dark:text-stone-300" />
+              <div className="mb-4 flex items-center gap-3">
+                <label className="flex cursor-pointer items-center gap-2 rounded-lg bg-stone-100 px-4 py-2 transition-colors hover:bg-stone-200 dark:bg-zinc-800 dark:hover:bg-zinc-700">
+                  <Upload className="h-4 w-4 text-stone-600 dark:text-stone-300" />
                   <span className="text-sm font-medium text-stone-700 dark:text-stone-200">
                     Tải lên từ máy
                   </span>
@@ -389,32 +380,32 @@ export function ProductForm({ initial, mode }: ProductFormProps) {
               </div>
 
               {images.length === 0 ? (
-                <div className="border-2 border-dashed border-stone-200 dark:border-zinc-700 rounded-lg p-8 text-center">
-                  <ImageIcon className="w-10 h-10 text-stone-300 mx-auto mb-2" />
+                <div className="rounded-lg border-2 border-dashed border-stone-200 p-8 text-center dark:border-zinc-700">
+                  <ImageIcon className="mx-auto mb-2 h-10 w-10 text-stone-300" />
                   <p className="text-sm text-stone-500">Chưa có hình ảnh nào</p>
                 </div>
               ) : (
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
                   {images.map((src, idx) => (
                     <div
                       key={`${idx}-${src.slice(0, 20)}`}
-                      className="relative group aspect-square rounded-lg overflow-hidden border border-stone-200 dark:border-zinc-700 bg-stone-100"
+                      className="group relative aspect-square overflow-hidden rounded-lg border border-stone-200 bg-stone-100 dark:border-zinc-700"
                     >
                       <img
                         src={src}
                         alt={`Hình ${idx + 1}`}
-                        className="w-full h-full object-cover"
+                        className="h-full w-full object-cover"
                       />
                       <button
                         type="button"
                         onClick={() => removeImage(idx)}
-                        className="absolute top-1.5 right-1.5 p-1 rounded-full bg-red-500 text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                        className="absolute right-1.5 top-1.5 rounded-full bg-red-500 p-1 text-white opacity-0 transition-opacity group-hover:opacity-100"
                         aria-label="Xóa hình"
                       >
-                        <X className="w-3 h-3" />
+                        <X className="h-3 w-3" />
                       </button>
                       {idx === 0 && (
-                        <span className="absolute bottom-1.5 left-1.5 px-2 py-0.5 text-xs bg-amber-700 text-white rounded">
+                        <span className="absolute bottom-1.5 left-1.5 rounded bg-amber-700 px-2 py-0.5 text-xs text-white">
                           Chính
                         </span>
                       )}
@@ -426,8 +417,8 @@ export function ProductForm({ initial, mode }: ProductFormProps) {
 
             {/* Price & stock */}
             <Card className="p-5">
-              <h2 className="font-semibold text-stone-800 dark:text-stone-100 mb-4">Giá & Kho</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <h2 className="mb-4 font-semibold text-stone-800 dark:text-stone-100">Giá & Kho</h2>
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <Input
                   type="number"
                   label="Giá bán (VND)"
@@ -458,10 +449,10 @@ export function ProductForm({ initial, mode }: ProductFormProps) {
 
             {/* Coffee info */}
             <Card className="p-5">
-              <h2 className="font-semibold text-stone-800 dark:text-stone-100 mb-4">
+              <h2 className="mb-4 font-semibold text-stone-800 dark:text-stone-100">
                 Thông Tin Cà Phê
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <Input
                   label="Vùng trồng (Origin)"
                   {...register('origin')}
@@ -500,7 +491,7 @@ export function ProductForm({ initial, mode }: ProductFormProps) {
           <div className="space-y-6">
             {/* Status toggles */}
             <Card className="p-5">
-              <h2 className="font-semibold text-stone-800 dark:text-stone-100 mb-4">Trạng Thái</h2>
+              <h2 className="mb-4 font-semibold text-stone-800 dark:text-stone-100">Trạng Thái</h2>
               <div className="space-y-3">
                 <Controller
                   control={control}
@@ -543,10 +534,8 @@ export function ProductForm({ initial, mode }: ProductFormProps) {
 
             {mode === 'edit' && initial && (
               <Card className="p-5">
-                <h2 className="font-semibold text-stone-800 dark:text-stone-100 mb-2">
-                  Thông tin
-                </h2>
-                <dl className="text-sm space-y-1 text-stone-600 dark:text-stone-400">
+                <h2 className="mb-2 font-semibold text-stone-800 dark:text-stone-100">Thông tin</h2>
+                <dl className="space-y-1 text-sm text-stone-600 dark:text-stone-400">
                   <div className="flex justify-between">
                     <dt>Ngày tạo:</dt>
                     <dd className="font-medium">{initial.createdAt}</dd>
@@ -557,7 +546,9 @@ export function ProductForm({ initial, mode }: ProductFormProps) {
                   </div>
                   <div className="flex justify-between">
                     <dt>Đánh giá:</dt>
-                    <dd className="font-medium">{initial.rating} ⭐ ({initial.reviewCount})</dd>
+                    <dd className="font-medium">
+                      {initial.rating} ⭐ ({initial.reviewCount})
+                    </dd>
                   </div>
                 </dl>
                 <Button
@@ -565,7 +556,7 @@ export function ProductForm({ initial, mode }: ProductFormProps) {
                   variant="danger"
                   fullWidth
                   className="mt-4"
-                  leftIcon={<Trash2 className="w-4 h-4" />}
+                  leftIcon={<Trash2 className="h-4 w-4" />}
                   onClick={handleDelete}
                 >
                   Xóa sản phẩm
@@ -588,11 +579,11 @@ interface ToggleFieldProps {
 
 function ToggleField({ label, description, checked, onChange }: ToggleFieldProps) {
   return (
-    <label className="flex items-start justify-between gap-3 cursor-pointer p-2 rounded-lg hover:bg-stone-50 dark:hover:bg-zinc-700/40">
-      <div className="flex-1 min-w-0">
+    <label className="flex cursor-pointer items-start justify-between gap-3 rounded-lg p-2 hover:bg-stone-50 dark:hover:bg-zinc-700/40">
+      <div className="min-w-0 flex-1">
         <p className="text-sm font-medium text-stone-800 dark:text-stone-100">{label}</p>
         {description && (
-          <p className="text-xs text-stone-500 dark:text-stone-400 mt-0.5">{description}</p>
+          <p className="mt-0.5 text-xs text-stone-500 dark:text-stone-400">{description}</p>
         )}
       </div>
       <button
@@ -608,7 +599,7 @@ function ToggleField({ label, description, checked, onChange }: ToggleFieldProps
         }`}
       >
         <span
-          className={`inline-block h-5 w-5 transform rounded-full bg-white shadow transition-transform mt-0.5 ${
+          className={`mt-0.5 inline-block h-5 w-5 transform rounded-full bg-white shadow transition-transform ${
             checked ? 'translate-x-5' : 'translate-x-0.5'
           }`}
         />

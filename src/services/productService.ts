@@ -4,8 +4,7 @@ import { products as mockProducts, getProductById, getProductBySlug } from '../d
 export type ProductFilters = FilterOptions;
 export type SortOption = FilterOptions['sortBy'];
 
-const simulateDelay = (ms: number = 300) =>
-  new Promise((resolve) => setTimeout(resolve, ms));
+const simulateDelay = (ms: number = 300) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const filterAndSort = (items: Product[], filters?: FilterOptions): Product[] => {
   let result = [...items];
@@ -17,7 +16,7 @@ const filterAndSort = (items: Product[], filters?: FilterOptions): Product[] => 
         p.name.toLowerCase().includes(query) ||
         p.description.toLowerCase().includes(query) ||
         p.tags.some((t) => t.toLowerCase().includes(query)) ||
-        p.origin.toLowerCase().includes(query),
+        p.origin.toLowerCase().includes(query)
     );
   }
 

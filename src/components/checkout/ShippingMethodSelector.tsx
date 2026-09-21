@@ -18,7 +18,7 @@ export const SHIPPING_OPTIONS: ShippingOption[] = [
     description: 'Giao hàng trong 2-3 ngày làm việc',
     price: 25000,
     estimatedDays: '2-3 ngày',
-    icon: <Truck className="w-5 h-5" />,
+    icon: <Truck className="h-5 w-5" />,
   },
   {
     id: 'EXPRESS',
@@ -26,7 +26,7 @@ export const SHIPPING_OPTIONS: ShippingOption[] = [
     description: 'Giao hàng trong 1 ngày làm việc',
     price: 50000,
     estimatedDays: '1 ngày',
-    icon: <Zap className="w-5 h-5" />,
+    icon: <Zap className="h-5 w-5" />,
   },
   {
     id: 'SAME_DAY',
@@ -34,7 +34,7 @@ export const SHIPPING_OPTIONS: ShippingOption[] = [
     description: 'Chỉ áp dụng tại TP. Hồ Chí Minh',
     price: 80000,
     estimatedDays: 'Trong ngày',
-    icon: <Bike className="w-5 h-5" />,
+    icon: <Bike className="h-5 w-5" />,
   },
 ];
 
@@ -65,14 +65,11 @@ export function ShippingMethodSelector({
         return (
           <label
             key={option.id}
-            className={`
-              flex items-center gap-3 p-3 rounded-lg border-2 cursor-pointer
-              transition-all duration-200
-              ${isSelected
-                ? 'border-amber-600 bg-amber-50 dark:bg-amber-900/20 dark:border-amber-500'
-                : 'border-stone-200 dark:border-zinc-700 hover:border-amber-300 dark:hover:border-amber-700'
-              }
-            `}
+            className={`flex cursor-pointer items-center gap-3 rounded-lg border-2 p-3 transition-all duration-200 ${
+              isSelected
+                ? 'border-amber-600 bg-amber-50 dark:border-amber-500 dark:bg-amber-900/20'
+                : 'border-stone-200 hover:border-amber-300 dark:border-zinc-700 dark:hover:border-amber-700'
+            } `}
           >
             <input
               type="radio"
@@ -83,36 +80,27 @@ export function ShippingMethodSelector({
               className="sr-only"
             />
             <div
-              className={`
-                flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center
-                ${isSelected
+              className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full ${
+                isSelected
                   ? 'bg-amber-600 text-white'
                   : 'bg-stone-100 text-stone-600 dark:bg-zinc-700 dark:text-stone-300'
-                }
-              `}
+              } `}
             >
               {option.icon}
             </div>
-            <div className="flex-1 min-w-0">
+            <div className="min-w-0 flex-1">
               <div className="flex items-center justify-between gap-2">
-                <p className="font-medium text-stone-800 dark:text-stone-100">
-                  {option.label}
-                </p>
-                <p className="font-semibold text-amber-700 dark:text-amber-500 whitespace-nowrap">
+                <p className="font-medium text-stone-800 dark:text-stone-100">{option.label}</p>
+                <p className="whitespace-nowrap font-semibold text-amber-700 dark:text-amber-500">
                   {formatCurrency(option.price)}
                 </p>
               </div>
-              <p className="text-sm text-stone-500 dark:text-stone-400">
-                {option.description}
-              </p>
+              <p className="text-sm text-stone-500 dark:text-stone-400">{option.description}</p>
             </div>
             <div
-              className={`
-                flex-shrink-0 w-5 h-5 rounded-full border-2 flex items-center justify-center
-                ${isSelected ? 'border-amber-600' : 'border-stone-300 dark:border-zinc-600'}
-              `}
+              className={`flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full border-2 ${isSelected ? 'border-amber-600' : 'border-stone-300 dark:border-zinc-600'} `}
             >
-              {isSelected && <div className="w-2.5 h-2.5 rounded-full bg-amber-600" />}
+              {isSelected && <div className="h-2.5 w-2.5 rounded-full bg-amber-600" />}
             </div>
           </label>
         );

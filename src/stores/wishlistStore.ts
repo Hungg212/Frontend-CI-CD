@@ -24,10 +24,7 @@ export const useWishlistStore = create<WishlistState>()(
         if (exists) return;
 
         set({
-          items: [
-            ...get().items,
-            { product, addedAt: new Date().toISOString() },
-          ],
+          items: [...get().items, { product, addedAt: new Date().toISOString() }],
         });
       },
 
@@ -62,6 +59,6 @@ export const useWishlistStore = create<WishlistState>()(
     {
       name: 'coffee-wishlist',
       storage: createJSONStorage(() => localStorage),
-    },
-  ),
+    }
+  )
 );

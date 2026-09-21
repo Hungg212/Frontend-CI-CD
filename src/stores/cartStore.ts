@@ -26,10 +26,7 @@ interface CartStore {
   appliedCoupon: Coupon | null;
   discount: number;
   note: string;
-  addItem: (
-    item: Omit<CartLineItem, 'quantity'>,
-    quantity?: number,
-  ) => void;
+  addItem: (item: Omit<CartLineItem, 'quantity'>, quantity?: number) => void;
   addProduct: (product: Product, quantity?: number) => void;
   removeItem: (id: string) => void;
   removeProduct: (productId: string) => void;
@@ -47,8 +44,7 @@ interface CartStore {
   getTotalPrice: () => number;
 }
 
-const findCouponByCode = (code: string): Coupon | undefined =>
-  getCouponByCode(code);
+const findCouponByCode = (code: string): Coupon | undefined => getCouponByCode(code);
 
 const recalcDiscount = (items: CartLineItem[], coupon: Coupon | null): number => {
   if (!coupon) return 0;
@@ -76,7 +72,7 @@ export const useCartStore = create<CartStore>()(
           let nextItems: CartLineItem[];
           if (existing) {
             nextItems = state.items.map((i) =>
-              i.id === item.id ? { ...i, quantity: i.quantity + quantity } : i,
+              i.id === item.id ? { ...i, quantity: i.quantity + quantity } : i
             );
           } else {
             nextItems = [...state.items, { ...item, quantity }];
@@ -126,9 +122,7 @@ export const useCartStore = create<CartStore>()(
           return;
         }
         set((state) => {
-          const nextItems = state.items.map((i) =>
-            i.id === id ? { ...i, quantity } : i,
-          );
+          const nextItems = state.items.map((i) => (i.id === id ? { ...i, quantity } : i));
           return {
             items: nextItems,
             discount: recalcDiscount(nextItems, state.coupon),
@@ -139,7 +133,8 @@ export const useCartStore = create<CartStore>()(
       clearCart: () => set({ items: [], coupon: null, appliedCoupon: null, discount: 0, note: '' }),
 
       applyCoupon: (codeOrCoupon) => {
-        const coupon = typeof codeOrCoupon === 'string' ? findCouponByCode(codeOrCoupon) : codeOrCoupon;
+        const coupon =
+          typeof codeOrCoupon === 'string' ? findCouponByCode(codeOrCoupon) : codeOrCoupon;
         if (!coupon) return { success: false, message: 'Mã giảm giá không tồn tại' };
         const subtotal = get().getSubtotal();
         if (subtotal < coupon.minOrderValue) {
@@ -157,8 +152,7 @@ export const useCartStore = create<CartStore>()(
 
       setNote: (note) => set({ note }),
 
-      getSubtotal: () =>
-        get().items.reduce((sum, i) => sum + i.price * i.quantity, 0),
+      getSubtotal: () => get().items.reduce((sum, i) => sum + i.price * i.quantity, 0),
 
       getDiscountAmount: () => get().discount,
 
@@ -182,6 +176,6 @@ export const useCartStore = create<CartStore>()(
     {
       name: 'coffee-cart',
       storage: createJSONStorage(() => localStorage),
-    },
-  ),
+    }
+  )
 );

@@ -63,15 +63,14 @@ const initialProducts: Product[] = [
     id: 'p-1',
     name: 'Cà Phê Arabica Cầu Đất',
     slug: 'ca-phe-arabica-cau-dat',
-    description: 'Cà phê Arabica Cầu Đất được trồng tại độ cao 1.500-1.900m, hương vị chua thanh, hậu ngọt tự nhiên.',
+    description:
+      'Cà phê Arabica Cầu Đất được trồng tại độ cao 1.500-1.900m, hương vị chua thanh, hậu ngọt tự nhiên.',
     shortDescription: 'Hạt Arabica Cầu Đất chất lượng cao',
     price: 285000,
     salePrice: 250000,
     category: 'Cà Phê Hạt',
     categorySlug: 'ca-phe-hat',
-    images: [
-      'https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=400&h=400&fit=crop',
-    ],
+    images: ['https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=400&h=400&fit=crop'],
     rating: 4.8,
     reviewCount: 234,
     stock: 156,
@@ -92,14 +91,13 @@ const initialProducts: Product[] = [
     id: 'p-2',
     name: 'Cà Phê Robusta Buôn Ma Thuột',
     slug: 'ca-phe-robusta-buon-ma-thuot',
-    description: 'Cà phê Robusta Buôn Ma Thuột nổi tiếng với hàm lượng caffeine cao, vị đắng đậm đà.',
+    description:
+      'Cà phê Robusta Buôn Ma Thuột nổi tiếng với hàm lượng caffeine cao, vị đắng đậm đà.',
     shortDescription: 'Robusta Buôn Ma Thuột đắng đậm',
     price: 145000,
     category: 'Cà Phê Hạt',
     categorySlug: 'ca-phe-hat',
-    images: [
-      'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=400&h=400&fit=crop',
-    ],
+    images: ['https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=400&h=400&fit=crop'],
     rating: 4.6,
     reviewCount: 189,
     stock: 234,
@@ -126,9 +124,7 @@ const initialProducts: Product[] = [
     salePrice: 280000,
     category: 'Cà Phê Hạt',
     categorySlug: 'ca-phe-hat',
-    images: [
-      'https://images.unsplash.com/photo-1497935586351-b67a49e012bf?w=400&h=400&fit=crop',
-    ],
+    images: ['https://images.unsplash.com/photo-1497935586351-b67a49e012bf?w=400&h=400&fit=crop'],
     rating: 4.9,
     reviewCount: 156,
     stock: 78,
@@ -155,9 +151,7 @@ const initialProducts: Product[] = [
     salePrice: 380000,
     category: 'Cà Phê Hữu Cơ',
     categorySlug: 'ca-phe-huu-co',
-    images: [
-      'https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=400&h=400&fit=crop',
-    ],
+    images: ['https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=400&h=400&fit=crop'],
     rating: 4.7,
     reviewCount: 98,
     stock: 45,
@@ -183,9 +177,7 @@ const initialProducts: Product[] = [
     price: 265000,
     category: 'Cà Phê Blend',
     categorySlug: 'ca-phe-blend',
-    images: [
-      'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=400&h=400&fit=crop',
-    ],
+    images: ['https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=400&h=400&fit=crop'],
     rating: 4.5,
     reviewCount: 312,
     stock: 189,
@@ -212,9 +204,7 @@ const initialProducts: Product[] = [
     salePrice: 165000,
     category: 'Cà Phê Bột',
     categorySlug: 'ca-phe-bot',
-    images: [
-      'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=400&h=400&fit=crop',
-    ],
+    images: ['https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=400&h=400&fit=crop'],
     rating: 4.6,
     reviewCount: 445,
     stock: 267,
@@ -240,9 +230,7 @@ const initialProducts: Product[] = [
     price: 350000,
     category: 'Cà Phê Pha Máy',
     categorySlug: 'ca-phe-pha-may',
-    images: [
-      'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=400&h=400&fit=crop',
-    ],
+    images: ['https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=400&h=400&fit=crop'],
     rating: 4.4,
     reviewCount: 178,
     stock: 123,
@@ -269,9 +257,7 @@ const initialProducts: Product[] = [
     salePrice: 350000,
     category: 'Cà Phê Hạt',
     categorySlug: 'ca-phe-hat',
-    images: [
-      'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400&h=400&fit=crop',
-    ],
+    images: ['https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400&h=400&fit=crop'],
     rating: 4.8,
     reviewCount: 87,
     stock: 56,
@@ -307,8 +293,7 @@ export const useAdminStore = create<AdminState>((set) => ({
     set((s) => ({
       categories: s.categories.map((c) => (c.id === id ? { ...c, ...data } : c)),
     })),
-  deleteCategory: (id) =>
-    set((s) => ({ categories: s.categories.filter((c) => c.id !== id) })),
+  deleteCategory: (id) => set((s) => ({ categories: s.categories.filter((c) => c.id !== id) })),
 
   orders: mockAdminOrders,
   updateOrderStatus: (id, status, note) =>
@@ -326,7 +311,9 @@ export const useAdminStore = create<AdminState>((set) => ({
     })),
   updatePaymentStatus: (id, status) =>
     set((s) => ({
-      orders: s.orders.map((o) => (o.id === id ? { ...o, paymentStatus: status, updatedAt: now() } : o)),
+      orders: s.orders.map((o) =>
+        o.id === id ? { ...o, paymentStatus: status, updatedAt: now() } : o
+      ),
     })),
 
   customers: mockAdminCustomers,

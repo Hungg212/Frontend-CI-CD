@@ -12,21 +12,11 @@ export const addressSchema = z.object({
     .min(2, 'Họ tên phải có ít nhất 2 ký tự')
     .max(50, 'Họ tên không quá 50 ký tự')
     .regex(/^[a-zA-ZÀ-ỹ\s]+$/, 'Họ tên chỉ chứa chữ cái và khoảng trắng'),
-  phone: z
-    .string()
-    .regex(vietnamesePhoneRegex, 'Số điện thoại không hợp lệ (VD: 0901234567)'),
-  email: z
-    .string()
-    .email('Email không hợp lệ'),
-  province: z
-    .string()
-    .min(1, 'Vui lòng chọn tỉnh / thành phố'),
-  district: z
-    .string()
-    .min(1, 'Vui lòng chọn quận / huyện'),
-  ward: z
-    .string()
-    .min(1, 'Vui lòng chọn phường / xã'),
+  phone: z.string().regex(vietnamesePhoneRegex, 'Số điện thoại không hợp lệ (VD: 0901234567)'),
+  email: z.string().email('Email không hợp lệ'),
+  province: z.string().min(1, 'Vui lòng chọn tỉnh / thành phố'),
+  district: z.string().min(1, 'Vui lòng chọn quận / huyện'),
+  ward: z.string().min(1, 'Vui lòng chọn phường / xã'),
   detail: z
     .string()
     .min(5, 'Địa chỉ chi tiết phải có ít nhất 5 ký tự')
@@ -47,11 +37,7 @@ export const checkoutSchema = z.object({
   paymentMethod: z.enum(PAYMENT_METHODS, {
     errorMap: () => ({ message: 'Vui lòng chọn phương thức thanh toán' }),
   }),
-  note: z
-    .string()
-    .max(500, 'Ghi chú không quá 500 ký tự')
-    .optional()
-    .or(z.literal('')),
+  note: z.string().max(500, 'Ghi chú không quá 500 ký tự').optional().or(z.literal('')),
   saveAddress: z.boolean().optional(),
   differentBillingAddress: z.boolean().optional(),
 });
@@ -60,10 +46,7 @@ export type CheckoutFormData = z.infer<typeof checkoutSchema>;
 export type AddressFormValues = z.infer<typeof addressSchema>;
 
 export const reviewSchema = z.object({
-  rating: z
-    .number()
-    .min(1, 'Vui lòng chọn số sao')
-    .max(5, 'Số sao tối đa là 5'),
+  rating: z.number().min(1, 'Vui lòng chọn số sao').max(5, 'Số sao tối đa là 5'),
   comment: z
     .string()
     .min(10, 'Nhận xét phải có ít nhất 10 ký tự')

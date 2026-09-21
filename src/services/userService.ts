@@ -2,8 +2,7 @@ import type { User, RegisterData, UpdateProfileData } from '../types';
 import { DEMO_USERS } from '../data/users';
 import { generateId } from '../utils/formatters';
 
-const simulateDelay = (ms: number = 400) =>
-  new Promise((resolve) => setTimeout(resolve, ms));
+const simulateDelay = (ms: number = 400) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export const userService = {
   async login(email: string, password: string): Promise<User> {

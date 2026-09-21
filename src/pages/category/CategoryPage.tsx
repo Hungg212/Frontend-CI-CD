@@ -10,10 +10,8 @@ export default function CategoryPage() {
 
   return (
     <div className="container mx-auto px-4 py-10 lg:px-8">
-      <h1 className="font-display text-3xl font-bold">
-        {category?.name ?? slug}
-      </h1>
-      <p className="mt-2 mb-8 text-coffee-700 dark:text-cream-300">
+      <h1 className="font-display text-3xl font-bold">{category?.name ?? slug}</h1>
+      <p className="mb-8 mt-2 text-coffee-700 dark:text-cream-300">
         {filtered.length} {filtered.length === 1 ? 'product' : 'products'}
       </p>
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">

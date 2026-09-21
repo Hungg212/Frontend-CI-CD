@@ -64,14 +64,12 @@ describe('orderStore', () => {
   describe('createOrder', () => {
     it('should create a new order with correct data', () => {
       const { result } = renderHook(() => useOrderStore());
-      
+
       const initialOrderCount = result.current.orders.length;
-      
+
       act(() => {
         result.current.createOrder({
-          items: [
-            { product: mockProduct, quantity: 2 },
-          ],
+          items: [{ product: mockProduct, quantity: 2 }],
           shippingAddress: mockAddress,
           paymentMethod: 'COD',
         });
@@ -86,7 +84,7 @@ describe('orderStore', () => {
 
     it('should calculate subtotal correctly', () => {
       const { result } = renderHook(() => useOrderStore());
-      
+
       act(() => {
         result.current.createOrder({
           items: [
@@ -104,7 +102,7 @@ describe('orderStore', () => {
 
     it('should set correct shipping fee based on subtotal', () => {
       const { result } = renderHook(() => useOrderStore());
-      
+
       // Order < 500000 should have shipping fee
       act(() => {
         result.current.createOrder({
@@ -134,7 +132,7 @@ describe('orderStore', () => {
 
     it('should generate order number with correct format', () => {
       const { result } = renderHook(() => useOrderStore());
-      
+
       act(() => {
         result.current.createOrder({
           items: [{ product: mockProduct, quantity: 1 }],
@@ -149,7 +147,7 @@ describe('orderStore', () => {
 
     it('should create order with initial timeline entry', () => {
       const { result } = renderHook(() => useOrderStore());
-      
+
       act(() => {
         result.current.createOrder({
           items: [{ product: mockProduct, quantity: 1 }],
@@ -166,16 +164,16 @@ describe('orderStore', () => {
 
     it('should set currentOrder after creation', () => {
       const { result } = renderHook(() => useOrderStore());
-      
+
       // Create order and verify it returns correct order
-      let createdOrder: Order | null = null;
-      
+      let createdOrder: Order | undefined;
+
       act(() => {
         createdOrder = result.current.createOrder({
           items: [{ product: mockProduct, quantity: 1 }],
           shippingAddress: mockAddress,
           paymentMethod: 'COD',
-        });
+        }) as Order;
       });
 
       // The createOrder function returns the created order
@@ -188,9 +186,9 @@ describe('orderStore', () => {
   describe('cancelOrder', () => {
     it('should cancel a pending order', () => {
       const { result } = renderHook(() => useOrderStore());
-      
+
       let createdOrderId = '';
-      
+
       act(() => {
         const order = result.current.createOrder({
           items: [{ product: mockProduct, quantity: 1 }],
@@ -201,7 +199,10 @@ describe('orderStore', () => {
       });
 
       act(() => {
-        const cancelled = result.current.cancelOrder(createdOrderId, 'Customer requested cancellation');
+        const cancelled = result.current.cancelOrder(
+          createdOrderId,
+          'Customer requested cancellation'
+        );
         expect(cancelled).not.toBeNull();
         expect(cancelled?.status).toBe('CANCELLED');
       });
@@ -214,12 +215,14 @@ describe('orderStore', () => {
 
     it('should refund if payment was made', () => {
       const { result } = renderHook(() => useOrderStore());
-      
+
       // Create order with PAID payment status directly
       const paidOrder: Order = {
         id: generateId('order'),
         orderNumber: generateOrderNumber(),
-        items: [{ product: mockProduct, quantity: 1, price: mockProduct.salePrice || mockProduct.price }],
+        items: [
+          { product: mockProduct, quantity: 1, price: mockProduct.salePrice || mockProduct.price },
+        ],
         subtotal: 200000,
         shippingFee: 30000,
         discount: 0,
@@ -230,7 +233,9 @@ describe('orderStore', () => {
         shippingAddress: mockAddress,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
-        timeline: [{ status: 'PENDING', timestamp: new Date().toISOString(), note: 'Đơn hàng được tạo' }],
+        timeline: [
+          { status: 'PENDING', timestamp: new Date().toISOString(), note: 'Đơn hàng được tạo' },
+        ],
       };
 
       act(() => {
@@ -246,10 +251,10 @@ describe('orderStore', () => {
 
     it('should not cancel a delivered order', () => {
       const { result } = renderHook(() => useOrderStore());
-      
+
       // Get an existing delivered order from initial orders
-      const deliveredOrder = result.current.orders.find(o => o.status === 'DELIVERED');
-      
+      const deliveredOrder = result.current.orders.find((o) => o.status === 'DELIVERED');
+
       if (deliveredOrder) {
         act(() => {
           const result_1 = result.current.cancelOrder(deliveredOrder.id);
@@ -260,10 +265,10 @@ describe('orderStore', () => {
 
     it('should not cancel an already cancelled order', () => {
       const { result } = renderHook(() => useOrderStore());
-      
+
       // Get an existing cancelled order from initial orders
-      const cancelledOrder = result.current.orders.find(o => o.status === 'CANCELLED');
-      
+      const cancelledOrder = result.current.orders.find((o) => o.status === 'CANCELLED');
+
       if (cancelledOrder) {
         const originalTimelineLength = cancelledOrder.timeline.length;
         act(() => {
@@ -277,7 +282,7 @@ describe('orderStore', () => {
 
     it('should return null for non-existent order', () => {
       const { result } = renderHook(() => useOrderStore());
-      
+
       act(() => {
         const result_1 = result.current.cancelOrder('non-existent-id');
         expect(result_1).toBeNull();
@@ -288,7 +293,7 @@ describe('orderStore', () => {
   describe('getOrders', () => {
     it('should get order by id', () => {
       const { result } = renderHook(() => useOrderStore());
-      
+
       act(() => {
         result.current.createOrder({
           items: [{ product: mockProduct, quantity: 1 }],
@@ -304,14 +309,14 @@ describe('orderStore', () => {
 
     it('should return undefined for non-existent order id', () => {
       const { result } = renderHook(() => useOrderStore());
-      
+
       const foundOrder = result.current.getOrderById('non-existent-id');
       expect(foundOrder).toBeUndefined();
     });
 
     it('should get orders by user phone', () => {
       const { result } = renderHook(() => useOrderStore());
-      
+
       act(() => {
         result.current.createOrder({
           items: [{ product: mockProduct, quantity: 1 }],
@@ -328,9 +333,9 @@ describe('orderStore', () => {
   describe('updateOrderStatus', () => {
     it('should update order status with timeline entry', () => {
       const { result } = renderHook(() => useOrderStore());
-      
+
       let createdOrderId = '';
-      
+
       act(() => {
         const order = result.current.createOrder({
           items: [{ product: mockProduct, quantity: 1 }],
@@ -352,9 +357,9 @@ describe('orderStore', () => {
 
     it('should update payment status to PAID when COD order is delivered', () => {
       const { result } = renderHook(() => useOrderStore());
-      
+
       let createdOrderId = '';
-      
+
       act(() => {
         const order = result.current.createOrder({
           items: [{ product: mockProduct, quantity: 1 }],
@@ -376,9 +381,9 @@ describe('orderStore', () => {
   describe('addReview', () => {
     it('should add a review to an order item', () => {
       const { result } = renderHook(() => useOrderStore());
-      
+
       let createdOrderId = '';
-      
+
       act(() => {
         const order = result.current.createOrder({
           items: [{ product: mockProduct, quantity: 1 }],
@@ -397,7 +402,7 @@ describe('orderStore', () => {
       });
 
       const updatedOrder = result.current.getOrderById(createdOrderId);
-      const itemWithReview = updatedOrder?.items.find(i => i.product.id === mockProduct.id);
+      const itemWithReview = updatedOrder?.items.find((i) => i.product.id === mockProduct.id);
       expect(itemWithReview?.review).toBeDefined();
       expect(itemWithReview?.review?.rating).toBe(5);
       expect(itemWithReview?.review?.comment).toBe('Sản phẩm rất ngon!');
@@ -405,7 +410,7 @@ describe('orderStore', () => {
 
     it('should return null for non-existent order', () => {
       const { result } = renderHook(() => useOrderStore());
-      
+
       act(() => {
         const review = result.current.addReview('non-existent-id', {
           productId: mockProduct.id,
@@ -420,9 +425,9 @@ describe('orderStore', () => {
   describe('setCurrentOrder', () => {
     it('should set current order', () => {
       const { result } = renderHook(() => useOrderStore());
-      
+
       const order = result.current.orders[0];
-      
+
       act(() => {
         result.current.setCurrentOrder(order);
       });
@@ -432,9 +437,9 @@ describe('orderStore', () => {
 
     it('should clear current order', () => {
       const { result } = renderHook(() => useOrderStore());
-      
+
       const order = result.current.orders[0];
-      
+
       act(() => {
         result.current.setCurrentOrder(order);
         result.current.setCurrentOrder(null);
@@ -447,9 +452,9 @@ describe('orderStore', () => {
   describe('resetOrders', () => {
     it('should reset orders to initial state', () => {
       const { result } = renderHook(() => useOrderStore());
-      
+
       const initialOrderCount = result.current.orders.length;
-      
+
       act(() => {
         result.current.createOrder({
           items: [{ product: mockProduct, quantity: 1 }],
@@ -459,7 +464,7 @@ describe('orderStore', () => {
       });
 
       expect(result.current.orders.length).toBe(initialOrderCount + 1);
-      
+
       act(() => {
         result.current.resetOrders();
       });

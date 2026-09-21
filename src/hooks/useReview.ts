@@ -4,12 +4,17 @@ import { reviewSchema } from '@/utils/checkoutSchema';
 import type { Review, CreateReviewData } from '@/types';
 
 export interface UseReviewReturn {
-  submitReview: (data: CreateReviewData) => Promise<{ success: boolean; message: string; review?: Review }>;
+  submitReview: (
+    data: CreateReviewData
+  ) => Promise<{ success: boolean; message: string; review?: Review }>;
   isSubmitting: boolean;
   error: string | null;
 }
 
-export function useReview(userId: string = 'user-001', userName: string = 'Nguyễn Văn A'): UseReviewReturn {
+export function useReview(
+  userId: string = 'user-001',
+  userName: string = 'Nguyễn Văn A'
+): UseReviewReturn {
   const addReviewStore = useOrderStore((s) => s.addReview);
 
   const [isSubmitting, setIsSubmitting] = useState(false);

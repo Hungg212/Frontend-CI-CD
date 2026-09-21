@@ -41,10 +41,18 @@ const LoginPage: React.FC = () => {
   const onSubmit = async (data: LoginData) => {
     const result = await login(data.email, data.password);
     if (result.success) {
-      pushNotification({ type: 'success', title: 'Đăng nhập thành công', message: 'Chào mừng bạn quay lại!' });
+      pushNotification({
+        type: 'success',
+        title: 'Đăng nhập thành công',
+        message: 'Chào mừng bạn quay lại!',
+      });
       navigate('/profile');
     } else {
-      pushNotification({ type: 'error', title: 'Đăng nhập thất bại', message: result.message ?? 'Lỗi đăng nhập' });
+      pushNotification({
+        type: 'error',
+        title: 'Đăng nhập thất bại',
+        message: result.message ?? 'Lỗi đăng nhập',
+      });
     }
   };
 
@@ -54,19 +62,21 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 to-stone-100 dark:from-zinc-900 dark:to-zinc-800 flex items-center justify-center py-12 px-4">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-amber-50 to-stone-100 px-4 py-12 dark:from-zinc-900 dark:to-zinc-800">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
         className="w-full max-w-md"
       >
-        <div className="text-center mb-6">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-amber-700 text-white mb-3">
-            <Coffee className="w-8 h-8" />
+        <div className="mb-6 text-center">
+          <div className="mb-3 inline-flex h-16 w-16 items-center justify-center rounded-full bg-amber-700 text-white">
+            <Coffee className="h-8 w-8" />
           </div>
-          <h1 className="text-3xl font-bold text-stone-800 dark:text-stone-100">Chào Mừng Trở Lại</h1>
-          <p className="text-stone-600 dark:text-stone-400 mt-1">Đăng nhập để tiếp tục mua sắm</p>
+          <h1 className="text-3xl font-bold text-stone-800 dark:text-stone-100">
+            Chào Mừng Trở Lại
+          </h1>
+          <p className="mt-1 text-stone-600 dark:text-stone-400">Đăng nhập để tiếp tục mua sắm</p>
         </div>
 
         <Card padding="lg">
@@ -75,7 +85,7 @@ const LoginPage: React.FC = () => {
               label="Email"
               type="email"
               placeholder="email@example.com"
-              leftIcon={<Mail className="w-4 h-4" />}
+              leftIcon={<Mail className="h-4 w-4" />}
               {...register('email')}
               error={errors.email?.message}
               autoComplete="email"
@@ -84,18 +94,24 @@ const LoginPage: React.FC = () => {
               label="Mật khẩu"
               type="password"
               placeholder="Nhập mật khẩu"
-              leftIcon={<Lock className="w-4 h-4" />}
+              leftIcon={<Lock className="h-4 w-4" />}
               {...register('password')}
               error={errors.password?.message}
               autoComplete="current-password"
             />
 
             <div className="flex items-center justify-between text-sm">
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" className="w-4 h-4 rounded border-stone-300 text-amber-600 focus:ring-amber-500" />
+              <label className="flex cursor-pointer items-center gap-2">
+                <input
+                  type="checkbox"
+                  className="h-4 w-4 rounded border-stone-300 text-amber-600 focus:ring-amber-500"
+                />
                 <span className="text-stone-700 dark:text-stone-300">Ghi nhớ đăng nhập</span>
               </label>
-              <Link to="/auth/forgot-password" className="text-amber-700 dark:text-amber-500 hover:underline">
+              <Link
+                to="/auth/forgot-password"
+                className="text-amber-700 hover:underline dark:text-amber-500"
+              >
                 Quên mật khẩu?
               </Link>
             </div>
@@ -107,7 +123,7 @@ const LoginPage: React.FC = () => {
               fullWidth
               isLoading={isSubmitting}
               disabled={isSubmitting}
-              rightIcon={isSubmitting ? undefined : <ArrowRight className="w-4 h-4" />}
+              rightIcon={isSubmitting ? undefined : <ArrowRight className="h-4 w-4" />}
             >
               {isSubmitting ? 'Đang đăng nhập...' : 'Đăng Nhập'}
             </Button>
@@ -117,7 +133,7 @@ const LoginPage: React.FC = () => {
             <button
               type="button"
               onClick={() => setShowHint(!showHint)}
-              className="text-xs text-stone-500 dark:text-stone-400 hover:text-amber-700 dark:hover:text-amber-500"
+              className="text-xs text-stone-500 hover:text-amber-700 dark:text-stone-400 dark:hover:text-amber-500"
             >
               {showHint ? 'Ẩn' : 'Hiển thị'} tài khoản demo
             </button>
@@ -126,35 +142,48 @@ const LoginPage: React.FC = () => {
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
                 exit={{ opacity: 0, height: 0 }}
-                className="mt-2 p-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg space-y-1.5"
+                className="mt-2 space-y-1.5 rounded-lg border border-amber-200 bg-amber-50 p-3 dark:border-amber-800 dark:bg-amber-900/20"
               >
                 {DEMO_ACCOUNTS.map((acc) => (
                   <button
                     key={acc.email}
                     type="button"
                     onClick={() => fillDemo(acc.email, acc.password)}
-                    className="w-full text-left text-xs p-2 hover:bg-amber-100 dark:hover:bg-amber-900/40 rounded transition-colors"
+                    className="w-full rounded p-2 text-left text-xs transition-colors hover:bg-amber-100 dark:hover:bg-amber-900/40"
                   >
-                    <span className="font-semibold text-amber-800 dark:text-amber-300">{acc.label}:</span>{' '}
-                    <span className="font-mono text-amber-700 dark:text-amber-400">{acc.email} / {acc.password}</span>
+                    <span className="font-semibold text-amber-800 dark:text-amber-300">
+                      {acc.label}:
+                    </span>{' '}
+                    <span className="font-mono text-amber-700 dark:text-amber-400">
+                      {acc.email} / {acc.password}
+                    </span>
                   </button>
                 ))}
               </motion.div>
             )}
           </div>
 
-          <div className="mt-6 pt-4 border-t border-stone-200 dark:border-zinc-700 text-center text-sm text-stone-600 dark:text-stone-400">
+          <div className="mt-6 border-t border-stone-200 pt-4 text-center text-sm text-stone-600 dark:border-zinc-700 dark:text-stone-400">
             Chưa có tài khoản?{' '}
-            <Link to="/auth/register" className="text-amber-700 dark:text-amber-500 hover:underline font-medium">
+            <Link
+              to="/auth/register"
+              className="font-medium text-amber-700 hover:underline dark:text-amber-500"
+            >
               Đăng ký ngay
             </Link>
           </div>
         </Card>
 
-        <p className="text-center text-xs text-stone-500 dark:text-stone-400 mt-6">
+        <p className="mt-6 text-center text-xs text-stone-500 dark:text-stone-400">
           Bằng việc đăng nhập, bạn đồng ý với{' '}
-          <Link to="/terms" className="hover:underline">Điều khoản</Link> và{' '}
-          <Link to="/privacy" className="hover:underline">Chính sách</Link> của chúng tôi.
+          <Link to="/terms" className="hover:underline">
+            Điều khoản
+          </Link>{' '}
+          và{' '}
+          <Link to="/privacy" className="hover:underline">
+            Chính sách
+          </Link>{' '}
+          của chúng tôi.
         </p>
       </motion.div>
     </div>

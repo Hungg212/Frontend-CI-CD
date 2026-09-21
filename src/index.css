@@ -9,7 +9,7 @@
   }
 
   body {
-    @apply bg-cream-50 text-coffee-900 font-body;
+    @apply bg-cream-50 font-body text-coffee-900;
   }
 
   h1,

@@ -20,7 +20,10 @@ interface AuthStore {
   isAuthenticated: boolean;
   isLoading: boolean;
   error: string | null;
-  login: (email: string, password: string) => Promise<{ success: boolean; message?: string; user?: User }>;
+  login: (
+    email: string,
+    password: string
+  ) => Promise<{ success: boolean; message?: string; user?: User }>;
   register: (data: RegisterData) => Promise<{ success: boolean; message?: string; user?: User }>;
   logout: () => void;
   updateUser: (updates: Partial<User>) => void;
@@ -34,7 +37,7 @@ interface AuthStore {
 const simulateDelay = (ms = 500) => new Promise((r) => setTimeout(r, ms));
 
 export const useAuthStore = create<AuthStore>()(
-    persist(
+  persist(
     (set, _get) => ({
       user: null,
       isAuthenticated: false,
@@ -107,7 +110,7 @@ export const useAuthStore = create<AuthStore>()(
             ? {
                 ...state.user,
                 addresses: state.user.addresses.map((a) =>
-                  a.id === id ? { ...a, ...address } : a,
+                  a.id === id ? { ...a, ...address } : a
                 ),
               }
             : null,
@@ -135,6 +138,6 @@ export const useAuthStore = create<AuthStore>()(
     }),
     {
       name: 'coffee-auth',
-    },
-  ),
+    }
+  )
 );

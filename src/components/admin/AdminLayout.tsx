@@ -20,23 +20,15 @@ export function AdminLayout({ title, subtitle, children }: AdminLayoutProps) {
       </div>
 
       {mobileOpen && (
-        <div className="lg:hidden fixed inset-0 z-50">
-          <div
-            className="absolute inset-0 bg-black/50"
-            onClick={() => setMobileOpen(false)}
-          />
-          <div className="absolute left-0 top-0 bottom-0">
+        <div className="fixed inset-0 z-50 lg:hidden">
+          <div className="absolute inset-0 bg-black/50" onClick={() => setMobileOpen(false)} />
+          <div className="absolute bottom-0 left-0 top-0">
             <AdminSidebar collapsed={false} onToggle={() => setMobileOpen(false)} />
           </div>
         </div>
       )}
 
-      <div
-        className={cn(
-          'transition-[padding] duration-300',
-          collapsed ? 'lg:pl-20' : 'lg:pl-64'
-        )}
-      >
+      <div className={cn('transition-[padding] duration-300', collapsed ? 'lg:pl-20' : 'lg:pl-64')}>
         <AdminHeader
           title={title}
           subtitle={subtitle}

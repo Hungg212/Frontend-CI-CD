@@ -30,27 +30,27 @@ export const CartItemRow: React.FC<CartItemRowProps> = ({ item }) => {
       exit={{ opacity: 0, x: -20 }}
       transition={{ duration: 0.2 }}
     >
-      <Card padding="sm" className="flex flex-col sm:flex-row gap-4 items-stretch sm:items-center">
+      <Card padding="sm" className="flex flex-col items-stretch gap-4 sm:flex-row sm:items-center">
         <Link
           to={`/product/${product.slug}`}
-          className="flex-shrink-0 w-full sm:w-24 h-24 rounded-lg overflow-hidden bg-stone-100 dark:bg-zinc-700"
+          className="h-24 w-full flex-shrink-0 overflow-hidden rounded-lg bg-stone-100 sm:w-24 dark:bg-zinc-700"
         >
           <img
             src={product.images[0]}
             alt={product.name}
             loading="lazy"
-            className="w-full h-full object-cover hover:scale-105 transition-transform"
+            className="h-full w-full object-cover transition-transform hover:scale-105"
           />
         </Link>
 
-        <div className="flex-1 min-w-0">
+        <div className="min-w-0 flex-1">
           <Link
             to={`/product/${product.slug}`}
-            className="font-semibold text-stone-800 dark:text-stone-100 hover:text-amber-700 dark:hover:text-amber-500 line-clamp-2"
+            className="line-clamp-2 font-semibold text-stone-800 hover:text-amber-700 dark:text-stone-100 dark:hover:text-amber-500"
           >
             {product.name}
           </Link>
-          <div className="mt-1 flex items-center gap-2 flex-wrap">
+          <div className="mt-1 flex flex-wrap items-center gap-2">
             <Badge variant="secondary" size="sm">
               {product.category}
             </Badge>
@@ -68,21 +68,23 @@ export const CartItemRow: React.FC<CartItemRowProps> = ({ item }) => {
           </div>
         </div>
 
-        <div className="flex sm:flex-col items-center sm:items-end justify-between gap-3 sm:gap-2 sm:text-right">
+        <div className="flex items-center justify-between gap-3 sm:flex-col sm:items-end sm:gap-2 sm:text-right">
           <QuantitySelector
             value={quantity}
             onChange={(q) => updateQuantity(item.id, q)}
             min={1}
             max={product.stock}
           />
-          <p className="font-bold text-stone-800 dark:text-stone-100">{formatCurrency(lineTotal)}</p>
+          <p className="font-bold text-stone-800 dark:text-stone-100">
+            {formatCurrency(lineTotal)}
+          </p>
           <button
             type="button"
             onClick={() => removeItem(product.id)}
-            className="inline-flex items-center gap-1 text-sm text-red-500 hover:text-red-700 transition-colors"
+            className="inline-flex items-center gap-1 text-sm text-red-500 transition-colors hover:text-red-700"
             aria-label={`Xóa ${product.name} khỏi giỏ hàng`}
           >
-            <Trash2 className="w-4 h-4" />
+            <Trash2 className="h-4 w-4" />
             Xóa
           </button>
         </div>

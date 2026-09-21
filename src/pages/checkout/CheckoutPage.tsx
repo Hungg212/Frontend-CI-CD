@@ -23,11 +23,26 @@ export default function CheckoutPage() {
           <section className="rounded-xl border border-warm-200 bg-cream-100 p-6 dark:border-coffee-800 dark:bg-coffee-900">
             <h2 className="mb-4 font-display text-xl font-semibold">Shipping address</h2>
             <div className="grid gap-4 sm:grid-cols-2">
-              <input className="rounded-md border border-warm-300 px-3 py-2 dark:border-coffee-700 dark:bg-coffee-800" placeholder="Full name" />
-              <input className="rounded-md border border-warm-300 px-3 py-2 dark:border-coffee-700 dark:bg-coffee-800" placeholder="Phone" />
-              <input className="rounded-md border border-warm-300 px-3 py-2 sm:col-span-2 dark:border-coffee-700 dark:bg-coffee-800" placeholder="Address line 1" />
-              <input className="rounded-md border border-warm-300 px-3 py-2 dark:border-coffee-700 dark:bg-coffee-800" placeholder="City" />
-              <input className="rounded-md border border-warm-300 px-3 py-2 dark:border-coffee-700 dark:bg-coffee-800" placeholder="ZIP / Postal code" />
+              <input
+                className="rounded-md border border-warm-300 px-3 py-2 dark:border-coffee-700 dark:bg-coffee-800"
+                placeholder="Full name"
+              />
+              <input
+                className="rounded-md border border-warm-300 px-3 py-2 dark:border-coffee-700 dark:bg-coffee-800"
+                placeholder="Phone"
+              />
+              <input
+                className="rounded-md border border-warm-300 px-3 py-2 sm:col-span-2 dark:border-coffee-700 dark:bg-coffee-800"
+                placeholder="Address line 1"
+              />
+              <input
+                className="rounded-md border border-warm-300 px-3 py-2 dark:border-coffee-700 dark:bg-coffee-800"
+                placeholder="City"
+              />
+              <input
+                className="rounded-md border border-warm-300 px-3 py-2 dark:border-coffee-700 dark:bg-coffee-800"
+                placeholder="ZIP / Postal code"
+              />
             </div>
           </section>
           <section className="rounded-xl border border-warm-200 bg-cream-100 p-6 dark:border-coffee-800 dark:bg-coffee-900">
@@ -42,7 +57,9 @@ export default function CheckoutPage() {
           <div className="space-y-2 border-b border-warm-200 pb-4 text-sm dark:border-coffee-800">
             {items.map((i) => (
               <div key={i.product.id} className="flex justify-between">
-                <span>{i.product.name} × {i.quantity}</span>
+                <span>
+                  {i.product.name} × {i.quantity}
+                </span>
                 <span>${(i.product.price * i.quantity).toFixed(2)}</span>
               </div>
             ))}

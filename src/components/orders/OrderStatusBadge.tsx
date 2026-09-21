@@ -6,7 +6,14 @@ export interface OrderStatusBadgeProps {
   className?: string;
 }
 
-const statusConfig: Record<OrderStatus, { label: string; variant: 'warning' | 'info' | 'default' | 'success' | 'error'; className: string }> = {
+const statusConfig: Record<
+  OrderStatus,
+  {
+    label: string;
+    variant: 'warning' | 'info' | 'default' | 'success' | 'error';
+    className: string;
+  }
+> = {
   PENDING: {
     label: 'Chờ Xác Nhận',
     variant: 'warning',
@@ -48,10 +55,10 @@ export function OrderStatusBadge({ status, className = '' }: OrderStatusBadgePro
   const config = statusConfig[status];
   return (
     <span
-      className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${config.className} ${className}`}
+      className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ${config.className} ${className}`}
       aria-label={`Trạng thái đơn hàng: ${config.label}`}
     >
-      <span className="w-1.5 h-1.5 rounded-full bg-current mr-1.5" />
+      <span className="mr-1.5 h-1.5 w-1.5 rounded-full bg-current" />
       {config.label}
     </span>
   );
@@ -85,7 +92,7 @@ export function PaymentStatusBadge({ status, className = '' }: PaymentStatusBadg
   const config = paymentConfig[status];
   return (
     <span
-      className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${config.className} ${className}`}
+      className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ${config.className} ${className}`}
       aria-label={`Trạng thái thanh toán: ${config.label}`}
     >
       {config.label}

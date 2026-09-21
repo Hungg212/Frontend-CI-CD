@@ -13,7 +13,7 @@ test.describe('Products Page', () => {
 
   test('should display product listings', async ({ page }) => {
     await page.waitForLoadState('networkidle');
-    
+
     // Check for product-related content
     const productContent = page.locator('body');
     await expect(productContent).toBeVisible();
@@ -38,17 +38,14 @@ test.describe('Products Page', () => {
     }
 
     // At minimum, page should load
-    expect(foundSearch || await page.locator('body').isVisible()).toBeTruthy();
+    expect(foundSearch || (await page.locator('body').isVisible())).toBeTruthy();
   });
 
   test('should filter by category', async ({ page }) => {
     await page.waitForLoadState('networkidle');
-    
+
     // Look for category filters or dropdown
-    const categorySelectors = [
-      page.locator('select').first(),
-      page.locator('button').first(),
-    ];
+    const categorySelectors = [page.locator('select').first(), page.locator('button').first()];
 
     let _foundFilter = false;
     for (const selector of categorySelectors) {
@@ -67,10 +64,10 @@ test.describe('Products Page', () => {
 
   test('should navigate to product detail', async ({ page }) => {
     await page.waitForLoadState('networkidle');
-    
+
     // Look for clickable product elements
     const productLinks = page.locator('a[href*="/products/"]').first();
-    
+
     try {
       await expect(productLinks).toBeVisible({ timeout: 5000 });
     } catch {
@@ -81,10 +78,10 @@ test.describe('Products Page', () => {
 
   test('should display product images', async ({ page }) => {
     await page.waitForLoadState('networkidle');
-    
+
     // Look for images
     const images = page.locator('img').first();
-    
+
     try {
       await expect(images).toBeVisible({ timeout: 5000 });
     } catch {
@@ -95,10 +92,10 @@ test.describe('Products Page', () => {
 
   test('should show pagination if products are many', async ({ page }) => {
     await page.waitForLoadState('networkidle');
-    
+
     // Look for pagination
     const pagination = page.locator('[class*="pagination"], [class*="page"]').first();
-    
+
     try {
       await expect(pagination).toBeVisible({ timeout: 3000 });
     } catch {

@@ -79,9 +79,7 @@ export const useOrderStore = create<OrderState>()(
           status,
           updatedAt: now,
           paymentStatus:
-            status === 'DELIVERED' && order.paymentMethod === 'COD'
-              ? 'PAID'
-              : order.paymentStatus,
+            status === 'DELIVERED' && order.paymentMethod === 'COD' ? 'PAID' : order.paymentStatus,
           timeline: [
             ...order.timeline,
             { status, timestamp: now, note: note || `Cập nhật trạng thái: ${status}` },
@@ -123,8 +121,7 @@ export const useOrderStore = create<OrderState>()(
 
       getOrderById: (id) => get().orders.find((o) => o.id === id),
 
-      getOrdersByUser: (userId) =>
-        get().orders.filter((o) => o.shippingAddress.phone === userId),
+      getOrdersByUser: (userId) => get().orders.filter((o) => o.shippingAddress.phone === userId),
 
       addReview: (orderId, reviewOrData) => {
         const order = get().orders.find((o) => o.id === orderId);
@@ -156,7 +153,7 @@ export const useOrderStore = create<OrderState>()(
         const updatedOrder: Order = {
           ...order,
           items: order.items.map((item) =>
-            item.product.id === newReview.productId ? { ...item, review: newReview } : item,
+            item.product.id === newReview.productId ? { ...item, review: newReview } : item
           ),
         };
 
@@ -172,6 +169,6 @@ export const useOrderStore = create<OrderState>()(
     {
       name: 'coffee-orders',
       storage: createJSONStorage(() => localStorage),
-    },
-  ),
+    }
+  )
 );

@@ -15,9 +15,7 @@ export default function ProfilePage() {
 
   return (
     <div className="container mx-auto px-4 py-10 lg:px-8">
-      <h1 className="font-display text-3xl font-bold">
-        {user?.name ?? 'My Profile'}
-      </h1>
+      <h1 className="font-display text-3xl font-bold">{user?.name ?? 'My Profile'}</h1>
       <p className="mt-1 text-coffee-700 dark:text-cream-300">
         Manage your account and preferences
       </p>
@@ -35,7 +33,7 @@ export default function ProfilePage() {
                     'flex items-center gap-2 whitespace-nowrap rounded-md px-3 py-2 text-sm font-medium transition-colors',
                     isActive
                       ? 'bg-coffee-700 text-cream-50'
-                      : 'text-coffee-700 hover:bg-cream-200 dark:text-cream-200 dark:hover:bg-coffee-800',
+                      : 'text-coffee-700 hover:bg-cream-200 dark:text-cream-200 dark:hover:bg-coffee-800'
                   )
                 }
               >

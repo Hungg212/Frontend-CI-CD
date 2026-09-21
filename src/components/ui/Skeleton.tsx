@@ -49,12 +49,7 @@ export function SkeletonText({ lines = 3, className }: { lines?: number; classNa
   return (
     <div className={cn('space-y-2', className)}>
       {Array.from({ length: lines }).map((_, i) => (
-        <Skeleton
-          key={i}
-          variant="text"
-          height={16}
-          width={i === lines - 1 ? '60%' : '100%'}
-        />
+        <Skeleton key={i} variant="text" height={16} width={i === lines - 1 ? '60%' : '100%'} />
       ))}
     </div>
   );

@@ -40,7 +40,10 @@ import {
 import { formatVND, formatCompactVND, formatDateTime } from '@/utils/adminFormat';
 import type { AdminRecentOrder } from '@/types/admin';
 
-const statusVariant: Record<AdminRecentOrder['status'], 'warning' | 'info' | 'primary' | 'success' | 'danger'> = {
+const statusVariant: Record<
+  AdminRecentOrder['status'],
+  'warning' | 'info' | 'primary' | 'success' | 'danger'
+> = {
   PENDING: 'warning',
   CONFIRMED: 'info',
   PROCESSING: 'primary',
@@ -71,7 +74,7 @@ const statsCards = [
     label: 'Tổng Doanh Thu',
     value: formatVND(mockStats.revenue),
     change: mockStats.revenueChange,
-    icon: <DollarSign className="w-6 h-6" />,
+    icon: <DollarSign className="h-6 w-6" />,
     color: 'from-amber-500 to-amber-700',
   },
   {
@@ -79,7 +82,7 @@ const statsCards = [
     label: 'Đơn Hàng',
     value: mockStats.orderCount.toLocaleString('vi-VN'),
     change: mockStats.orderCountChange,
-    icon: <ShoppingCart className="w-6 h-6" />,
+    icon: <ShoppingCart className="h-6 w-6" />,
     color: 'from-blue-500 to-blue-700',
   },
   {
@@ -87,7 +90,7 @@ const statsCards = [
     label: 'Khách Hàng',
     value: mockStats.customerCount.toLocaleString('vi-VN'),
     change: mockStats.customerCountChange,
-    icon: <Users className="w-6 h-6" />,
+    icon: <Users className="h-6 w-6" />,
     color: 'from-emerald-500 to-emerald-700',
   },
   {
@@ -95,7 +98,7 @@ const statsCards = [
     label: 'Giá Trị Đơn TB',
     value: formatVND(mockStats.averageOrderValue),
     change: mockStats.averageOrderValueChange,
-    icon: <TrendingUp className="w-6 h-6" />,
+    icon: <TrendingUp className="h-6 w-6" />,
     color: 'from-purple-500 to-purple-700',
   },
 ];
@@ -116,20 +119,22 @@ export default function AdminDashboard() {
     <AdminLayout title="Dashboard" subtitle="Tổng quan hoạt động cửa hàng">
       <div className="space-y-6">
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
           {statsCards.map((s) => (
             <Card key={s.key} className="p-5" hover>
               <div className="flex items-start justify-between">
                 <div className="min-w-0">
-                  <p className="text-sm text-stone-500 dark:text-stone-400 font-medium">{s.label}</p>
-                  <p className="text-2xl font-bold text-stone-800 dark:text-stone-100 mt-2 truncate">
+                  <p className="text-sm font-medium text-stone-500 dark:text-stone-400">
+                    {s.label}
+                  </p>
+                  <p className="mt-2 truncate text-2xl font-bold text-stone-800 dark:text-stone-100">
                     {s.value}
                   </p>
-                  <div className="flex items-center gap-1 mt-2 text-sm">
+                  <div className="mt-2 flex items-center gap-1 text-sm">
                     {s.change >= 0 ? (
-                      <TrendingUp className="w-4 h-4 text-emerald-600" />
+                      <TrendingUp className="h-4 w-4 text-emerald-600" />
                     ) : (
-                      <TrendingDown className="w-4 h-4 text-red-600" />
+                      <TrendingDown className="h-4 w-4 text-red-600" />
                     )}
                     <span
                       className={`font-semibold ${
@@ -143,7 +148,7 @@ export default function AdminDashboard() {
                   </div>
                 </div>
                 <div
-                  className={`w-12 h-12 rounded-xl bg-gradient-to-br ${s.color} text-white flex items-center justify-center flex-shrink-0 shadow-lg`}
+                  className={`h-12 w-12 rounded-xl bg-gradient-to-br ${s.color} flex flex-shrink-0 items-center justify-center text-white shadow-lg`}
                 >
                   {s.icon}
                 </div>
@@ -153,11 +158,13 @@ export default function AdminDashboard() {
         </div>
 
         {/* Charts row 1 */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
           <Card className="p-5 lg:col-span-2">
-            <div className="flex items-center justify-between mb-4">
+            <div className="mb-4 flex items-center justify-between">
               <div>
-                <h2 className="font-semibold text-stone-800 dark:text-stone-100">Doanh Thu 12 Tháng</h2>
+                <h2 className="font-semibold text-stone-800 dark:text-stone-100">
+                  Doanh Thu 12 Tháng
+                </h2>
                 <p className="text-sm text-stone-500 dark:text-stone-400">
                   Tổng doanh thu theo tháng trong năm 2026
                 </p>
@@ -165,7 +172,10 @@ export default function AdminDashboard() {
             </div>
             <div className="h-72">
               <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={mockRevenueData} margin={{ top: 5, right: 10, left: 0, bottom: 0 }}>
+                <AreaChart
+                  data={mockRevenueData}
+                  margin={{ top: 5, right: 10, left: 0, bottom: 0 }}
+                >
                   <defs>
                     <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="0%" stopColor="#b45309" stopOpacity={0.6} />
@@ -197,7 +207,9 @@ export default function AdminDashboard() {
 
           <Card className="p-5">
             <div className="mb-4">
-              <h2 className="font-semibold text-stone-800 dark:text-stone-100">Doanh Số Theo Danh Mục</h2>
+              <h2 className="font-semibold text-stone-800 dark:text-stone-100">
+                Doanh Số Theo Danh Mục
+              </h2>
               <p className="text-sm text-stone-500 dark:text-stone-400">Phân bổ theo tỉ lệ</p>
             </div>
             <div className="h-72">
@@ -232,11 +244,13 @@ export default function AdminDashboard() {
         </div>
 
         {/* Charts row 2 */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
           <Card className="p-5">
             <div className="mb-4">
               <h2 className="font-semibold text-stone-800 dark:text-stone-100">Đơn Hàng 7 Ngày</h2>
-              <p className="text-sm text-stone-500 dark:text-stone-400">Số lượng đơn theo ngày trong tuần</p>
+              <p className="text-sm text-stone-500 dark:text-stone-400">
+                Số lượng đơn theo ngày trong tuần
+              </p>
             </div>
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
@@ -250,10 +264,7 @@ export default function AdminDashboard() {
                   <CartesianGrid strokeDasharray="3 3" stroke="#e7e5e4" vertical={false} />
                   <XAxis dataKey="day" stroke="#78716c" fontSize={12} />
                   <YAxis stroke="#78716c" fontSize={12} allowDecimals={false} />
-                  <Tooltip
-                    contentStyle={tooltipStyle}
-                    formatter={(v: number) => [v, 'Đơn hàng']}
-                  />
+                  <Tooltip contentStyle={tooltipStyle} formatter={(v: number) => [v, 'Đơn hàng']} />
                   <Bar dataKey="orders" fill="url(#colorOrders)" radius={[8, 8, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
@@ -262,12 +273,19 @@ export default function AdminDashboard() {
 
           <Card className="p-5">
             <div className="mb-4">
-              <h2 className="font-semibold text-stone-800 dark:text-stone-100">Tăng Trưởng Khách Hàng</h2>
-              <p className="text-sm text-stone-500 dark:text-stone-400">Số khách hàng mới mỗi tháng</p>
+              <h2 className="font-semibold text-stone-800 dark:text-stone-100">
+                Tăng Trưởng Khách Hàng
+              </h2>
+              <p className="text-sm text-stone-500 dark:text-stone-400">
+                Số khách hàng mới mỗi tháng
+              </p>
             </div>
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={mockCustomerGrowth} margin={{ top: 5, right: 10, left: 0, bottom: 0 }}>
+                <AreaChart
+                  data={mockCustomerGrowth}
+                  margin={{ top: 5, right: 10, left: 0, bottom: 0 }}
+                >
                   <defs>
                     <linearGradient id="colorCustomers" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="0%" stopColor="#10b981" stopOpacity={0.5} />
@@ -296,9 +314,11 @@ export default function AdminDashboard() {
 
         {/* Revenue line chart (extra detail) */}
         <Card className="p-5">
-          <div className="flex items-center justify-between mb-4">
+          <div className="mb-4 flex items-center justify-between">
             <div>
-              <h2 className="font-semibold text-stone-800 dark:text-stone-100">Xu Hướng Doanh Thu</h2>
+              <h2 className="font-semibold text-stone-800 dark:text-stone-100">
+                Xu Hướng Doanh Thu
+              </h2>
               <p className="text-sm text-stone-500 dark:text-stone-400">
                 Đường doanh thu chi tiết theo tháng
               </p>
@@ -335,19 +355,21 @@ export default function AdminDashboard() {
         </Card>
 
         {/* Recent activity + Top products */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-          <Card className="lg:col-span-2 p-0 overflow-hidden">
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+          <Card className="overflow-hidden p-0 lg:col-span-2">
             <div className="flex items-center justify-between p-5 pb-3">
               <div>
-                <h2 className="font-semibold text-stone-800 dark:text-stone-100">Đơn Hàng Gần Đây</h2>
+                <h2 className="font-semibold text-stone-800 dark:text-stone-100">
+                  Đơn Hàng Gần Đây
+                </h2>
                 <p className="text-sm text-stone-500 dark:text-stone-400">5 đơn hàng mới nhất</p>
               </div>
               <button
                 type="button"
                 onClick={() => navigate('/admin/orders')}
-                className="text-sm text-amber-700 dark:text-amber-400 hover:underline flex items-center gap-1"
+                className="flex items-center gap-1 text-sm text-amber-700 hover:underline dark:text-amber-400"
               >
-                Xem tất cả <ArrowRight className="w-4 h-4" />
+                Xem tất cả <ArrowRight className="h-4 w-4" />
               </button>
             </div>
             <div className="overflow-x-auto">
@@ -366,7 +388,7 @@ export default function AdminDashboard() {
                     <tr
                       key={o.id}
                       onClick={() => navigate(`/admin/orders/${o.id}`)}
-                      className="hover:bg-stone-50 dark:hover:bg-zinc-700/30 cursor-pointer"
+                      className="cursor-pointer hover:bg-stone-50 dark:hover:bg-zinc-700/30"
                     >
                       <td className="px-5 py-3 font-medium text-amber-700 dark:text-amber-400">
                         {o.orderNumber}
@@ -386,7 +408,9 @@ export default function AdminDashboard() {
                         <Badge variant={statusVariant[o.status]} size="sm">
                           {statusLabel[o.status]}
                         </Badge>
-                        <p className="text-xs text-stone-500 mt-1">{paymentLabel[o.paymentStatus]}</p>
+                        <p className="mt-1 text-xs text-stone-500">
+                          {paymentLabel[o.paymentStatus]}
+                        </p>
                       </td>
                       <td className="px-5 py-3 text-stone-500 dark:text-stone-400">
                         {formatDateTime(o.createdAt)}
@@ -399,33 +423,35 @@ export default function AdminDashboard() {
           </Card>
 
           <Card className="p-5">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="font-semibold text-stone-800 dark:text-stone-100">Sản Phẩm Bán Chạy</h2>
-              <Package className="w-5 h-5 text-amber-700" />
+            <div className="mb-4 flex items-center justify-between">
+              <h2 className="font-semibold text-stone-800 dark:text-stone-100">
+                Sản Phẩm Bán Chạy
+              </h2>
+              <Package className="h-5 w-5 text-amber-700" />
             </div>
             <ul className="space-y-3">
               {mockTopProducts.map((p, idx) => (
                 <li
                   key={p.id}
-                  className="flex items-center gap-3 p-2 rounded-lg hover:bg-stone-50 dark:hover:bg-zinc-700/40"
+                  className="flex items-center gap-3 rounded-lg p-2 hover:bg-stone-50 dark:hover:bg-zinc-700/40"
                 >
-                  <span className="w-6 h-6 flex-shrink-0 rounded-full bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300 text-xs font-bold flex items-center justify-center">
+                  <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-amber-100 text-xs font-bold text-amber-700 dark:bg-amber-900/40 dark:text-amber-300">
                     {idx + 1}
                   </span>
                   <img
                     src={p.image}
                     alt={p.name}
-                    className="w-12 h-12 rounded-lg object-cover flex-shrink-0"
+                    className="h-12 w-12 flex-shrink-0 rounded-lg object-cover"
                   />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-stone-800 dark:text-stone-100 truncate">
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-medium text-stone-800 dark:text-stone-100">
                       {p.name}
                     </p>
                     <p className="text-xs text-stone-500 dark:text-stone-400">
                       Đã bán: {p.soldCount}
                     </p>
                   </div>
-                  <p className="text-sm font-semibold text-amber-700 dark:text-amber-400 flex-shrink-0">
+                  <p className="flex-shrink-0 text-sm font-semibold text-amber-700 dark:text-amber-400">
                     {formatCompactVND(p.revenue)}
                   </p>
                 </li>

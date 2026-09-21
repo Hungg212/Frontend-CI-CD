@@ -86,7 +86,11 @@ export const orders: Order[] = [
       { status: 'PENDING', timestamp: '2025-09-18T14:20:00Z', note: 'Đơn hàng được tạo' },
       { status: 'CONFIRMED', timestamp: '2025-09-18T15:00:00Z', note: 'Thanh toán thành công' },
       { status: 'PROCESSING', timestamp: '2025-09-19T08:00:00Z', note: 'Đang đóng gói' },
-      { status: 'SHIPPING', timestamp: '2025-09-19T09:15:00Z', note: 'Đơn hàng đang được vận chuyển' },
+      {
+        status: 'SHIPPING',
+        timestamp: '2025-09-19T09:15:00Z',
+        note: 'Đơn hàng đang được vận chuyển',
+      },
     ],
   },
   {
@@ -199,7 +203,11 @@ export const orders: Order[] = [
     createdAt: '2025-09-20T13:15:00Z',
     updatedAt: '2025-09-20T13:15:00Z',
     timeline: [
-      { status: 'PENDING', timestamp: '2025-09-20T13:15:00Z', note: 'Đơn hàng được tạo, chờ xác nhận' },
+      {
+        status: 'PENDING',
+        timestamp: '2025-09-20T13:15:00Z',
+        note: 'Đơn hàng được tạo, chờ xác nhận',
+      },
     ],
   },
   {

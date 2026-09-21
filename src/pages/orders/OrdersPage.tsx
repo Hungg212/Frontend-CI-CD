@@ -6,7 +6,7 @@ export default function OrdersPage() {
 
   if (orders.length === 0) {
     return (
-      <div className="text-center py-12">
+      <div className="py-12 text-center">
         <p className="text-stone-500">Bạn chưa có đơn hàng nào.</p>
       </div>
     );

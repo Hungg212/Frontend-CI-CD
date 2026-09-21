@@ -1,13 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import {
-  Settings as SettingsIcon,
-  Lock,
-  User as UserIcon,
-  Save,
-  CheckCircle2,
-} from 'lucide-react';
+import { Settings as SettingsIcon, Lock, User as UserIcon, Save, CheckCircle2 } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -62,9 +56,9 @@ export default function ProfileSettingsPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
-        <h1 className="text-2xl sm:text-3xl font-bold text-stone-800 dark:text-stone-100 flex items-center gap-2">
-          <SettingsIcon className="w-7 h-7 text-amber-600" />
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+        <h1 className="flex items-center gap-2 text-2xl font-bold text-stone-800 sm:text-3xl dark:text-stone-100">
+          <SettingsIcon className="h-7 w-7 text-amber-600" />
           Cài Đặt Tài Khoản
         </h1>
         <Link to="/profile">
@@ -72,7 +66,7 @@ export default function ProfileSettingsPage() {
         </Link>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-4">
         <aside className="lg:col-span-1">
           <Card padding="md">
             <nav className="space-y-1">
@@ -86,15 +80,13 @@ export default function ProfileSettingsPage() {
                   <button
                     key={item.id}
                     onClick={() => setActiveTab(item.id as 'profile' | 'password')}
-                    className={`
-                      w-full flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors
-                      ${isActive
+                    className={`flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
+                      isActive
                         ? 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300'
-                        : 'text-stone-600 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-zinc-700/50'
-                      }
-                    `}
+                        : 'text-stone-600 hover:bg-stone-50 dark:text-stone-300 dark:hover:bg-zinc-700/50'
+                    } `}
                   >
-                    <Icon className="w-4 h-4" />
+                    <Icon className="h-4 w-4" />
                     {item.label}
                   </button>
                 );
@@ -111,16 +103,16 @@ export default function ProfileSettingsPage() {
               animate={{ opacity: 1, y: 0 }}
             >
               <Card padding="lg">
-                <h2 className="text-lg font-semibold text-stone-800 dark:text-stone-100 mb-1">
+                <h2 className="mb-1 text-lg font-semibold text-stone-800 dark:text-stone-100">
                   Thông tin cá nhân
                 </h2>
-                <p className="text-sm text-stone-500 dark:text-stone-400 mb-6">
+                <p className="mb-6 text-sm text-stone-500 dark:text-stone-400">
                   Cập nhật thông tin của bạn
                 </p>
 
                 {profileSaved && (
-                  <div className="mb-4 p-3 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-400 rounded-lg flex items-center gap-2 text-sm">
-                    <CheckCircle2 className="w-4 h-4" />
+                  <div className="mb-4 flex items-center gap-2 rounded-lg border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-700 dark:border-emerald-800 dark:bg-emerald-900/20 dark:text-emerald-400">
+                    <CheckCircle2 className="h-4 w-4" />
                     Đã lưu thông tin thành công
                   </div>
                 )}
@@ -147,8 +139,8 @@ export default function ProfileSettingsPage() {
                     onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
                   />
 
-                  <div className="pt-2 flex justify-end">
-                    <Button type="submit" leftIcon={<Save className="w-4 h-4" />}>
+                  <div className="flex justify-end pt-2">
+                    <Button type="submit" leftIcon={<Save className="h-4 w-4" />}>
                       Lưu thay đổi
                     </Button>
                   </div>
@@ -164,22 +156,25 @@ export default function ProfileSettingsPage() {
               animate={{ opacity: 1, y: 0 }}
             >
               <Card padding="lg">
-                <h2 className="text-lg font-semibold text-stone-800 dark:text-stone-100 mb-1">
+                <h2 className="mb-1 text-lg font-semibold text-stone-800 dark:text-stone-100">
                   Đổi mật khẩu
                 </h2>
-                <p className="text-sm text-stone-500 dark:text-stone-400 mb-6">
+                <p className="mb-6 text-sm text-stone-500 dark:text-stone-400">
                   Đảm bảo mật khẩu mới của bạn có ít nhất 6 ký tự
                 </p>
 
                 {passwordSaved && (
-                  <div className="mb-4 p-3 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-400 rounded-lg flex items-center gap-2 text-sm">
-                    <CheckCircle2 className="w-4 h-4" />
+                  <div className="mb-4 flex items-center gap-2 rounded-lg border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-700 dark:border-emerald-800 dark:bg-emerald-900/20 dark:text-emerald-400">
+                    <CheckCircle2 className="h-4 w-4" />
                     Đổi mật khẩu thành công
                   </div>
                 )}
 
                 {passwordError && (
-                  <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 rounded-lg text-sm" role="alert">
+                  <div
+                    className="mb-4 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700 dark:border-red-800 dark:bg-red-900/20 dark:text-red-400"
+                    role="alert"
+                  >
                     {passwordError}
                   </div>
                 )}
@@ -198,9 +193,7 @@ export default function ProfileSettingsPage() {
                     label="Mật khẩu mới"
                     type="password"
                     value={passwords.newPassword}
-                    onChange={(e) =>
-                      setPasswords({ ...passwords, newPassword: e.target.value })
-                    }
+                    onChange={(e) => setPasswords({ ...passwords, newPassword: e.target.value })}
                     helperText="Ít nhất 6 ký tự"
                     required
                   />
@@ -214,8 +207,8 @@ export default function ProfileSettingsPage() {
                     required
                   />
 
-                  <div className="pt-2 flex justify-end">
-                    <Button type="submit" leftIcon={<Save className="w-4 h-4" />}>
+                  <div className="flex justify-end pt-2">
+                    <Button type="submit" leftIcon={<Save className="h-4 w-4" />}>
                       Đổi mật khẩu
                     </Button>
                   </div>

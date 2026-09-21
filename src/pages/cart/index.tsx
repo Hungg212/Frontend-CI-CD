@@ -24,17 +24,17 @@ const EmptyState: React.FC = () => (
     transition={{ duration: 0.3 }}
     className="flex flex-col items-center justify-center py-16"
   >
-    <div className="w-24 h-24 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center mb-4">
-      <ShoppingBag className="w-12 h-12 text-amber-700 dark:text-amber-500" />
+    <div className="mb-4 flex h-24 w-24 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-900/30">
+      <ShoppingBag className="h-12 w-12 text-amber-700 dark:text-amber-500" />
     </div>
-    <h2 className="text-2xl font-bold text-stone-800 dark:text-stone-100 mb-2">
+    <h2 className="mb-2 text-2xl font-bold text-stone-800 dark:text-stone-100">
       Giỏ Hàng Của Bạn Đang Trống
     </h2>
-    <p className="text-stone-600 dark:text-stone-400 mb-6 max-w-md text-center">
+    <p className="mb-6 max-w-md text-center text-stone-600 dark:text-stone-400">
       Hãy khám phá các sản phẩm cà phê thơm ngon của chúng tôi và thêm vào giỏ hàng nhé!
     </p>
     <Link to="/products">
-      <Button variant="primary" size="lg" leftIcon={<ShoppingBag className="w-5 h-5" />}>
+      <Button variant="primary" size="lg" leftIcon={<ShoppingBag className="h-5 w-5" />}>
         Khám Phá Sản Phẩm
       </Button>
     </Link>
@@ -82,20 +82,20 @@ const CartPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-stone-50 dark:bg-zinc-900 py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-stone-50 py-8 dark:bg-zinc-900">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-6">
           <Link
             to="/products"
-            className="inline-flex items-center gap-1 text-sm text-stone-600 dark:text-stone-400 hover:text-amber-700 dark:hover:text-amber-500"
+            className="inline-flex items-center gap-1 text-sm text-stone-600 hover:text-amber-700 dark:text-stone-400 dark:hover:text-amber-500"
           >
-            <ArrowLeft className="w-4 h-4" />
+            <ArrowLeft className="h-4 w-4" />
             Tiếp Tục Mua Hàng
           </Link>
-          <h1 className="text-3xl font-bold text-stone-800 dark:text-stone-100 mt-2">
+          <h1 className="mt-2 text-3xl font-bold text-stone-800 dark:text-stone-100">
             Giỏ Hàng Của Bạn
           </h1>
-          <p className="text-stone-600 dark:text-stone-400 mt-1">
+          <p className="mt-1 text-stone-600 dark:text-stone-400">
             {items.length > 0 ? `${items.length} sản phẩm trong giỏ hàng` : 'Chưa có sản phẩm nào'}
           </p>
         </div>
@@ -103,8 +103,8 @@ const CartPage: React.FC = () => {
         {items.length === 0 ? (
           <EmptyState />
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-2 space-y-3">
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+            <div className="space-y-3 lg:col-span-2">
               <AnimatePresence>
                 {items.map((item) => (
                   <CartItemRow key={item.product.id} item={item} />
@@ -114,11 +114,11 @@ const CartPage: React.FC = () => {
 
             <div className="lg:col-span-1">
               <Card padding="md" className="lg:sticky lg:top-24">
-                <h2 className="text-lg font-bold text-stone-800 dark:text-stone-100 mb-4">
+                <h2 className="mb-4 text-lg font-bold text-stone-800 dark:text-stone-100">
                   Tóm Tắt Đơn Hàng
                 </h2>
 
-                <div className="space-y-3 pb-4 border-b border-stone-200 dark:border-zinc-700">
+                <div className="space-y-3 border-b border-stone-200 pb-4 dark:border-zinc-700">
                   <CouponInput
                     appliedCoupon={appliedCoupon as Coupon | null}
                     onApply={handleApplyCoupon}
@@ -126,7 +126,7 @@ const CartPage: React.FC = () => {
                   />
                 </div>
 
-                <div className="py-4 space-y-2 border-b border-stone-200 dark:border-zinc-700">
+                <div className="space-y-2 border-b border-stone-200 py-4 dark:border-zinc-700">
                   <div className="flex justify-between text-stone-600 dark:text-stone-400">
                     <span>Tạm tính</span>
                     <span>{formatCurrency(subtotal)}</span>
@@ -148,15 +148,16 @@ const CartPage: React.FC = () => {
                     </span>
                   </div>
                   {subtotal < FREE_SHIPPING_THRESHOLD && (
-                    <p className="text-xs text-stone-500 dark:text-stone-400 pt-2">
-                      Mua thêm {formatCurrency(FREE_SHIPPING_THRESHOLD - subtotal)} để được miễn phí vận chuyển
+                    <p className="pt-2 text-xs text-stone-500 dark:text-stone-400">
+                      Mua thêm {formatCurrency(FREE_SHIPPING_THRESHOLD - subtotal)} để được miễn phí
+                      vận chuyển
                     </p>
                   )}
                 </div>
 
-                <div className="py-4 flex justify-between items-baseline">
+                <div className="flex items-baseline justify-between py-4">
                   <span className="font-bold text-stone-800 dark:text-stone-100">Tổng cộng</span>
-                  <span className="font-bold text-2xl text-amber-700 dark:text-amber-500">
+                  <span className="text-2xl font-bold text-amber-700 dark:text-amber-500">
                     {formatCurrency(total)}
                   </span>
                 </div>
@@ -165,7 +166,7 @@ const CartPage: React.FC = () => {
                   variant="primary"
                   size="lg"
                   fullWidth
-                  rightIcon={<ArrowRight className="w-5 h-5" />}
+                  rightIcon={<ArrowRight className="h-5 w-5" />}
                   onClick={handleCheckout}
                 >
                   Tiến Hành Thanh Toán

@@ -24,7 +24,9 @@ export interface UseCheckoutReturn {
   validate: () => boolean;
   appliedCoupon: Coupon | null;
   discountAmount: number;
-  handleApplyCoupon: (code: string) => Promise<{ success: boolean; message: string; coupon?: Coupon }>;
+  handleApplyCoupon: (
+    code: string
+  ) => Promise<{ success: boolean; message: string; coupon?: Coupon }>;
   handleRemoveCoupon: () => void;
   totals: OrderTotals;
   isSubmitting: boolean;
@@ -97,15 +99,18 @@ export function useCheckout(): UseCheckoutReturn {
     return true;
   }, [formData]);
 
-  const handleApplyCoupon = useCallback(async (code: string) => {
-    const subtotal = getSubtotal();
-    const result = await applyCoupon(code, subtotal);
-    if (result.success && result.coupon) {
-      setAppliedCoupon(result.coupon);
-      setDiscountAmount(result.discountAmount ?? 0);
-    }
-    return { success: result.success, message: result.message, coupon: result.coupon };
-  }, [getSubtotal]);
+  const handleApplyCoupon = useCallback(
+    async (code: string) => {
+      const subtotal = getSubtotal();
+      const result = await applyCoupon(code, subtotal);
+      if (result.success && result.coupon) {
+        setAppliedCoupon(result.coupon);
+        setDiscountAmount(result.discountAmount ?? 0);
+      }
+      return { success: result.success, message: result.message, coupon: result.coupon };
+    },
+    [getSubtotal]
+  );
 
   const handleRemoveCoupon = useCallback(() => {
     setAppliedCoupon(null);
@@ -167,7 +172,18 @@ export function useCheckout(): UseCheckoutReturn {
     } finally {
       setIsSubmitting(false);
     }
-  }, [validate, items, formData, subtotal, shippingFee, discountAmount, total, createOrderStore, clearCart, navigate]);
+  }, [
+    validate,
+    items,
+    formData,
+    subtotal,
+    shippingFee,
+    discountAmount,
+    total,
+    createOrderStore,
+    clearCart,
+    navigate,
+  ]);
 
   return {
     formData,

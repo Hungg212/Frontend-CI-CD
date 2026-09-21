@@ -16,10 +16,7 @@ interface ConfirmDialogProps {
   loading?: boolean;
 }
 
-const variantConfig: Record<
-  ConfirmVariant,
-  { confirmClass: string; iconBg: string }
-> = {
+const variantConfig: Record<ConfirmVariant, { confirmClass: string; iconBg: string }> = {
   danger: {
     confirmClass: 'bg-red-500 hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700',
     iconBg: 'bg-red-100 dark:bg-red-900/30',
@@ -50,7 +47,12 @@ export function ConfirmDialog({
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="sm" showCloseButton={false}>
       <div className="text-center">
-        <div className={cn('mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full', config.iconBg)}>
+        <div
+          className={cn(
+            'mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full',
+            config.iconBg
+          )}
+        >
           <svg
             className={cn(
               'h-6 w-6',
@@ -78,11 +80,7 @@ export function ConfirmDialog({
           <Button variant="outline" onClick={onClose} disabled={loading}>
             {cancelText}
           </Button>
-          <Button
-            onClick={onConfirm}
-            loading={loading}
-            className={config.confirmClass}
-          >
+          <Button onClick={onConfirm} loading={loading} className={config.confirmClass}>
             {confirmText}
           </Button>
         </div>

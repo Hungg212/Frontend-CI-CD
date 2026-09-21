@@ -95,14 +95,14 @@ export function ReviewModal({
       size="lg"
     >
       <div className="space-y-4">
-        <div className="flex items-center gap-3 p-3 bg-stone-50 dark:bg-zinc-700/50 rounded-lg">
+        <div className="flex items-center gap-3 rounded-lg bg-stone-50 p-3 dark:bg-zinc-700/50">
           <img
             src={product.images[0]}
             alt={product.name}
-            className="w-14 h-14 rounded object-cover"
+            className="h-14 w-14 rounded object-cover"
           />
-          <div className="flex-1 min-w-0">
-            <p className="font-medium text-stone-800 dark:text-stone-100 line-clamp-2">
+          <div className="min-w-0 flex-1">
+            <p className="line-clamp-2 font-medium text-stone-800 dark:text-stone-100">
               {product.name}
             </p>
             <p className="text-xs text-stone-500 dark:text-stone-400">SKU: {product.sku}</p>
@@ -110,7 +110,7 @@ export function ReviewModal({
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-stone-700 dark:text-stone-200 mb-2">
+          <label className="mb-2 block text-sm font-medium text-stone-700 dark:text-stone-200">
             Đánh giá của bạn <span className="text-red-500">*</span>
           </label>
           <div className="flex items-center gap-1">
@@ -125,11 +125,11 @@ export function ReviewModal({
                   onMouseEnter={() => setHoverRating(star)}
                   onMouseLeave={() => setHoverRating(0)}
                   onClick={() => setRating(star)}
-                  className="p-1 focus:outline-none focus:ring-2 focus:ring-amber-500 rounded"
+                  className="rounded p-1 focus:outline-none focus:ring-2 focus:ring-amber-500"
                   aria-label={`${star} sao`}
                 >
                   <Star
-                    className={`w-8 h-8 transition-colors ${
+                    className={`h-8 w-8 transition-colors ${
                       isActive
                         ? 'fill-amber-500 text-amber-500'
                         : 'text-stone-300 dark:text-zinc-600'
@@ -151,7 +151,7 @@ export function ReviewModal({
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-stone-700 dark:text-stone-200 mb-1.5">
+          <label className="mb-1.5 block text-sm font-medium text-stone-700 dark:text-stone-200">
             Nhận xét <span className="text-red-500">*</span>
           </label>
           <textarea
@@ -160,35 +160,35 @@ export function ReviewModal({
             rows={4}
             maxLength={500}
             placeholder="Chia sẻ trải nghiệm của bạn về sản phẩm..."
-            className="w-full px-3 py-2 rounded-lg border border-stone-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-stone-800 dark:text-stone-100 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-amber-500 resize-none"
+            className="w-full resize-none rounded-lg border border-stone-200 bg-white px-3 py-2 text-stone-800 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-amber-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-stone-100"
           />
-          <p className="mt-1 text-xs text-stone-500 dark:text-stone-400 text-right">
+          <p className="mt-1 text-right text-xs text-stone-500 dark:text-stone-400">
             {comment.length}/500
           </p>
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-stone-700 dark:text-stone-200 mb-1.5">
+          <label className="mb-1.5 block text-sm font-medium text-stone-700 dark:text-stone-200">
             Hình ảnh (tùy chọn)
           </label>
-          <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
+          <div className="grid grid-cols-3 gap-2 sm:grid-cols-5">
             {images.map((img, idx) => (
-              <div key={idx} className="relative aspect-square rounded-lg overflow-hidden group">
-                <img src={img} alt="" className="w-full h-full object-cover" />
+              <div key={idx} className="group relative aspect-square overflow-hidden rounded-lg">
+                <img src={img} alt="" className="h-full w-full object-cover" />
                 <button
                   type="button"
                   onClick={() => removeImage(idx)}
-                  className="absolute top-1 right-1 w-6 h-6 rounded-full bg-red-500 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                  className="absolute right-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-white opacity-0 transition-opacity group-hover:opacity-100"
                   aria-label="Xóa hình ảnh"
                 >
-                  <X className="w-3 h-3" />
+                  <X className="h-3 w-3" />
                 </button>
               </div>
             ))}
             {images.length < MAX_IMAGES && (
-              <label className="aspect-square rounded-lg border-2 border-dashed border-stone-300 dark:border-zinc-600 flex flex-col items-center justify-center cursor-pointer hover:border-amber-500 hover:bg-amber-50 dark:hover:bg-amber-900/10 transition-colors">
-                <Upload className="w-5 h-5 text-stone-400" />
-                <span className="text-xs text-stone-500 mt-1">Tải lên</span>
+              <label className="flex aspect-square cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-stone-300 transition-colors hover:border-amber-500 hover:bg-amber-50 dark:border-zinc-600 dark:hover:bg-amber-900/10">
+                <Upload className="h-5 w-5 text-stone-400" />
+                <span className="mt-1 text-xs text-stone-500">Tải lên</span>
                 <input
                   type="file"
                   accept="image/*"
@@ -205,12 +205,15 @@ export function ReviewModal({
         </div>
 
         {(localError || error) && (
-          <p className="text-sm text-red-500 bg-red-50 dark:bg-red-900/20 p-2 rounded-lg" role="alert">
+          <p
+            className="rounded-lg bg-red-50 p-2 text-sm text-red-500 dark:bg-red-900/20"
+            role="alert"
+          >
             {localError || error}
           </p>
         )}
 
-        <div className="flex gap-2 justify-end pt-2 border-t border-stone-200 dark:border-zinc-700">
+        <div className="flex justify-end gap-2 border-t border-stone-200 pt-2 dark:border-zinc-700">
           <Button variant="ghost" onClick={handleClose} disabled={isSubmitting}>
             Hủy
           </Button>

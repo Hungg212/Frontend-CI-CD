@@ -80,7 +80,7 @@ test.describe('Authentication Pages', () => {
       // Should either navigate or show success
       const currentUrl = page.url();
       const isLoggedIn = currentUrl.includes('profile') || currentUrl.includes('/');
-      expect(isLoggedIn || await page.locator('body').isVisible()).toBeTruthy();
+      expect(isLoggedIn || (await page.locator('body').isVisible())).toBeTruthy();
     });
 
     test('should show error for invalid credentials', async ({ page }) => {
@@ -97,7 +97,7 @@ test.describe('Authentication Pages', () => {
 
       // Check for error message or stayed on login page
       const stillOnLogin = page.url().includes('login');
-      expect(stillOnLogin || await page.locator('body').isVisible()).toBeTruthy();
+      expect(stillOnLogin || (await page.locator('body').isVisible())).toBeTruthy();
     });
 
     test('should have link to register page', async ({ page }) => {
@@ -198,7 +198,7 @@ test.describe('Authentication Pages', () => {
       const submitButton = page.locator('button[type="submit"]').first();
 
       const uniqueEmail = `testuser${Date.now()}@example.com`;
-      
+
       await nameInput.fill('Test User');
       await emailInput.fill(uniqueEmail);
       await passwordInput.fill('password123');
@@ -211,7 +211,7 @@ test.describe('Authentication Pages', () => {
       // Should either navigate or show success
       const currentUrl = page.url();
       const isRegistered = currentUrl.includes('profile') || currentUrl.includes('/');
-      expect(isRegistered || await page.locator('body').isVisible()).toBeTruthy();
+      expect(isRegistered || (await page.locator('body').isVisible())).toBeTruthy();
     });
 
     test('should have link to login page', async ({ page }) => {

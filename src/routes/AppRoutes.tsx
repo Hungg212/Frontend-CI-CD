@@ -9,9 +9,7 @@ import { Spinner } from '@/components/ui';
 
 const HomePage = lazy(() => import('@/pages/home/HomePage'));
 const ProductsPage = lazy(() => import('@/pages/products/ProductsPage'));
-const ProductDetailPage = lazy(
-  () => import('@/pages/product-detail/ProductDetailPage'),
-);
+const ProductDetailPage = lazy(() => import('@/pages/product-detail/ProductDetailPage'));
 const CategoryPage = lazy(() => import('@/pages/category/CategoryPage'));
 const SearchPage = lazy(() => import('@/pages/search/SearchPage'));
 
@@ -20,9 +18,7 @@ const WishlistPage = lazy(() => import('@/pages/wishlist/WishlistPage'));
 
 const LoginPage = lazy(() => import('@/pages/auth/LoginPage'));
 const RegisterPage = lazy(() => import('@/pages/auth/RegisterPage'));
-const ForgotPasswordPage = lazy(
-  () => import('@/pages/auth/ForgotPasswordPage'),
-);
+const ForgotPasswordPage = lazy(() => import('@/pages/auth/ForgotPasswordPage'));
 const ResetPasswordPage = lazy(() => import('@/pages/auth/ResetPasswordPage'));
 
 const ProfilePage = lazy(() => import('@/pages/profile/ProfilePage'));
@@ -36,17 +32,13 @@ const OrderSuccessPage = lazy(() => import('@/pages/checkout/OrderSuccessPage'))
 
 const AdminDashboard = lazy(() => import('@/pages/admin/AdminDashboard'));
 const AdminProducts = lazy(() => import('@/pages/admin/AdminProducts'));
-const AdminProductCreate = lazy(
-  () => import('@/pages/admin/AdminProductCreate'),
-);
+const AdminProductCreate = lazy(() => import('@/pages/admin/AdminProductCreate'));
 const AdminProductEdit = lazy(() => import('@/pages/admin/AdminProductEdit'));
 const AdminCategories = lazy(() => import('@/pages/admin/AdminCategories'));
 const AdminOrders = lazy(() => import('@/pages/admin/AdminOrders'));
 const AdminOrderDetail = lazy(() => import('@/pages/admin/AdminOrderDetail'));
 const AdminCustomers = lazy(() => import('@/pages/admin/AdminCustomers'));
-const AdminCustomerDetail = lazy(
-  () => import('@/pages/admin/AdminCustomerDetail'),
-);
+const AdminCustomerDetail = lazy(() => import('@/pages/admin/AdminCustomerDetail'));
 const AdminCoupons = lazy(() => import('@/pages/admin/AdminCoupons'));
 const AdminReviews = lazy(() => import('@/pages/admin/AdminReviews'));
 const AdminAnalytics = lazy(() => import('@/pages/admin/AdminAnalytics'));

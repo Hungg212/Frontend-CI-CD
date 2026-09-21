@@ -52,31 +52,39 @@ const ResetPasswordPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 to-stone-100 dark:from-zinc-900 dark:to-zinc-800 flex items-center justify-center py-12 px-4">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-amber-50 to-stone-100 px-4 py-12 dark:from-zinc-900 dark:to-zinc-800">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
         className="w-full max-w-md"
       >
-        <div className="text-center mb-6">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-amber-700 text-white mb-3">
-            <Coffee className="w-8 h-8" />
+        <div className="mb-6 text-center">
+          <div className="mb-3 inline-flex h-16 w-16 items-center justify-center rounded-full bg-amber-700 text-white">
+            <Coffee className="h-8 w-8" />
           </div>
-          <h1 className="text-3xl font-bold text-stone-800 dark:text-stone-100">Đặt Lại Mật Khẩu</h1>
-          <p className="text-stone-600 dark:text-stone-400 mt-1">
+          <h1 className="text-3xl font-bold text-stone-800 dark:text-stone-100">
+            Đặt Lại Mật Khẩu
+          </h1>
+          <p className="mt-1 text-stone-600 dark:text-stone-400">
             Tạo mật khẩu mới cho tài khoản của bạn
           </p>
         </div>
 
         <Card padding="lg">
           {success ? (
-            <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="text-center py-4">
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-emerald-100 dark:bg-emerald-900/30 mb-4">
-                <CheckCircle2 className="w-10 h-10 text-emerald-600 dark:text-emerald-400" />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="py-4 text-center"
+            >
+              <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/30">
+                <CheckCircle2 className="h-10 w-10 text-emerald-600 dark:text-emerald-400" />
               </div>
-              <h2 className="text-xl font-bold text-stone-800 dark:text-stone-100 mb-2">Thành Công!</h2>
-              <p className="text-sm text-stone-600 dark:text-stone-400 mb-2">
+              <h2 className="mb-2 text-xl font-bold text-stone-800 dark:text-stone-100">
+                Thành Công!
+              </h2>
+              <p className="mb-2 text-sm text-stone-600 dark:text-stone-400">
                 Mật khẩu của bạn đã được cập nhật.
               </p>
               <p className="text-xs text-stone-500 dark:text-stone-400">
@@ -86,8 +94,8 @@ const ResetPasswordPage: React.FC = () => {
           ) : (
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               {!token && (
-                <div className="p-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg flex items-start gap-2">
-                  <ShieldCheck className="w-4 h-4 text-amber-600 dark:text-amber-500 flex-shrink-0 mt-0.5" />
+                <div className="flex items-start gap-2 rounded-lg border border-amber-200 bg-amber-50 p-3 dark:border-amber-800 dark:bg-amber-900/20">
+                  <ShieldCheck className="mt-0.5 h-4 w-4 flex-shrink-0 text-amber-600 dark:text-amber-500" />
                   <p className="text-xs text-amber-700 dark:text-amber-400">
                     Token không hợp lệ - bạn sẽ được chuyển đến trang yêu cầu đặt lại sau khi gửi.
                   </p>
@@ -97,7 +105,7 @@ const ResetPasswordPage: React.FC = () => {
                 label="Mật khẩu mới"
                 type="password"
                 placeholder="Tối thiểu 6 ký tự"
-                leftIcon={<Lock className="w-4 h-4" />}
+                leftIcon={<Lock className="h-4 w-4" />}
                 {...register('password')}
                 error={errors.password?.message}
                 autoComplete="new-password"
@@ -106,7 +114,7 @@ const ResetPasswordPage: React.FC = () => {
                 label="Xác nhận mật khẩu mới"
                 type="password"
                 placeholder="Nhập lại mật khẩu"
-                leftIcon={<Lock className="w-4 h-4" />}
+                leftIcon={<Lock className="h-4 w-4" />}
                 {...register('confirmPassword')}
                 error={errors.confirmPassword?.message}
                 autoComplete="new-password"
@@ -122,7 +130,12 @@ const ResetPasswordPage: React.FC = () => {
                 {isSubmitting ? 'Đang cập nhật...' : 'Đặt Lại Mật Khẩu'}
               </Button>
               <Link to="/auth/login" className="block">
-                <Button type="button" variant="ghost" fullWidth leftIcon={<ArrowLeft className="w-4 h-4" />}>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  fullWidth
+                  leftIcon={<ArrowLeft className="h-4 w-4" />}
+                >
                   Quay lại đăng nhập
                 </Button>
               </Link>

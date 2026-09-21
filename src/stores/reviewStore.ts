@@ -62,8 +62,7 @@ export const useReviewStore = create<ReviewState>()(
       deleteReview: (id) => {
         set({ reviews: get().reviews.filter((r) => r.id !== id) });
       },
-      getReviewsByProduct: (productId) =>
-        get().reviews.filter((r) => r.productId === productId),
+      getReviewsByProduct: (productId) => get().reviews.filter((r) => r.productId === productId),
       getReviewsByUser: (userId) => get().reviews.filter((r) => r.userId === userId),
       hasReviewed: (productId, userId) =>
         get().reviews.some((r) => r.productId === productId && r.userId === userId),

@@ -3,9 +3,20 @@ import { MapPin, Home, Building2, MapPinned } from 'lucide-react';
 import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
 
-export interface Province { code: string; name: string; districts: District[]; }
-export interface District { code: string; name: string; wards: Ward[]; }
-export interface Ward { code: string; name: string; }
+export interface Province {
+  code: string;
+  name: string;
+  districts: District[];
+}
+export interface District {
+  code: string;
+  name: string;
+  wards: Ward[];
+}
+export interface Ward {
+  code: string;
+  name: string;
+}
 
 export const PROVINCES_DATA: Province[] = [
   {
@@ -97,10 +108,10 @@ export interface AddressFormProps {
 }
 
 const labelIcons = {
-  fullName: <Home className="w-4 h-4" />,
-  province: <MapPin className="w-4 h-4" />,
-  district: <MapPinned className="w-4 h-4" />,
-  ward: <Building2 className="w-4 h-4" />,
+  fullName: <Home className="h-4 w-4" />,
+  province: <MapPin className="h-4 w-4" />,
+  district: <MapPinned className="h-4 w-4" />,
+  ward: <Building2 className="h-4 w-4" />,
 };
 
 export function AddressForm({
@@ -117,7 +128,7 @@ export function AddressForm({
 
   return (
     <div className={`space-y-4 ${className}`}>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <Input
           label="Họ và tên"
           value={values.fullName}
@@ -152,7 +163,7 @@ export function AddressForm({
         autoComplete="email"
       />
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         <Select
           label="Tỉnh / Thành phố"
           value={values.province}
@@ -201,12 +212,12 @@ export function AddressForm({
       />
 
       {showSaveOption && (
-        <label className="flex items-center gap-2 cursor-pointer">
+        <label className="flex cursor-pointer items-center gap-2">
           <input
             type="checkbox"
             checked={!!values.saveAddress}
             onChange={(e) => onChange('saveAddress', e.target.checked)}
-            className="w-4 h-4 text-amber-600 border-stone-300 rounded focus:ring-amber-500"
+            className="h-4 w-4 rounded border-stone-300 text-amber-600 focus:ring-amber-500"
           />
           <span className="text-sm text-stone-700 dark:text-stone-200">
             Lưu địa chỉ này cho lần sau

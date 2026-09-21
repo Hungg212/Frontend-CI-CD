@@ -13,8 +13,8 @@ export default function HomePage() {
             Brew your perfect cup, delivered to your door.
           </h1>
           <p className="text-pretty text-lg text-coffee-700 dark:text-cream-200">
-            Single-origin beans, signature blends, and curated accessories
-            crafted for the home barista.
+            Single-origin beans, signature blends, and curated accessories crafted for the home
+            barista.
           </p>
           <div className="flex flex-col gap-3 sm:flex-row">
             <LinkButton to="/products">

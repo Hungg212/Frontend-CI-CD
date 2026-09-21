@@ -59,14 +59,16 @@ export function CouponInput({
 
   if (appliedCoupon) {
     return (
-      <div className={`bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 rounded-lg p-3 ${className}`}>
+      <div
+        className={`rounded-lg border border-emerald-200 bg-emerald-50 p-3 dark:border-emerald-800 dark:bg-emerald-900/20 ${className}`}
+      >
         <div className="flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2 flex-1 min-w-0">
-            <div className="flex-shrink-0 w-8 h-8 rounded-full bg-emerald-500 text-white flex items-center justify-center">
-              <CheckCircle2 className="w-4 h-4" />
+          <div className="flex min-w-0 flex-1 items-center gap-2">
+            <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-emerald-500 text-white">
+              <CheckCircle2 className="h-4 w-4" />
             </div>
-            <div className="flex-1 min-w-0">
-              <p className="font-semibold text-emerald-800 dark:text-emerald-300 truncate">
+            <div className="min-w-0 flex-1">
+              <p className="truncate font-semibold text-emerald-800 dark:text-emerald-300">
                 {appliedCoupon.code}
               </p>
               <p className="text-xs text-emerald-700 dark:text-emerald-400">
@@ -80,10 +82,10 @@ export function CouponInput({
             type="button"
             onClick={handleRemove}
             disabled={disabled}
-            className="flex-shrink-0 p-1 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 rounded transition-colors disabled:opacity-50"
+            className="flex-shrink-0 rounded p-1 text-emerald-700 transition-colors hover:bg-emerald-100 disabled:opacity-50 dark:text-emerald-400 dark:hover:bg-emerald-900/40"
             aria-label="Hủy mã giảm giá"
           >
-            <X className="w-4 h-4" />
+            <X className="h-4 w-4" />
           </button>
         </div>
       </div>
@@ -103,7 +105,7 @@ export function CouponInput({
             setError(null);
           }}
           placeholder="Nhập mã giảm giá"
-          leftIcon={<Tag className="w-4 h-4" />}
+          leftIcon={<Tag className="h-4 w-4" />}
           error={error || undefined}
           disabled={disabled || loading}
           onKeyDown={(e) => {
@@ -131,9 +133,9 @@ export function CouponInput({
             initial={{ opacity: 0, y: -5 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -5 }}
-            className="text-sm text-emerald-600 dark:text-emerald-400 flex items-center gap-1"
+            className="flex items-center gap-1 text-sm text-emerald-600 dark:text-emerald-400"
           >
-            <CheckCircle2 className="w-3.5 h-3.5" />
+            <CheckCircle2 className="h-3.5 w-3.5" />
             {success}
           </motion.p>
         )}

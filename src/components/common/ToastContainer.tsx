@@ -76,8 +76,8 @@ export default function ToastContainer() {
             key={t.id}
             role="alert"
             className={cn(
-              'pointer-events-auto flex items-center gap-3 rounded-lg border bg-white px-4 py-3 shadow-coffee animate-slide-in-right dark:border-coffee-700',
-              colorMap[t.type],
+              'animate-slide-in-right pointer-events-auto flex items-center gap-3 rounded-lg border bg-white px-4 py-3 shadow-coffee dark:border-coffee-700',
+              colorMap[t.type]
             )}
           >
             <Icon className="h-5 w-5 shrink-0" />

@@ -20,7 +20,7 @@ const HCM_PROVINCE_CODE = 'HCM';
 export function calculateShipping(
   address: { province: string } | null,
   method: ShippingMethod,
-  subtotal: number = 0,
+  subtotal: number = 0
 ): number {
   const baseFee = SHIPPING_FEE_MAP[method] ?? 25000;
 
@@ -38,7 +38,7 @@ export function calculateShipping(
 }
 
 const MOCK_COUPONS: Record<string, Coupon> = {
-  'WELCOME10': {
+  WELCOME10: {
     id: 'cpn-001',
     code: 'WELCOME10',
     type: 'PERCENT',
@@ -51,7 +51,7 @@ const MOCK_COUPONS: Record<string, Coupon> = {
     validTo: '2026-12-31T23:59:59Z',
     isActive: true,
   },
-  'COFFEE50K': {
+  COFFEE50K: {
     id: 'cpn-002',
     code: 'COFFEE50K',
     type: 'FIXED',
@@ -63,7 +63,7 @@ const MOCK_COUPONS: Record<string, Coupon> = {
     validTo: '2026-12-31T23:59:59Z',
     isActive: true,
   },
-  'FREESHIP': {
+  FREESHIP: {
     id: 'cpn-003',
     code: 'FREESHIP',
     type: 'FIXED',
@@ -75,7 +75,7 @@ const MOCK_COUPONS: Record<string, Coupon> = {
     validTo: '2026-12-31T23:59:59Z',
     isActive: true,
   },
-  'VIP20': {
+  VIP20: {
     id: 'cpn-004',
     code: 'VIP20',
     type: 'PERCENT',

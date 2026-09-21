@@ -30,29 +30,29 @@ export const CartItem: React.FC<CartItemProps> = ({ item }) => {
   const { updateQuantity, removeItem } = useCart();
 
   return (
-    <div className="flex gap-3 py-4 border-b border-stone-200 dark:border-zinc-700 last:border-0">
+    <div className="flex gap-3 border-b border-stone-200 py-4 last:border-0 dark:border-zinc-700">
       <Link
         to={`/product/${item.slug}`}
-        className="flex-shrink-0 w-20 h-20 overflow-hidden rounded-lg bg-stone-100 dark:bg-zinc-700"
+        className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg bg-stone-100 dark:bg-zinc-700"
       >
         <img
           src={item.image}
           alt={item.name}
           loading="lazy"
-          className="w-full h-full object-cover hover:scale-105 transition-transform"
+          className="h-full w-full object-cover transition-transform hover:scale-105"
         />
       </Link>
-      <div className="flex-1 min-w-0">
+      <div className="min-w-0 flex-1">
         <Link
           to={`/product/${item.slug}`}
-          className="font-medium text-sm text-stone-800 dark:text-stone-100 hover:text-amber-700 dark:hover:text-amber-500 line-clamp-2"
+          className="line-clamp-2 text-sm font-medium text-stone-800 hover:text-amber-700 dark:text-stone-100 dark:hover:text-amber-500"
         >
           {item.name}
         </Link>
-        <p className="text-xs text-stone-500 dark:text-stone-400 mt-0.5">
+        <p className="mt-0.5 text-xs text-stone-500 dark:text-stone-400">
           Khối lượng: {item.weight}
         </p>
-        <div className="flex items-center gap-2 mt-1">
+        <div className="mt-1 flex items-center gap-2">
           <span className="text-sm font-semibold text-amber-700 dark:text-amber-500">
             {formatPrice(item.price)}
           </span>
@@ -62,20 +62,20 @@ export const CartItem: React.FC<CartItemProps> = ({ item }) => {
             </span>
           )}
         </div>
-        <div className="flex items-center justify-between mt-2">
+        <div className="mt-2 flex items-center justify-between">
           <QuantitySelector
             value={item.quantity}
-            onChange={q => updateQuantity(item.id, q)}
+            onChange={(q) => updateQuantity(item.id, q)}
             min={1}
             max={99}
           />
           <button
             type="button"
             onClick={() => removeItem(item.id)}
-            className="p-1.5 text-stone-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+            className="rounded-lg p-1.5 text-stone-400 transition-colors hover:bg-red-50 hover:text-red-500 dark:hover:bg-red-900/20"
             aria-label="Xóa sản phẩm"
           >
-            <Trash2 className="w-4 h-4" />
+            <Trash2 className="h-4 w-4" />
           </button>
         </div>
       </div>

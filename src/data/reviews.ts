@@ -32,7 +32,8 @@ export const reviews: Review[] = [
     userAvatar: 'https://i.pravatar.cc/150?img=25',
     productId: 'prod-9',
     rating: 4,
-    comment: 'Cà phê xay truyền thống rất hợp với phin. Mình pha cà phê sữa đá mỗi sáng, ngon tuyệt!',
+    comment:
+      'Cà phê xay truyền thống rất hợp với phin. Mình pha cà phê sữa đá mỗi sáng, ngon tuyệt!',
     createdAt: '2025-09-05T10:15:00Z',
     isVerified: true,
   },
@@ -79,8 +80,7 @@ export const reviews: Review[] = [
     userAvatar: 'https://i.pravatar.cc/150?img=25',
     productId: 'prod-27',
     rating: 5,
-    comment:
-      'Hộp quà Premium rất đẹp và sang trọng. Mình mua tặng sếp, ai cũng khen!',
+    comment: 'Hộp quà Premium rất đẹp và sang trọng. Mình mua tặng sếp, ai cũng khen!',
     images: ['https://picsum.photos/seed/review-gift-1/400/400'],
     createdAt: '2025-09-14T13:00:00Z',
     isVerified: true,

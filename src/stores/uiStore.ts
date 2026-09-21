@@ -35,8 +35,7 @@ export const useUIStore = create<UIState>()((set) => ({
   quickViewProductId: null,
   notifications: [],
 
-  toggleMobileMenu: () =>
-    set((state) => ({ isMobileMenuOpen: !state.isMobileMenuOpen })),
+  toggleMobileMenu: () => set((state) => ({ isMobileMenuOpen: !state.isMobileMenuOpen })),
 
   toggleCart: () => set((state) => ({ isCartOpen: !state.isCartOpen })),
 
@@ -45,7 +44,7 @@ export const useUIStore = create<UIState>()((set) => ({
   toggleQuickView: (productId) =>
     set((state) => ({
       isQuickViewOpen: !state.isQuickViewOpen,
-      quickViewProductId: !state.isQuickViewOpen ? productId ?? null : null,
+      quickViewProductId: !state.isQuickViewOpen ? (productId ?? null) : null,
     })),
 
   openMobileMenu: () => set({ isMobileMenuOpen: true }),
@@ -54,8 +53,7 @@ export const useUIStore = create<UIState>()((set) => ({
   closeCart: () => set({ isCartOpen: false }),
   openSearch: () => set({ isSearchOpen: true }),
   closeSearch: () => set({ isSearchOpen: false }),
-  openQuickView: (productId) =>
-    set({ isQuickViewOpen: true, quickViewProductId: productId }),
+  openQuickView: (productId) => set({ isQuickViewOpen: true, quickViewProductId: productId }),
   closeQuickView: () => set({ isQuickViewOpen: false, quickViewProductId: null }),
 
   closeAll: () =>

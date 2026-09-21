@@ -10,11 +10,11 @@ export interface OrderTimelineProps {
 }
 
 const steps: { status: OrderStatus; label: string; icon: React.ReactNode }[] = [
-  { status: 'PENDING', label: 'Chờ xác nhận', icon: <Clock className="w-4 h-4" /> },
-  { status: 'CONFIRMED', label: 'Đã xác nhận', icon: <Check className="w-4 h-4" /> },
-  { status: 'PROCESSING', label: 'Đang xử lý', icon: <Package className="w-4 h-4" /> },
-  { status: 'SHIPPING', label: 'Đang giao', icon: <Truck className="w-4 h-4" /> },
-  { status: 'DELIVERED', label: 'Đã giao', icon: <CheckCircle2 className="w-4 h-4" /> },
+  { status: 'PENDING', label: 'Chờ xác nhận', icon: <Clock className="h-4 w-4" /> },
+  { status: 'CONFIRMED', label: 'Đã xác nhận', icon: <Check className="h-4 w-4" /> },
+  { status: 'PROCESSING', label: 'Đang xử lý', icon: <Package className="h-4 w-4" /> },
+  { status: 'SHIPPING', label: 'Đang giao', icon: <Truck className="h-4 w-4" /> },
+  { status: 'DELIVERED', label: 'Đã giao', icon: <CheckCircle2 className="h-4 w-4" /> },
 ];
 
 const statusOrder: OrderStatus[] = ['PENDING', 'CONFIRMED', 'PROCESSING', 'SHIPPING', 'DELIVERED'];
@@ -42,19 +42,21 @@ export function OrderTimeline({ timeline, currentStatus, className = '' }: Order
     const cancelledEntry = timeline.find((t) => t.status === 'CANCELLED');
     return (
       <div className={`${className}`}>
-        <div className="flex items-start gap-3 p-4 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800">
-          <div className="flex-shrink-0 w-8 h-8 rounded-full bg-red-500 text-white flex items-center justify-center">
-            <XCircle className="w-4 h-4" />
+        <div className="flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 p-4 dark:border-red-800 dark:bg-red-900/20">
+          <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-red-500 text-white">
+            <XCircle className="h-4 w-4" />
           </div>
           <div className="flex-1">
             <p className="font-medium text-red-700 dark:text-red-400">Đơn hàng đã bị hủy</p>
             {cancelledEntry && (
-              <p className="text-sm text-stone-600 dark:text-stone-400 mt-1">
+              <p className="mt-1 text-sm text-stone-600 dark:text-stone-400">
                 {formatDate(cancelledEntry.timestamp)}
               </p>
             )}
             {cancelledEntry?.note && (
-              <p className="text-sm text-stone-600 dark:text-stone-400 mt-1">{cancelledEntry.note}</p>
+              <p className="mt-1 text-sm text-stone-600 dark:text-stone-400">
+                {cancelledEntry.note}
+              </p>
             )}
           </div>
         </div>
@@ -77,52 +79,41 @@ export function OrderTimeline({ timeline, currentStatus, className = '' }: Order
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ delay: index * 0.1 }}
-                className={`
-                  flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center
-                  transition-colors duration-300
-                  ${isCompleted
+                className={`flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full transition-colors duration-300 ${
+                  isCompleted
                     ? 'bg-amber-600 text-white dark:bg-amber-500'
                     : 'bg-stone-200 text-stone-400 dark:bg-zinc-700 dark:text-zinc-500'
-                  }
-                  ${isCurrent ? 'ring-4 ring-amber-200 dark:ring-amber-900/50' : ''}
-                `}
+                } ${isCurrent ? 'ring-4 ring-amber-200 dark:ring-amber-900/50' : ''} `}
               >
                 {step.icon}
               </motion.div>
               {!isLast && (
                 <div
-                  className={`
-                    w-0.5 flex-1 mt-2 transition-colors duration-300
-                    ${index < currentStepIndex
+                  className={`mt-2 w-0.5 flex-1 transition-colors duration-300 ${
+                    index < currentStepIndex
                       ? 'bg-amber-600 dark:bg-amber-500'
                       : 'bg-stone-200 dark:bg-zinc-700'
-                    }
-                  `}
+                  } `}
                   style={{ minHeight: '24px' }}
                 />
               )}
             </div>
             <div className="flex-1 pt-1">
               <p
-                className={`
-                  font-medium
-                  ${isCompleted ? 'text-stone-800 dark:text-stone-100' : 'text-stone-400 dark:text-stone-500'}
-                `}
+                className={`font-medium ${isCompleted ? 'text-stone-800 dark:text-stone-100' : 'text-stone-400 dark:text-stone-500'} `}
               >
                 {step.label}
               </p>
               {entry && (
-                <p className="text-sm text-stone-500 dark:text-stone-400 mt-0.5">
+                <p className="mt-0.5 text-sm text-stone-500 dark:text-stone-400">
                   {formatDate(entry.timestamp)}
                 </p>
               )}
               {entry?.note && (
-                <p className="text-sm text-stone-600 dark:text-stone-300 mt-1">{entry.note}</p>
+                <p className="mt-1 text-sm text-stone-600 dark:text-stone-300">{entry.note}</p>
               )}
               {!entry && isCurrent && (
-                <p className="text-sm text-amber-600 dark:text-amber-400 mt-0.5">
-                  Đang xử lý...
-                </p>
+                <p className="mt-0.5 text-sm text-amber-600 dark:text-amber-400">Đang xử lý...</p>
               )}
             </div>
           </div>

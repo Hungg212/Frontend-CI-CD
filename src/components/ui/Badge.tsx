@@ -1,7 +1,18 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 
-type BadgeVariant = 'default' | 'success' | 'warning' | 'error' | 'info' | 'sale' | 'new' | 'bestseller' | 'primary' | 'secondary' | 'danger';
+type BadgeVariant =
+  | 'default'
+  | 'success'
+  | 'warning'
+  | 'error'
+  | 'info'
+  | 'sale'
+  | 'new'
+  | 'bestseller'
+  | 'primary'
+  | 'secondary'
+  | 'danger';
 
 interface BadgeProps {
   variant?: BadgeVariant;
@@ -58,12 +69,10 @@ export function Badge({
         'inline-flex items-center gap-1.5 rounded-full font-medium',
         sizeClasses[size],
         variantClasses[variant],
-        className,
+        className
       )}
     >
-      {dot && (
-        <span className={cn('h-1.5 w-1.5 rounded-full', dotClasses[variant])} />
-      )}
+      {dot && <span className={cn('h-1.5 w-1.5 rounded-full', dotClasses[variant])} />}
       {children}
     </span>
   );

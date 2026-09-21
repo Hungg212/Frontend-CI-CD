@@ -14,7 +14,12 @@ interface BreadcrumbProps {
   className?: string;
 }
 
-export function Breadcrumb({ items, separator = '/', homeIcon = true, className }: BreadcrumbProps) {
+export function Breadcrumb({
+  items,
+  separator = '/',
+  homeIcon = true,
+  className,
+}: BreadcrumbProps) {
   return (
     <nav aria-label="Breadcrumb" className={className}>
       <ol className="flex items-center gap-2 text-sm">

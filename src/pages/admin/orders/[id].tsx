@@ -39,7 +39,10 @@ const statusLabel: Record<AdminOrder['status'], string> = {
   CANCELLED: 'Đã hủy',
 };
 
-const statusVariant: Record<AdminOrder['status'], 'warning' | 'info' | 'primary' | 'success' | 'danger'> = {
+const statusVariant: Record<
+  AdminOrder['status'],
+  'warning' | 'info' | 'primary' | 'success' | 'danger'
+> = {
   PENDING: 'warning',
   CONFIRMED: 'info',
   PROCESSING: 'primary',
@@ -70,11 +73,11 @@ interface StepDef {
 }
 
 const flowSteps: StepDef[] = [
-  { status: 'PENDING', label: 'Chờ xử lý', icon: <Clock className="w-4 h-4" /> },
-  { status: 'CONFIRMED', label: 'Đã xác nhận', icon: <CheckCircle2 className="w-4 h-4" /> },
-  { status: 'PROCESSING', label: 'Đang chuẩn bị', icon: <Package className="w-4 h-4" /> },
-  { status: 'SHIPPING', label: 'Đang giao', icon: <Truck className="w-4 h-4" /> },
-  { status: 'DELIVERED', label: 'Đã giao', icon: <PackageCheck className="w-4 h-4" /> },
+  { status: 'PENDING', label: 'Chờ xử lý', icon: <Clock className="h-4 w-4" /> },
+  { status: 'CONFIRMED', label: 'Đã xác nhận', icon: <CheckCircle2 className="h-4 w-4" /> },
+  { status: 'PROCESSING', label: 'Đang chuẩn bị', icon: <Package className="h-4 w-4" /> },
+  { status: 'SHIPPING', label: 'Đang giao', icon: <Truck className="h-4 w-4" /> },
+  { status: 'DELIVERED', label: 'Đã giao', icon: <PackageCheck className="h-4 w-4" /> },
 ];
 
 export default function AdminOrderDetail() {
@@ -90,7 +93,7 @@ export default function AdminOrderDetail() {
     return (
       <AdminLayout title="Không tìm thấy đơn hàng">
         <Card className="p-8 text-center">
-          <p className="text-stone-600 dark:text-stone-400 mb-4">Đơn hàng không tồn tại</p>
+          <p className="mb-4 text-stone-600 dark:text-stone-400">Đơn hàng không tồn tại</p>
           <Button onClick={() => navigate('/admin/orders')}>Quay lại</Button>
         </Card>
       </AdminLayout>
@@ -102,7 +105,11 @@ export default function AdminOrderDetail() {
 
   const handleConfirmStatus = () => {
     if (!statusModal) return;
-    updateOrderStatus(order.id, statusModal, statusNote || `Cập nhật trạng thái: ${statusLabel[statusModal]}`);
+    updateOrderStatus(
+      order.id,
+      statusModal,
+      statusNote || `Cập nhật trạng thái: ${statusLabel[statusModal]}`
+    );
     setStatusModal(null);
     setStatusNote('');
   };
@@ -115,14 +122,14 @@ export default function AdminOrderDetail() {
       <div className="space-y-4">
         <Button
           variant="ghost"
-          leftIcon={<ArrowLeft className="w-4 h-4" />}
+          leftIcon={<ArrowLeft className="h-4 w-4" />}
           onClick={() => navigate('/admin/orders')}
         >
           Quay lại danh sách
         </Button>
 
         {/* Status banner */}
-        <Card className="p-4 flex flex-wrap items-center gap-3 justify-between">
+        <Card className="flex flex-wrap items-center justify-between gap-3 p-4">
           <div className="flex items-center gap-3">
             <Badge variant={statusVariant[order.status]} size="lg">
               {statusLabel[order.status]}
@@ -147,27 +154,29 @@ export default function AdminOrderDetail() {
           </div>
         </Card>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-          <div className="lg:col-span-2 space-y-4">
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+          <div className="space-y-4 lg:col-span-2">
             {/* Order items */}
             <Card className="p-5">
-              <div className="flex items-center gap-2 mb-4">
-                <Package className="w-5 h-5 text-amber-700" />
+              <div className="mb-4 flex items-center gap-2">
+                <Package className="h-5 w-5 text-amber-700" />
                 <h2 className="font-semibold text-stone-800 dark:text-stone-100">Sản phẩm</h2>
               </div>
               <div className="space-y-3">
                 {order.items.map((item) => (
                   <div
                     key={item.productId}
-                    className="flex items-center gap-3 py-3 border-b border-stone-100 dark:border-zinc-700 last:border-0"
+                    className="flex items-center gap-3 border-b border-stone-100 py-3 last:border-0 dark:border-zinc-700"
                   >
                     <img
                       src={item.productImage}
                       alt={item.productName}
-                      className="w-14 h-14 rounded-lg object-cover bg-stone-100"
+                      className="h-14 w-14 rounded-lg bg-stone-100 object-cover"
                     />
-                    <div className="flex-1 min-w-0">
-                      <p className="font-medium text-stone-800 dark:text-stone-100">{item.productName}</p>
+                    <div className="min-w-0 flex-1">
+                      <p className="font-medium text-stone-800 dark:text-stone-100">
+                        {item.productName}
+                      </p>
                       <p className="text-sm text-stone-500 dark:text-stone-400">
                         {formatVND(item.price)} × {item.quantity}
                       </p>
@@ -179,7 +188,7 @@ export default function AdminOrderDetail() {
                 ))}
               </div>
 
-              <div className="mt-4 pt-4 border-t border-stone-200 dark:border-zinc-700 space-y-2 text-sm">
+              <div className="mt-4 space-y-2 border-t border-stone-200 pt-4 text-sm dark:border-zinc-700">
                 <div className="flex justify-between">
                   <span className="text-stone-600 dark:text-stone-400">Tạm tính</span>
                   <span className="font-medium">{formatVND(order.subtotal)}</span>
@@ -194,7 +203,7 @@ export default function AdminOrderDetail() {
                     <span className="font-medium">-{formatVND(order.discount)}</span>
                   </div>
                 )}
-                <div className="flex justify-between text-base font-bold pt-2 border-t border-stone-200 dark:border-zinc-700">
+                <div className="flex justify-between border-t border-stone-200 pt-2 text-base font-bold dark:border-zinc-700">
                   <span>Tổng cộng</span>
                   <span className="text-amber-700">{formatVND(order.total)}</span>
                 </div>
@@ -203,13 +212,15 @@ export default function AdminOrderDetail() {
 
             {/* Status timeline */}
             <Card className="p-5">
-              <div className="flex items-center gap-2 mb-4">
-                <Clock className="w-5 h-5 text-amber-700" />
-                <h2 className="font-semibold text-stone-800 dark:text-stone-100">Lịch sử trạng thái</h2>
+              <div className="mb-4 flex items-center gap-2">
+                <Clock className="h-5 w-5 text-amber-700" />
+                <h2 className="font-semibold text-stone-800 dark:text-stone-100">
+                  Lịch sử trạng thái
+                </h2>
               </div>
               <ol className="relative space-y-4">
                 <span
-                  className="absolute left-[15px] top-2 bottom-2 w-0.5 bg-stone-200 dark:bg-zinc-700"
+                  className="absolute bottom-2 left-[15px] top-2 w-0.5 bg-stone-200 dark:bg-zinc-700"
                   aria-hidden
                 />
                 {flowSteps.map((step) => {
@@ -217,9 +228,9 @@ export default function AdminOrderDetail() {
                   const timelineEntry = order.timeline.find((t) => t.status === step.status);
                   const isCurrent = order.status === step.status;
                   return (
-                    <li key={step.status} className="flex gap-3 relative">
+                    <li key={step.status} className="relative flex gap-3">
                       <span
-                        className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 z-10 ${
+                        className={`z-10 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full ${
                           reached
                             ? isCurrent
                               ? 'bg-amber-700 text-white ring-4 ring-amber-200'
@@ -243,7 +254,7 @@ export default function AdminOrderDetail() {
                               {formatDateTime(timelineEntry.timestamp)}
                             </p>
                             {timelineEntry.note && (
-                              <p className="text-sm text-stone-600 dark:text-stone-300 mt-1">
+                              <p className="mt-1 text-sm text-stone-600 dark:text-stone-300">
                                 {timelineEntry.note}
                               </p>
                             )}
@@ -254,9 +265,9 @@ export default function AdminOrderDetail() {
                   );
                 })}
                 {order.status === 'CANCELLED' && (
-                  <li className="flex gap-3 relative">
-                    <span className="w-8 h-8 rounded-full flex items-center justify-center bg-red-500 text-white flex-shrink-0 z-10">
-                      <XCircle className="w-4 h-4" />
+                  <li className="relative flex gap-3">
+                    <span className="z-10 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-red-500 text-white">
+                      <XCircle className="h-4 w-4" />
                     </span>
                     <div className="flex-1 pb-2">
                       <p className="font-medium text-red-600">Đơn hàng đã hủy</p>
@@ -275,8 +286,8 @@ export default function AdminOrderDetail() {
 
             {order.note && (
               <Card className="p-5">
-                <div className="flex items-center gap-2 mb-2">
-                  <FileText className="w-5 h-5 text-amber-700" />
+                <div className="mb-2 flex items-center gap-2">
+                  <FileText className="h-5 w-5 text-amber-700" />
                   <h2 className="font-semibold text-stone-800 dark:text-stone-100">Ghi chú</h2>
                 </div>
                 <p className="text-sm text-stone-600 dark:text-stone-300">{order.note}</p>
@@ -287,8 +298,8 @@ export default function AdminOrderDetail() {
           <div className="space-y-4">
             {/* Customer info */}
             <Card className="p-5">
-              <div className="flex items-center gap-2 mb-4">
-                <User className="w-5 h-5 text-amber-700" />
+              <div className="mb-4 flex items-center gap-2">
+                <User className="h-5 w-5 text-amber-700" />
                 <h2 className="font-semibold text-stone-800 dark:text-stone-100">Khách hàng</h2>
               </div>
               <div className="space-y-2 text-sm">
@@ -310,17 +321,17 @@ export default function AdminOrderDetail() {
 
             {/* Shipping */}
             <Card className="p-5">
-              <div className="flex items-center gap-2 mb-4">
-                <MapPin className="w-5 h-5 text-amber-700" />
-                <h2 className="font-semibold text-stone-800 dark:text-stone-100">Địa chỉ giao hàng</h2>
+              <div className="mb-4 flex items-center gap-2">
+                <MapPin className="h-5 w-5 text-amber-700" />
+                <h2 className="font-semibold text-stone-800 dark:text-stone-100">
+                  Địa chỉ giao hàng
+                </h2>
               </div>
-              <div className="text-sm space-y-1">
+              <div className="space-y-1 text-sm">
                 <p className="font-medium text-stone-800 dark:text-stone-100">
                   {order.shippingAddress.fullName}
                 </p>
-                <p className="text-stone-600 dark:text-stone-400">
-                  {order.shippingAddress.phone}
-                </p>
+                <p className="text-stone-600 dark:text-stone-400">{order.shippingAddress.phone}</p>
                 <p className="text-stone-600 dark:text-stone-400">
                   {order.shippingAddress.detail}, {order.shippingAddress.ward},{' '}
                   {order.shippingAddress.district}, {order.shippingAddress.province}
@@ -330,11 +341,11 @@ export default function AdminOrderDetail() {
 
             {/* Payment */}
             <Card className="p-5">
-              <div className="flex items-center gap-2 mb-4">
-                <CreditCard className="w-5 h-5 text-amber-700" />
+              <div className="mb-4 flex items-center gap-2">
+                <CreditCard className="h-5 w-5 text-amber-700" />
                 <h2 className="font-semibold text-stone-800 dark:text-stone-100">Thanh toán</h2>
               </div>
-              <div className="text-sm space-y-2">
+              <div className="space-y-2 text-sm">
                 <div>
                   <span className="text-stone-600 dark:text-stone-400">Phương thức:</span>
                   <p className="font-medium text-stone-800 dark:text-stone-100">
@@ -344,7 +355,10 @@ export default function AdminOrderDetail() {
                 <div>
                   <span className="text-stone-600 dark:text-stone-400">Trạng thái:</span>
                   <p>
-                    <Badge variant={order.paymentStatus === 'PAID' ? 'success' : 'warning'} size="sm">
+                    <Badge
+                      variant={order.paymentStatus === 'PAID' ? 'success' : 'warning'}
+                      size="sm"
+                    >
                       {paymentLabel[order.paymentStatus]}
                     </Badge>
                   </p>
@@ -377,13 +391,13 @@ export default function AdminOrderDetail() {
               Trạng thái mới sẽ được lưu vào lịch sử đơn hàng.
             </p>
             <div>
-              <label className="block text-sm font-medium text-stone-700 dark:text-stone-200 mb-1.5">
+              <label className="mb-1.5 block text-sm font-medium text-stone-700 dark:text-stone-200">
                 Ghi chú (tùy chọn)
               </label>
               <textarea
                 value={statusNote}
                 onChange={(e) => setStatusNote(e.target.value)}
-                className="w-full rounded-lg border border-stone-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2 min-h-[80px] focus:outline-none focus:ring-2 focus:ring-amber-500"
+                className="min-h-[80px] w-full rounded-lg border border-stone-200 bg-white px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500 dark:border-zinc-700 dark:bg-zinc-800"
                 placeholder="VD: Đã liên hệ khách xác nhận..."
               />
             </div>

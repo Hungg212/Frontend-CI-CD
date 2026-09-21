@@ -16,7 +16,7 @@ test.describe('Cart Page', () => {
 
   test('should display empty cart message', async ({ page }) => {
     await page.waitForLoadState('networkidle');
-    
+
     // Cart page should load regardless
     expect(await page.locator('body').isVisible()).toBeTruthy();
   });
@@ -28,7 +28,7 @@ test.describe('Cart Page', () => {
 
     // Look for any button and try clicking it
     const buttons = page.locator('button').first();
-    
+
     try {
       await buttons.click({ timeout: 3000 });
     } catch {
@@ -38,7 +38,7 @@ test.describe('Cart Page', () => {
     // Navigate to cart
     await page.goto('/cart');
     await page.waitForLoadState('networkidle');
-    
+
     // Page should load
     expect(await page.locator('body').isVisible()).toBeTruthy();
   });

@@ -43,12 +43,8 @@ export const DISTRICTS: Record<string, { value: string; label: string }[]> = {
     { value: 'tdm', label: 'Thủ Dầu Một' },
     { value: 'di-an', label: 'Dĩ An' },
   ],
-  'dong-nai': [
-    { value: 'bh', label: 'Biên Hòa' },
-  ],
-  'long-an': [
-    { value: 'tan-an', label: 'Tân An' },
-  ],
+  'dong-nai': [{ value: 'bh', label: 'Biên Hòa' }],
+  'long-an': [{ value: 'tan-an', label: 'Tân An' }],
 };
 
 export const WARDS: Record<string, { value: string; label: string }[]> = {

@@ -1,15 +1,8 @@
-import type {
-  Order,
-  OrderStatus,
-  CreateOrderData,
-  CreateReviewData,
-  Review,
-} from '../types';
+import type { Order, OrderStatus, CreateOrderData, CreateReviewData, Review } from '../types';
 import { orders as mockOrders } from '../data/orders';
 import { generateId, generateOrderNumber } from '../utils/formatters';
 
-const simulateDelay = (ms: number = 400) =>
-  new Promise((resolve) => setTimeout(resolve, ms));
+const simulateDelay = (ms: number = 400) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export const orderService = {
   async createOrder(data: CreateOrderData): Promise<Order> {

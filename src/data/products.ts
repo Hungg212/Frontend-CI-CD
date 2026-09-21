@@ -365,8 +365,7 @@ export const products: Product[] = [
     id: 'prod-13',
     name: 'Cà phê xay Moka',
     slug: 'ca-phe-xay-moka',
-    description:
-      'Cà phê xay vừa mịn cho ấm Moka, mang đến ly cà phê đậm đà kiểu Ý ngay tại nhà.',
+    description: 'Cà phê xay vừa mịn cho ấm Moka, mang đến ly cà phê đậm đà kiểu Ý ngay tại nhà.',
     shortDescription: 'Xay Moka - Đậm đà kiểu Ý',
     price: 169000,
     category: 'Cà phê xay',
@@ -475,8 +474,7 @@ export const products: Product[] = [
     id: 'prod-17',
     name: 'Cà phê hòa tan sữa',
     slug: 'ca-phe-hoa-tan-sua',
-    description:
-      'Cà phê sữa hòa tan thơm ngon, vị ngọt dịu, phù hợp cho gia đình và văn phòng.',
+    description: 'Cà phê sữa hòa tan thơm ngon, vị ngọt dịu, phù hợp cho gia đình và văn phòng.',
     shortDescription: 'Cà phê sữa hòa tan - Thơm ngon',
     price: 89000,
     category: 'Cà phê gói',
@@ -641,8 +639,7 @@ export const products: Product[] = [
     id: 'prod-23',
     name: 'Cà phê rang mộc Espresso',
     slug: 'ca-phe-rang-moc-espresso',
-    description:
-      'Rang mộc chuyên cho Espresso, hương vị đậm đà, crema dày và hậu vị kéo dài.',
+    description: 'Rang mộc chuyên cho Espresso, hương vị đậm đà, crema dày và hậu vị kéo dài.',
     shortDescription: 'Rang mộc Espresso - Crema dày',
     price: 259000,
     category: 'Cà phê rang mộc',
@@ -817,14 +814,11 @@ export const getProductBySlug = (slug: string): Product | undefined =>
 export const getProductsByCategory = (categorySlug: string): Product[] =>
   products.filter((p) => p.categorySlug === categorySlug);
 
-export const getBestsellers = (): Product[] =>
-  products.filter((p) => p.isBestSeller);
+export const getBestsellers = (): Product[] => products.filter((p) => p.isBestSeller);
 
-export const getNewArrivals = (): Product[] =>
-  products.filter((p) => p.isNewArrival);
+export const getNewArrivals = (): Product[] => products.filter((p) => p.isNewArrival);
 
-export const getFeaturedProducts = (): Product[] =>
-  products.filter((p) => p.isFeatured);
+export const getFeaturedProducts = (): Product[] => products.filter((p) => p.isFeatured);
 
 export const getFlashSaleProducts = (): Product[] =>
   products.filter((p) => p.salePrice !== undefined && p.discount && p.discount >= 10);
@@ -836,7 +830,7 @@ export const searchProducts = (query: string): Product[] => {
       p.name.toLowerCase().includes(q) ||
       p.description.toLowerCase().includes(q) ||
       p.tags.some((t) => t.toLowerCase().includes(q)) ||
-      p.origin.toLowerCase().includes(q),
+      p.origin.toLowerCase().includes(q)
   );
 };
 

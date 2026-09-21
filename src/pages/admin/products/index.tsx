@@ -75,8 +75,7 @@ export default function AdminProducts() {
   const totalPages = Math.max(1, Math.ceil(filtered.length / ITEMS_PER_PAGE));
   const pageItems = filtered.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
 
-  const allSelected =
-    pageItems.length > 0 && pageItems.every((p) => selectedIds.includes(p.id));
+  const allSelected = pageItems.length > 0 && pageItems.every((p) => selectedIds.includes(p.id));
 
   const toggleSelectAll = () => {
     if (allSelected) {
@@ -88,9 +87,7 @@ export default function AdminProducts() {
   };
 
   const toggleOne = (id: string) => {
-    setSelectedIds((prev) =>
-      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
-    );
+    setSelectedIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
   };
 
   const handleDelete = (ids: string[], isBulk = false) => setDeleteModal({ ids, isBulk });
@@ -107,21 +104,35 @@ export default function AdminProducts() {
   };
 
   const getStockBadge = (product: Product) => {
-    if (product.stock === 0) return <Badge variant="danger" size="sm">Hết hàng</Badge>;
-    if (product.stock <= 10) return <Badge variant="warning" size="sm">Sắp hết</Badge>;
-    return <Badge variant="success" size="sm">Còn hàng</Badge>;
+    if (product.stock === 0)
+      return (
+        <Badge variant="danger" size="sm">
+          Hết hàng
+        </Badge>
+      );
+    if (product.stock <= 10)
+      return (
+        <Badge variant="warning" size="sm">
+          Sắp hết
+        </Badge>
+      );
+    return (
+      <Badge variant="success" size="sm">
+        Còn hàng
+      </Badge>
+    );
   };
 
   return (
     <AdminLayout title="Quản Lý Sản Phẩm" subtitle="Danh sách sản phẩm trong cửa hàng">
-      <Card className="p-0 overflow-hidden">
+      <Card className="overflow-hidden p-0">
         {/* Toolbar */}
-        <div className="p-4 border-b border-stone-200 dark:border-zinc-700 flex flex-col lg:flex-row gap-3">
-          <div className="flex-1 grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div className="flex flex-col gap-3 border-b border-stone-200 p-4 lg:flex-row dark:border-zinc-700">
+          <div className="grid flex-1 grid-cols-1 gap-3 sm:grid-cols-3">
             <Input
               type="search"
               placeholder="Tìm theo tên, SKU, mô tả..."
-              leftIcon={<Search className="w-4 h-4" />}
+              leftIcon={<Search className="h-4 w-4" />}
               value={search}
               onChange={(e) => {
                 setSearch(e.target.value);
@@ -149,14 +160,14 @@ export default function AdminProducts() {
             {selectedIds.length > 0 && (
               <Button
                 variant="danger"
-                leftIcon={<Trash2 className="w-4 h-4" />}
+                leftIcon={<Trash2 className="h-4 w-4" />}
                 onClick={() => handleDelete(selectedIds, true)}
               >
                 Xóa ({selectedIds.length})
               </Button>
             )}
             <Button
-              leftIcon={<Plus className="w-4 h-4" />}
+              leftIcon={<Plus className="h-4 w-4" />}
               onClick={() => navigate('/admin/products/create')}
             >
               Thêm Sản Phẩm Mới
@@ -169,12 +180,12 @@ export default function AdminProducts() {
           <table className="w-full text-sm">
             <thead className="bg-stone-50 dark:bg-zinc-900/50">
               <tr className="text-left text-xs uppercase text-stone-500 dark:text-stone-400">
-                <th className="px-4 py-3 w-10">
+                <th className="w-10 px-4 py-3">
                   <input
                     type="checkbox"
                     checked={allSelected}
                     onChange={toggleSelectAll}
-                    className="w-4 h-4 accent-amber-700"
+                    className="h-4 w-4 accent-amber-700"
                     aria-label="Chọn tất cả"
                   />
                 </th>
@@ -183,7 +194,7 @@ export default function AdminProducts() {
                 <th className="px-4 py-3 font-semibold">Giá</th>
                 <th className="px-4 py-3 font-semibold">Tồn kho</th>
                 <th className="px-4 py-3 font-semibold">Trạng thái</th>
-                <th className="px-4 py-3 font-semibold text-right">Hành động</th>
+                <th className="px-4 py-3 text-right font-semibold">Hành động</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-stone-100 dark:divide-zinc-700">
@@ -202,7 +213,7 @@ export default function AdminProducts() {
                         type="checkbox"
                         checked={isSelected}
                         onChange={() => toggleOne(p.id)}
-                        className="w-4 h-4 accent-amber-700"
+                        className="h-4 w-4 accent-amber-700"
                         aria-label={`Chọn ${p.name}`}
                       />
                     </td>
@@ -211,10 +222,10 @@ export default function AdminProducts() {
                         <img
                           src={p.images[0]}
                           alt={p.name}
-                          className="w-12 h-12 rounded-lg object-cover flex-shrink-0 bg-stone-100"
+                          className="h-12 w-12 flex-shrink-0 rounded-lg bg-stone-100 object-cover"
                         />
                         <div className="min-w-0">
-                          <p className="font-medium text-stone-800 dark:text-stone-100 truncate max-w-xs">
+                          <p className="max-w-xs truncate font-medium text-stone-800 dark:text-stone-100">
                             {p.name}
                           </p>
                           <p className="text-xs text-stone-500 dark:text-stone-400">SKU: {p.sku}</p>
@@ -227,9 +238,7 @@ export default function AdminProducts() {
                         {formatVND(p.salePrice ?? p.price)}
                       </p>
                       {p.salePrice && (
-                        <p className="text-xs text-stone-400 line-through">
-                          {formatVND(p.price)}
-                        </p>
+                        <p className="text-xs text-stone-400 line-through">{formatVND(p.price)}</p>
                       )}
                     </td>
                     <td className="px-4 py-3 text-stone-700 dark:text-stone-300">
@@ -246,7 +255,11 @@ export default function AdminProducts() {
                     <td className="px-4 py-3">
                       <div className="flex flex-wrap gap-1">
                         {getStockBadge(p)}
-                        {p.isFeatured && <Badge variant="info" size="sm">Nổi bật</Badge>}
+                        {p.isFeatured && (
+                          <Badge variant="info" size="sm">
+                            Nổi bật
+                          </Badge>
+                        )}
                       </div>
                     </td>
                     <td className="px-4 py-3">
@@ -254,29 +267,29 @@ export default function AdminProducts() {
                         <button
                           type="button"
                           onClick={() => navigate(`/products/${p.slug}`)}
-                          className="p-1.5 rounded-lg text-stone-500 hover:bg-stone-100 dark:hover:bg-zinc-700 hover:text-amber-700"
+                          className="rounded-lg p-1.5 text-stone-500 hover:bg-stone-100 hover:text-amber-700 dark:hover:bg-zinc-700"
                           aria-label="Xem"
                           title="Xem chi tiết"
                         >
-                          <Eye className="w-4 h-4" />
+                          <Eye className="h-4 w-4" />
                         </button>
                         <button
                           type="button"
                           onClick={() => navigate(`/admin/products/${p.id}/edit`)}
-                          className="p-1.5 rounded-lg text-stone-500 hover:bg-stone-100 dark:hover:bg-zinc-700 hover:text-blue-600"
+                          className="rounded-lg p-1.5 text-stone-500 hover:bg-stone-100 hover:text-blue-600 dark:hover:bg-zinc-700"
                           aria-label="Sửa"
                           title="Chỉnh sửa"
                         >
-                          <Edit className="w-4 h-4" />
+                          <Edit className="h-4 w-4" />
                         </button>
                         <button
                           type="button"
                           onClick={() => handleDelete([p.id])}
-                          className="p-1.5 rounded-lg text-stone-500 hover:bg-red-50 dark:hover:bg-red-900/30 hover:text-red-600"
+                          className="rounded-lg p-1.5 text-stone-500 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/30"
                           aria-label="Xóa"
                           title="Xóa"
                         >
-                          <Trash2 className="w-4 h-4" />
+                          <Trash2 className="h-4 w-4" />
                         </button>
                       </div>
                     </td>
@@ -286,7 +299,7 @@ export default function AdminProducts() {
               {pageItems.length === 0 && (
                 <tr>
                   <td colSpan={7} className="px-4 py-12 text-center">
-                    <Package className="w-12 h-12 mx-auto text-stone-300 dark:text-zinc-600 mb-2" />
+                    <Package className="mx-auto mb-2 h-12 w-12 text-stone-300 dark:text-zinc-600" />
                     <p className="text-stone-500 dark:text-stone-400">Không có sản phẩm nào</p>
                   </td>
                 </tr>
@@ -296,7 +309,7 @@ export default function AdminProducts() {
         </div>
 
         {/* Pagination */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-4 py-3 border-t border-stone-200 dark:border-zinc-700">
+        <div className="flex flex-col items-center justify-between gap-3 border-t border-stone-200 px-4 py-3 sm:flex-row dark:border-zinc-700">
           <p className="text-sm text-stone-500 dark:text-stone-400">
             Hiển thị {(page - 1) * ITEMS_PER_PAGE + 1}-
             {Math.min(page * ITEMS_PER_PAGE, filtered.length)} / {filtered.length} sản phẩm
@@ -307,7 +320,7 @@ export default function AdminProducts() {
               size="sm"
               disabled={page === 1}
               onClick={() => setPage((p) => Math.max(1, p - 1))}
-              leftIcon={<ChevronLeft className="w-4 h-4" />}
+              leftIcon={<ChevronLeft className="h-4 w-4" />}
             >
               Trước
             </Button>
@@ -319,7 +332,7 @@ export default function AdminProducts() {
               size="sm"
               disabled={page === totalPages}
               onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-              rightIcon={<ChevronRight className="w-4 h-4" />}
+              rightIcon={<ChevronRight className="h-4 w-4" />}
             >
               Sau
             </Button>
@@ -329,13 +342,13 @@ export default function AdminProducts() {
 
       {/* Bulk action bar */}
       {selectedIds.length > 0 && (
-        <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-30 flex items-center gap-3 bg-stone-900 text-white px-5 py-3 rounded-xl shadow-xl">
-          <Filter className="w-4 h-4" />
+        <div className="fixed bottom-4 left-1/2 z-30 flex -translate-x-1/2 items-center gap-3 rounded-xl bg-stone-900 px-5 py-3 text-white shadow-xl">
+          <Filter className="h-4 w-4" />
           <span className="text-sm font-medium">Đã chọn {selectedIds.length} sản phẩm</span>
           <button
             type="button"
             onClick={() => setSelectedIds([])}
-            className="text-sm text-stone-300 hover:text-white underline"
+            className="text-sm text-stone-300 underline hover:text-white"
           >
             Bỏ chọn
           </button>
@@ -354,7 +367,7 @@ export default function AdminProducts() {
         }
         size="sm"
       >
-        <p className="text-sm text-stone-600 dark:text-stone-400 mb-4">
+        <p className="mb-4 text-sm text-stone-600 dark:text-stone-400">
           Hành động này không thể hoàn tác.
         </p>
         <div className="flex justify-end gap-2">

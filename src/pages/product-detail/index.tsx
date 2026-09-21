@@ -1,6 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { Truck, ShieldCheck, RotateCcw, ChevronRight, Package, Award, ShoppingCart } from 'lucide-react';
+import {
+  Truck,
+  ShieldCheck,
+  RotateCcw,
+  ChevronRight,
+  Package,
+  Award,
+  ShoppingCart,
+} from 'lucide-react';
 import { productService } from '@/services/productService';
 import { getReviewsByProduct } from '@/data/products';
 import { ProductCard } from '@/components/product/ProductCard';
@@ -13,7 +21,11 @@ import type { Product, Review } from '@/types';
 import { RatingDisplay } from '@/components/ui/Rating';
 
 const formatPrice = (price: number): string =>
-  new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND', maximumFractionDigits: 0 }).format(price);
+  new Intl.NumberFormat('vi-VN', {
+    style: 'currency',
+    currency: 'VND',
+    maximumFractionDigits: 0,
+  }).format(price);
 
 const ProductDetailPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -33,7 +45,8 @@ const ProductDetailPage: React.FC = () => {
     setLoading(true);
     setActiveImage(0);
     setQuantity(1);
-    productService.getProductBySlug(slug)
+    productService
+      .getProductBySlug(slug)
       .then((p) => {
         setProduct(p ?? null);
         if (p) {
@@ -43,23 +56,25 @@ const ProductDetailPage: React.FC = () => {
         setLoading(false);
         window.scrollTo({ top: 0 });
       })
-      .catch(() => { setLoading(false); });
+      .catch(() => {
+        setLoading(false);
+      });
   }, [slug]);
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-stone-50 dark:bg-zinc-900 flex items-center justify-center">
-        <div className="animate-spin w-8 h-8 border-4 border-amber-700 border-t-transparent rounded-full" />
+      <div className="flex min-h-screen items-center justify-center bg-stone-50 dark:bg-zinc-900">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-amber-700 border-t-transparent" />
       </div>
     );
   }
 
   if (!product) {
     return (
-      <div className="min-h-screen bg-stone-50 dark:bg-zinc-900 flex items-center justify-center">
+      <div className="flex min-h-screen items-center justify-center bg-stone-50 dark:bg-zinc-900">
         <div className="text-center">
-          <Package className="w-16 h-16 mx-auto text-stone-300 mb-4" />
-          <h2 className="text-2xl font-bold mb-2">Sản phẩm không tồn tại</h2>
+          <Package className="mx-auto mb-4 h-16 w-16 text-stone-300" />
+          <h2 className="mb-2 text-2xl font-bold">Sản phẩm không tồn tại</h2>
           <Button onClick={() => navigate('/products')}>Xem tất cả sản phẩm</Button>
         </div>
       </div>
@@ -67,7 +82,9 @@ const ProductDetailPage: React.FC = () => {
   }
 
   const hasDiscount = product.salePrice !== undefined && product.salePrice > 0;
-  const discountPercent = hasDiscount ? Math.round(((product.price - (product.salePrice ?? 0)) / product.price) * 100) : 0;
+  const discountPercent = hasDiscount
+    ? Math.round(((product.price - (product.salePrice ?? 0)) / product.price) * 100)
+    : 0;
   const salePrice = product.salePrice ?? product.price;
 
   const handleAddToCart = () => {
@@ -77,43 +94,53 @@ const ProductDetailPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-stone-50 dark:bg-zinc-900">
       {/* Breadcrumb */}
-      <div className="bg-white dark:bg-zinc-800 border-b border-stone-200 dark:border-zinc-700">
+      <div className="border-b border-stone-200 bg-white dark:border-zinc-700 dark:bg-zinc-800">
         <div className="container mx-auto px-4 py-3">
-          <nav className="text-sm text-stone-500 dark:text-stone-400 flex items-center gap-1">
-            <Link to="/" className="hover:text-amber-700">Trang chủ</Link>
-            <ChevronRight className="w-3 h-3" />
-            <Link to="/products" className="hover:text-amber-700">Sản phẩm</Link>
-            <ChevronRight className="w-3 h-3" />
-            <Link to={`/category/${product.categorySlug}`} className="hover:text-amber-700">{product.category}</Link>
-            <ChevronRight className="w-3 h-3" />
+          <nav className="flex items-center gap-1 text-sm text-stone-500 dark:text-stone-400">
+            <Link to="/" className="hover:text-amber-700">
+              Trang chủ
+            </Link>
+            <ChevronRight className="h-3 w-3" />
+            <Link to="/products" className="hover:text-amber-700">
+              Sản phẩm
+            </Link>
+            <ChevronRight className="h-3 w-3" />
+            <Link to={`/category/${product.categorySlug}`} className="hover:text-amber-700">
+              {product.category}
+            </Link>
+            <ChevronRight className="h-3 w-3" />
             <span className="text-stone-800 dark:text-stone-200">{product.name}</span>
           </nav>
         </div>
       </div>
 
       <div className="container mx-auto px-4 py-8">
-        <div className="grid lg:grid-cols-2 gap-8 mb-12">
+        <div className="mb-12 grid gap-8 lg:grid-cols-2">
           {/* Image Gallery */}
           <div className="space-y-4">
             <div
-              className="relative aspect-square overflow-hidden rounded-2xl bg-stone-100 dark:bg-zinc-800 cursor-zoom-in"
+              className="relative aspect-square cursor-zoom-in overflow-hidden rounded-2xl bg-stone-100 dark:bg-zinc-800"
               onClick={() => setZoom(!zoom)}
             >
               <img
                 src={product.images[activeImage]}
                 alt={product.name}
-                className="w-full h-full object-cover"
+                className="h-full w-full object-cover"
               />
               {hasDiscount && (
-                <Badge variant="sale" className="absolute top-4 left-4">
+                <Badge variant="sale" className="absolute left-4 top-4">
                   -{discountPercent}%
                 </Badge>
               )}
               {product.isNewArrival && (
-                <Badge variant="new" className="absolute top-4 left-4 mt-8">MỚI</Badge>
+                <Badge variant="new" className="absolute left-4 top-4 mt-8">
+                  MỚI
+                </Badge>
               )}
               {product.isBestSeller && (
-                <Badge variant="bestseller" className="absolute top-4 right-4">BÁN CHẠY</Badge>
+                <Badge variant="bestseller" className="absolute right-4 top-4">
+                  BÁN CHẠY
+                </Badge>
               )}
             </div>
             {product.images.length > 1 && (
@@ -123,11 +150,11 @@ const ProductDetailPage: React.FC = () => {
                     key={idx}
                     type="button"
                     onClick={() => setActiveImage(idx)}
-                    className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-colors ${
+                    className={`h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg border-2 transition-colors ${
                       idx === activeImage ? 'border-amber-600' : 'border-transparent'
                     }`}
                   >
-                    <img src={img} alt="" className="w-full h-full object-cover" />
+                    <img src={img} alt="" className="h-full w-full object-cover" />
                   </button>
                 ))}
               </div>
@@ -137,8 +164,12 @@ const ProductDetailPage: React.FC = () => {
           {/* Product Info */}
           <div className="space-y-6">
             <div>
-              <p className="text-sm text-amber-700 dark:text-amber-500 font-medium mb-1">{product.category}</p>
-              <h1 className="text-3xl md:text-4xl font-bold text-stone-900 dark:text-stone-100 mb-3">{product.name}</h1>
+              <p className="mb-1 text-sm font-medium text-amber-700 dark:text-amber-500">
+                {product.category}
+              </p>
+              <h1 className="mb-3 text-3xl font-bold text-stone-900 md:text-4xl dark:text-stone-100">
+                {product.name}
+              </h1>
               <RatingDisplay value={product.rating} count={product.reviewCount} />
             </div>
 
@@ -148,29 +179,33 @@ const ProductDetailPage: React.FC = () => {
               </span>
               {hasDiscount && (
                 <>
-                  <span className="text-xl text-stone-400 line-through">{formatPrice(product.price)}</span>
+                  <span className="text-xl text-stone-400 line-through">
+                    {formatPrice(product.price)}
+                  </span>
                   <Badge variant="sale">-{discountPercent}%</Badge>
                 </>
               )}
             </div>
 
-            <p className="text-stone-600 dark:text-stone-300 leading-relaxed">{product.shortDescription}</p>
+            <p className="leading-relaxed text-stone-600 dark:text-stone-300">
+              {product.shortDescription}
+            </p>
 
             <div className="grid grid-cols-2 gap-4">
               <div className="flex items-center gap-2">
-                <Truck className="w-5 h-5 text-amber-700" />
+                <Truck className="h-5 w-5 text-amber-700" />
                 <span className="text-sm">Giao hàng nhanh 24h</span>
               </div>
               <div className="flex items-center gap-2">
-                <ShieldCheck className="w-5 h-5 text-amber-700" />
+                <ShieldCheck className="h-5 w-5 text-amber-700" />
                 <span className="text-sm">Bảo hành chất lượng</span>
               </div>
               <div className="flex items-center gap-2">
-                <RotateCcw className="w-5 h-5 text-amber-700" />
+                <RotateCcw className="h-5 w-5 text-amber-700" />
                 <span className="text-sm">Đổi trả 30 ngày</span>
               </div>
               <div className="flex items-center gap-2">
-                <Award className="w-5 h-5 text-amber-700" />
+                <Award className="h-5 w-5 text-amber-700" />
                 <span className="text-sm">100% nguyên chất</span>
               </div>
             </div>
@@ -197,14 +232,16 @@ const ProductDetailPage: React.FC = () => {
                 min={1}
                 max={Math.min(product.stock, 10)}
               />
-              <span className={`text-sm ${product.stock > 0 ? 'text-emerald-600' : 'text-red-500'}`}>
+              <span
+                className={`text-sm ${product.stock > 0 ? 'text-emerald-600' : 'text-red-500'}`}
+              >
                 {product.stock > 0 ? `Còn ${product.stock} sản phẩm` : 'Hết hàng'}
               </span>
             </div>
 
             <div className="flex gap-3">
               <Button size="lg" onClick={handleAddToCart} disabled={product.stock === 0}>
-                <ShoppingCart className="w-5 h-5" />
+                <ShoppingCart className="h-5 w-5" />
                 Thêm vào giỏ hàng
               </Button>
             </div>
@@ -220,51 +257,82 @@ const ProductDetailPage: React.FC = () => {
           </TabsList>
 
           <TabsContent value="description">
-            <div className="bg-white dark:bg-zinc-800 rounded-xl border border-stone-200 dark:border-zinc-700 p-6">
-              <h2 className="text-xl font-bold mb-4">Mô tả sản phẩm</h2>
-              <p className="text-stone-600 dark:text-stone-300 leading-relaxed whitespace-pre-line">
+            <div className="rounded-xl border border-stone-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-800">
+              <h2 className="mb-4 text-xl font-bold">Mô tả sản phẩm</h2>
+              <p className="whitespace-pre-line leading-relaxed text-stone-600 dark:text-stone-300">
                 {product.description}
               </p>
-              <h3 className="text-lg font-semibold mt-6 mb-3">Pha chế</h3>
+              <h3 className="mb-3 mt-6 text-lg font-semibold">Pha chế</h3>
               <div className="flex flex-wrap gap-2">
                 {product.brewingMethod.map((method) => (
-                  <Badge key={method} variant="secondary">{method}</Badge>
+                  <Badge key={method} variant="secondary">
+                    {method}
+                  </Badge>
                 ))}
               </div>
             </div>
           </TabsContent>
 
           <TabsContent value="specs">
-            <div className="bg-white dark:bg-zinc-800 rounded-xl border border-stone-200 dark:border-zinc-700 p-6">
-              <h2 className="text-xl font-bold mb-4">Thông số kỹ thuật</h2>
+            <div className="rounded-xl border border-stone-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-800">
+              <h2 className="mb-4 text-xl font-bold">Thông số kỹ thuật</h2>
               <table className="w-full text-sm">
                 <tbody className="divide-y divide-stone-100 dark:divide-zinc-700">
-                  <tr><td className="py-2 font-medium w-1/3">Tên sản phẩm</td><td className="py-2">{product.name}</td></tr>
-                  <tr><td className="py-2 font-medium">SKU</td><td className="py-2">{product.sku}</td></tr>
-                  <tr><td className="py-2 font-medium">Khối lượng</td><td className="py-2">{product.weight}</td></tr>
-                  <tr><td className="py-2 font-medium">Độ rang</td><td className="py-2">{product.roastLevel}</td></tr>
-                  <tr><td className="py-2 font-medium">Hương vị</td><td className="py-2">{product.flavorNotes.join(', ')}</td></tr>
-                  <tr><td className="py-2 font-medium">Xuất xứ</td><td className="py-2">{product.origin}</td></tr>
-                  <tr><td className="py-2 font-medium">Danh mục</td><td className="py-2">{product.category}</td></tr>
-                  <tr><td className="py-2 font-medium">Tồn kho</td><td className="py-2">{product.stock}</td></tr>
+                  <tr>
+                    <td className="w-1/3 py-2 font-medium">Tên sản phẩm</td>
+                    <td className="py-2">{product.name}</td>
+                  </tr>
+                  <tr>
+                    <td className="py-2 font-medium">SKU</td>
+                    <td className="py-2">{product.sku}</td>
+                  </tr>
+                  <tr>
+                    <td className="py-2 font-medium">Khối lượng</td>
+                    <td className="py-2">{product.weight}</td>
+                  </tr>
+                  <tr>
+                    <td className="py-2 font-medium">Độ rang</td>
+                    <td className="py-2">{product.roastLevel}</td>
+                  </tr>
+                  <tr>
+                    <td className="py-2 font-medium">Hương vị</td>
+                    <td className="py-2">{product.flavorNotes.join(', ')}</td>
+                  </tr>
+                  <tr>
+                    <td className="py-2 font-medium">Xuất xứ</td>
+                    <td className="py-2">{product.origin}</td>
+                  </tr>
+                  <tr>
+                    <td className="py-2 font-medium">Danh mục</td>
+                    <td className="py-2">{product.category}</td>
+                  </tr>
+                  <tr>
+                    <td className="py-2 font-medium">Tồn kho</td>
+                    <td className="py-2">{product.stock}</td>
+                  </tr>
                 </tbody>
               </table>
             </div>
           </TabsContent>
 
           <TabsContent value="reviews">
-            <div className="bg-white dark:bg-zinc-800 rounded-xl border border-stone-200 dark:border-zinc-700 p-6">
-              <h2 className="text-xl font-bold mb-4">Đánh giá sản phẩm</h2>
+            <div className="rounded-xl border border-stone-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-800">
+              <h2 className="mb-4 text-xl font-bold">Đánh giá sản phẩm</h2>
               {reviews.length === 0 ? (
-                <p className="text-stone-500 text-center py-8">Chưa có đánh giá nào.</p>
+                <p className="py-8 text-center text-stone-500">Chưa có đánh giá nào.</p>
               ) : (
                 <div className="space-y-4">
                   {reviews.map((review) => (
-                    <div key={review.id} className="border-b border-stone-100 dark:border-zinc-700 pb-4">
+                    <div
+                      key={review.id}
+                      className="border-b border-stone-100 pb-4 dark:border-zinc-700"
+                    >
                       <RatingDisplay value={review.rating} size="sm" />
-                      <p className="font-medium mt-1">{review.userName}</p>
-                      <p className="text-stone-600 dark:text-stone-300 text-sm mt-1">{review.comment}</p>
-                      <p className="text-xs text-stone-400 mt-1">
+                      <p className="mt-1 font-medium">{review.userName}</p>
+                      <p className="mt-1 text-sm text-stone-600 dark:text-stone-300">
+                        {review.comment}
+                      </p>
+                      <p className="mt-1 text-xs text-stone-400">
                         {new Date(review.createdAt).toLocaleDateString('vi-VN')}
                       </p>
                     </div>
@@ -278,8 +346,8 @@ const ProductDetailPage: React.FC = () => {
         {/* Related Products */}
         {relatedProducts.length > 0 && (
           <div className="mt-12">
-            <h2 className="text-2xl font-bold mb-6">Sản phẩm liên quan</h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+            <h2 className="mb-6 text-2xl font-bold">Sản phẩm liên quan</h2>
+            <div className="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-6">
               {relatedProducts.map((p) => (
                 <ProductCard key={p.id} product={p} onAddToCart={(prod) => addProduct(prod, 1)} />
               ))}

@@ -1,25 +1,14 @@
 import { z } from 'zod';
 
 export const loginSchema = z.object({
-  email: z
-    .string()
-    .min(1, 'Email không được để trống')
-    .email('Email không hợp lệ'),
-  password: z
-    .string()
-    .min(6, 'Mật khẩu phải có ít nhất 6 ký tự'),
+  email: z.string().min(1, 'Email không được để trống').email('Email không hợp lệ'),
+  password: z.string().min(6, 'Mật khẩu phải có ít nhất 6 ký tự'),
 });
 
 export const registerSchema = z
   .object({
-    name: z
-      .string()
-      .min(2, 'Tên phải có ít nhất 2 ký tự')
-      .max(50, 'Tên không quá 50 ký tự'),
-    email: z
-      .string()
-      .min(1, 'Email không được để trống')
-      .email('Email không hợp lệ'),
+    name: z.string().min(2, 'Tên phải có ít nhất 2 ký tự').max(50, 'Tên không quá 50 ký tự'),
+    email: z.string().min(1, 'Email không được để trống').email('Email không hợp lệ'),
     password: z
       .string()
       .min(6, 'Mật khẩu phải có ít nhất 6 ký tự')
@@ -40,9 +29,7 @@ export const registerSchema = z
 export const addressSchema = z.object({
   label: z.enum(['home', 'office', 'other']),
   name: z.string().min(2, 'Tên người nhận phải có ít nhất 2 ký tự'),
-  phone: z
-    .string()
-    .regex(/^(0|\+84)[0-9]{9,10}$/, 'Số điện thoại không hợp lệ'),
+  phone: z.string().regex(/^(0|\+84)[0-9]{9,10}$/, 'Số điện thoại không hợp lệ'),
   province: z.string().min(1, 'Vui lòng chọn tỉnh/thành phố'),
   district: z.string().min(1, 'Vui lòng chọn quận/huyện'),
   ward: z.string().min(1, 'Vui lòng chọn phường/xã'),
@@ -58,10 +45,7 @@ export const checkoutSchema = z.object({
 });
 
 export const reviewSchema = z.object({
-  rating: z
-    .number()
-    .min(1, 'Vui lòng chọn số sao')
-    .max(5, 'Số sao tối đa là 5'),
+  rating: z.number().min(1, 'Vui lòng chọn số sao').max(5, 'Số sao tối đa là 5'),
   comment: z
     .string()
     .min(10, 'Nhận xét phải có ít nhất 10 ký tự')
@@ -70,10 +54,7 @@ export const reviewSchema = z.object({
 });
 
 export const profileSchema = z.object({
-  name: z
-    .string()
-    .min(2, 'Tên phải có ít nhất 2 ký tự')
-    .max(50, 'Tên không quá 50 ký tự'),
+  name: z.string().min(2, 'Tên phải có ít nhất 2 ký tự').max(50, 'Tên không quá 50 ký tự'),
   phone: z
     .string()
     .regex(/^(0|\+84)[0-9]{9,10}$/, 'Số điện thoại không hợp lệ')
@@ -85,9 +66,7 @@ export const profileSchema = z.object({
 export const contactSchema = z.object({
   name: z.string().min(2, 'Tên phải có ít nhất 2 ký tự'),
   email: z.string().email('Email không hợp lệ'),
-  phone: z
-    .string()
-    .regex(/^(0|\+84)[0-9]{9,10}$/, 'Số điện thoại không hợp lệ'),
+  phone: z.string().regex(/^(0|\+84)[0-9]{9,10}$/, 'Số điện thoại không hợp lệ'),
   subject: z.string().min(5, 'Tiêu đề phải có ít nhất 5 ký tự'),
   message: z.string().min(10, 'Nội dung phải có ít nhất 10 ký tự'),
 });
