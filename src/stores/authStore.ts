@@ -34,8 +34,8 @@ interface AuthStore {
 const simulateDelay = (ms = 500) => new Promise((r) => setTimeout(r, ms));
 
 export const useAuthStore = create<AuthStore>()(
-  persist(
-    (set, get) => ({
+    persist(
+    (set, _get) => ({
       user: null,
       isAuthenticated: false,
       isLoading: false,

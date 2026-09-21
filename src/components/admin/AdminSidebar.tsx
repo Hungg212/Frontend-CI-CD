@@ -18,7 +18,7 @@ interface AdminSidebarProps {
   onToggle?: () => void;
 }
 
-export default function AdminSidebar({ collapsed = false, onToggle }: AdminSidebarProps = {}) {
+export default function AdminSidebar({ collapsed = false, onToggle: _onToggle }: AdminSidebarProps = {}) {
   return (
     <aside className={`hidden w-64 shrink-0 border-r border-warm-200 bg-white dark:border-coffee-800 dark:bg-coffee-900 md:block transition-all duration-300 ${collapsed ? 'w-20' : ''}`}>
       <div className="sticky top-0 flex h-screen flex-col">

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Tag, X, Loader2, CheckCircle2 } from 'lucide-react';
+import { Tag, X, CheckCircle2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';

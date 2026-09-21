@@ -56,7 +56,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
     try {
       const stored = localStorage.getItem(CART_STORAGE_KEY);
       if (stored) return JSON.parse(stored);
-    } catch {}
+    } catch (_e) { /* ignore */ }
     return [];
   });
   const [isOpen, setIsOpen] = React.useState(false);
@@ -64,7 +64,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
   React.useEffect(() => {
     try {
       localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
-    } catch {}
+    } catch (_e) { /* ignore storage errors */ }
   }, [items]);
 
   const addItem = (item: CartItemData) => {

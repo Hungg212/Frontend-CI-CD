@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { Skeleton } from './Skeleton';
 import { ImageIcon } from 'lucide-react';

@@ -1,7 +1,6 @@
 import React from 'react';
 import { Minus, Plus, Trash2, Heart, Package } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { Button } from '@/components/ui/Button';
 import type { CartItem as CartItemType } from '@/types';
 
 export interface CartItemProps {

@@ -840,7 +840,7 @@ export const searchProducts = (query: string): Product[] => {
   );
 };
 
-export const getReviewsByProduct = (productId: string): import('../types').Review[] => {
+export const getReviewsByProduct = (_productId: string): import('../types').Review[] => {
   // For demo purposes, return empty array
   // In production, this would fetch from API
   return [];

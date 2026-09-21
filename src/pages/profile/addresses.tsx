@@ -12,9 +12,7 @@ import {
   Briefcase,
   MapPin,
   CheckCircle2,
-  Star,
   Phone,
-  X,
   Loader2,
 } from 'lucide-react';
 import { Card } from '@/components/ui/Card';

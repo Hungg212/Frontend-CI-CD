@@ -5,7 +5,7 @@ import AuthLayout from '@/layouts/AuthLayout';
 import AdminLayout from '@/layouts/AdminLayout';
 import ProtectedRoute from './ProtectedRoute';
 import AdminRoute from './AdminRoute';
-import { Spinner, FullPageSpinner } from '@/components/ui';
+import { Spinner } from '@/components/ui';
 
 const HomePage = lazy(() => import('@/pages/home/HomePage'));
 const ProductsPage = lazy(() => import('@/pages/products/ProductsPage'));

@@ -1,13 +1,11 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { Search, Filter, ChevronRight } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { categories } from '@/data/categories';
 import { productService } from '@/services/productService';
 import { ProductCard } from '@/components/product/ProductCard';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
-import { Rating } from '@/components/ui/Rating';
 import { useCartStore } from '@/stores/cartStore';
 import type { Product, FilterOptions } from '@/types';
 
@@ -26,7 +24,6 @@ const ProductsPage: React.FC = () => {
   const [allProducts, setAllProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
-  const [drawerOpen, setDrawerOpen] = useState(false);
   const [search, setSearch] = useState(searchParams.get('q') || '');
   const [category, setCategory] = useState(searchParams.get('category') || '');
   const [sortBy, setSortBy] = useState<FilterOptions['sortBy']>('newest');

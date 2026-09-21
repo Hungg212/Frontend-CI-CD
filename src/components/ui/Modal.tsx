@@ -1,9 +1,8 @@
-import { useEffect, useRef, useCallback, type ReactNode } from 'react';
+import React, { useEffect, useRef, useCallback, type ReactNode } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { createPortal } from 'react-dom';
 import { cn } from '@/lib/utils';
 import { X } from 'lucide-react';
-import { Button } from './Button';
 
 interface ModalProps {
   isOpen: boolean;

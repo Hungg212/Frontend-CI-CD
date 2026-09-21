@@ -1,20 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import {
-  Heart, ShoppingCart, Share2, Truck, ShieldCheck, RotateCcw, ChevronRight,
-  Package, Award, Clock, ZoomIn, Plus, Minus,
-} from 'lucide-react';
+import { Truck, ShieldCheck, RotateCcw, ChevronRight, Package, Award, ShoppingCart } from 'lucide-react';
 import { productService } from '@/services/productService';
 import { getReviewsByProduct } from '@/data/products';
 import { ProductCard } from '@/components/product/ProductCard';
 import { Button } from '@/components/ui/Button';
-import { Rating, RatingDisplay } from '@/components/ui/Rating';
 import { Badge } from '@/components/ui/Badge';
 import { QuantitySelector } from '@/components/ui/QuantitySelector';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/Tabs';
 import { useCartStore } from '@/stores/cartStore';
 import type { Product, Review } from '@/types';
+import { RatingDisplay } from '@/components/ui/Rating';
 
 const formatPrice = (price: number): string =>
   new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND', maximumFractionDigits: 0 }).format(price);

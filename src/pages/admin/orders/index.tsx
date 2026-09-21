@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, Filter, Eye, Calendar, ShoppingBag } from 'lucide-react';
+import { Search, Eye, Calendar, ShoppingBag } from 'lucide-react';
 import AdminLayout from '@/components/admin/AdminLayout';
 import { Card } from '@/components/ui';
 import { Input } from '@/components/ui';
@@ -21,7 +21,7 @@ const orderStatusOptions = [
   { value: 'CANCELLED', label: 'Đã hủy' },
 ];
 
-const statusVariant: Record<AdminOrder['status'], 'warning' | 'info' | 'primary' | 'success' | 'danger'> = {
+const _statusVariant: Record<AdminOrder['status'], 'warning' | 'info' | 'primary' | 'success' | 'danger'> = {
   PENDING: 'warning',
   CONFIRMED: 'info',
   PROCESSING: 'primary',

@@ -31,14 +31,14 @@ export const WishlistProvider: React.FC<{ children: React.ReactNode }> = ({
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored) return JSON.parse(stored);
-    } catch {}
+    } catch (_e) { /* ignore */ }
     return [];
   });
 
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-    } catch {}
+    } catch (_e) { /* ignore storage errors */ }
   }, [items]);
 
   const addItem = (item: WishlistItem) => {

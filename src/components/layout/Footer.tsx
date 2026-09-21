@@ -1,6 +1,6 @@
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
-import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui';
 import { Input } from '@/components/ui';
 import { Send, MapPin, Phone, Mail, Facebook, Instagram, Youtube, ArrowUp } from 'lucide-react';

@@ -1,3 +1,4 @@
+import React from 'react';
 import { cn } from '@/lib/utils';
 
 type BadgeVariant = 'default' | 'success' | 'warning' | 'error' | 'info' | 'sale' | 'new' | 'bestseller' | 'primary' | 'secondary' | 'danger';

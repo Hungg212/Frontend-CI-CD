@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Check, Clock, Package, Truck, CheckCircle2, XCircle, CreditCard } from 'lucide-react';
+import { Check, Clock, Package, Truck, CheckCircle2, XCircle } from 'lucide-react';
 import type { OrderStatus, OrderTimeline as OrderTimelineType } from '@/types';
 
 export interface OrderTimelineProps {

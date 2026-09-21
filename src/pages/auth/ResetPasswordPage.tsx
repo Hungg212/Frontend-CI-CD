@@ -3,7 +3,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Lock, Coffee, ArrowLeft, CheckCircle2, Eye, EyeOff, ShieldCheck } from 'lucide-react';
+import { Lock, Coffee, ArrowLeft, CheckCircle2, ShieldCheck } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
@@ -36,7 +36,7 @@ const ResetPasswordPage: React.FC = () => {
     resolver: zodResolver(schema),
   });
 
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = async (_data: FormData) => {
     if (!token) {
       pushNotification({
         type: 'error',

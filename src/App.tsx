@@ -1,6 +1,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter } from 'react-router-dom';
-import { lazy, Suspense } from 'react';
+import { Suspense } from 'react';
 import { ThemeProvider } from '@/components/providers/ThemeProvider';
 import AppRoutes from '@/routes/AppRoutes';
 import { Spinner } from '@/components/ui/Spinner';

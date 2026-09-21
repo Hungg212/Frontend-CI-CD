@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import {
   ChevronLeft,
   Package,
@@ -11,7 +10,6 @@ import {
   Star,
   RefreshCw,
   ShieldCheck,
-  Loader2,
 } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
@@ -93,7 +91,7 @@ export default function OrderDetailPage() {
   const handleReorder = () => {
     try {
       const cartData = JSON.parse(localStorage.getItem('cart-storage') || '{}');
-      const existingItems: any[] = cartData?.state?.items || [];
+      const existingItems = cartData?.state?.items || [];
       const merged = [...existingItems];
       order.items.forEach((item) => {
         const existing = merged.find((c) => c.product.id === item.product.id);

@@ -1,9 +1,8 @@
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import OrderTimeline from '@/components/orders/OrderTimeline';
 import OrderStatusBadge from '@/components/orders/OrderStatusBadge';
 import { LinkButton } from '@/components/ui/Button';
 import { useOrderStore } from '@/stores/orderStore';
-import { useState } from 'react';
 
 export default function OrderDetailPage() {
   const { id } = useParams<{ id: string }>();

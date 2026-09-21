@@ -1,17 +1,7 @@
 import React, { useEffect, useMemo } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import {
-  CheckCircle2,
-  Package,
-  Truck,
-  Calendar,
-  MapPin,
-  CreditCard,
-  ShoppingBag,
-  Home,
-  ChevronRight,
-} from 'lucide-react';
+import { CheckCircle2, Package, Truck, MapPin, CreditCard, ShoppingBag, Home, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { useOrderStore } from '@/stores/orderStore';

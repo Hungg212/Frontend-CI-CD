@@ -74,7 +74,7 @@ export function useOrders(pageSize = 5): UseOrdersReturn {
     if (!order) return;
     try {
       const cartData = JSON.parse(localStorage.getItem('cart-storage') || '{}');
-      const existingItems: any[] = cartData?.state?.items || [];
+      const existingItems = cartData?.state?.items || [];
       const merged = [...existingItems];
       order.items.forEach((item) => {
         const existing = merged.find((c) => c.product.id === item.product.id);
@@ -92,7 +92,7 @@ export function useOrders(pageSize = 5): UseOrdersReturn {
         }),
       );
       window.location.href = '/cart';
-    } catch {}
+    } catch (_e) { /* ignore */ }
   };
 
   return {

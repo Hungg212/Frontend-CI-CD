@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, Navigate } from 'react-router-dom';
-import { ChevronRight, Star, Trash2, Edit3, X, Loader2, MessageSquare } from 'lucide-react';
+import { ChevronRight, Star, Trash2, Edit3, Loader2, MessageSquare } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';

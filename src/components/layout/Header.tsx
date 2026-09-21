@@ -2,7 +2,6 @@ import { Link, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { useThemeStore } from '@/stores/themeStore';
-import { useCartStore } from '@/stores/cartStore';
 import { Search, Heart, ShoppingCart, User, Sun, Moon, Menu, X, ChevronDown } from 'lucide-react';
 
 const navLinks = [

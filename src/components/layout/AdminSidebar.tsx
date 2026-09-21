@@ -1,5 +1,4 @@
 import { Link, useLocation } from 'react-router-dom';
-import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import {
   LayoutDashboard,
@@ -13,7 +12,6 @@ import {
   ChevronLeft,
   ChevronRight,
   LogOut,
-  Bell,
 } from 'lucide-react';
 
 const adminNavItems = [

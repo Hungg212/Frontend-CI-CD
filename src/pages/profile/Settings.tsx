@@ -6,8 +6,6 @@ import {
   Lock,
   User as UserIcon,
   Save,
-  Eye,
-  EyeOff,
   CheckCircle2,
 } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
@@ -30,9 +28,6 @@ export default function ProfileSettingsPage() {
   const [activeTab, setActiveTab] = useState<'profile' | 'password'>('profile');
   const [profile, setProfile] = useState(MOCK_USER);
   const [passwords, setPasswords] = useState(passwordSchema);
-  const [showCurrent, setShowCurrent] = useState(false);
-  const [showNew, setShowNew] = useState(false);
-  const [showConfirm, setShowConfirm] = useState(false);
   const [profileSaved, setProfileSaved] = useState(false);
   const [passwordSaved, setPasswordSaved] = useState(false);
   const [passwordError, setPasswordError] = useState<string | null>(null);
@@ -90,7 +85,7 @@ export default function ProfileSettingsPage() {
                 return (
                   <button
                     key={item.id}
-                    onClick={() => setActiveTab(item.id as any)}
+                    onClick={() => setActiveTab(item.id as 'profile' | 'password')}
                     className={`
                       w-full flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors
                       ${isActive

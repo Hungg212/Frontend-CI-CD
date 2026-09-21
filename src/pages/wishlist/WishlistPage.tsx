@@ -1,4 +1,3 @@
-import ProductCard from '@/components/product/ProductCard';
 import { Heart } from 'lucide-react';
 import { LinkButton } from '@/components/ui/Button';
 

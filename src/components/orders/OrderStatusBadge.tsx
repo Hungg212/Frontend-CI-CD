@@ -1,5 +1,4 @@
 import React from 'react';
-import { Badge } from '@/components/ui/Badge';
 import type { OrderStatus, PaymentStatus } from '@/types';
 
 export interface OrderStatusBadgeProps {

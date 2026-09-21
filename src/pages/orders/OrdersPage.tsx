@@ -1,6 +1,5 @@
 import OrderCard from '@/components/orders/OrderCard';
 import { useOrderStore } from '@/stores/orderStore';
-import type { Order } from '@/types';
 
 export default function OrdersPage() {
   const orders = useOrderStore((s) => s.orders);

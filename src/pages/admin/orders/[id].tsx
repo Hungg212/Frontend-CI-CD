@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
   ArrowLeft,
@@ -14,10 +14,8 @@ import {
   FileText,
 } from 'lucide-react';
 import AdminLayout from '@/components/admin/AdminLayout';
-import { Card } from '@/components/ui';
+import { Card, Badge } from '@/components/ui';
 import { Button } from '@/components/ui';
-import { Select } from '@/components/ui';
-import { Badge } from '@/components/ui';
 import { Modal } from '@/components/ui';
 import { useAdminStore } from '@/stores/adminStore';
 import { formatVND, formatDateTime, formatDate } from '@/utils/adminFormat';
@@ -100,7 +98,7 @@ export default function AdminOrderDetail() {
   }
 
   const stepStatuses = new Set(order.timeline.map((t) => t.status));
-  const currentStepIndex = flowSteps.findIndex((s) => s.status === order.status);
+  const _currentStepIndex = flowSteps.findIndex((s) => s.status === order.status);
 
   const handleConfirmStatus = () => {
     if (!statusModal) return;

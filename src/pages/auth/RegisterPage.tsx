@@ -58,7 +58,7 @@ const RegisterPage: React.FC = () => {
     }
   };
 
-  const passwordStrength = (pwd: string): { label: string; color: string; width: string } => {
+  const _passwordStrength = (pwd: string): { label: string; color: string; width: string } => {
     if (!pwd) return { label: '', color: '', width: '0%' };
     let score = 0;
     if (pwd.length >= 6) score++;

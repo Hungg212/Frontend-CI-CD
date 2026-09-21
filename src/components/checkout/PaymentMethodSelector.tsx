@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { CreditCard, Wallet, Building2, Smartphone, Banknote } from 'lucide-react';
 import type { PaymentMethod as PaymentMethodType } from '@/types';
 

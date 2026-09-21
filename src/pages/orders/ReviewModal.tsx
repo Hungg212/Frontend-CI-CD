@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Star, X, ImageIcon, Upload } from 'lucide-react';
+import { Star, X, Upload } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Modal } from '@/components/ui/Modal';
 import { Button } from '@/components/ui/Button';

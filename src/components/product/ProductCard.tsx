@@ -23,7 +23,7 @@ const formatPrice = (price: number): string => {
   }).format(price);
 };
 
-const calculateDiscount = (originalPrice: number, salePrice: number): number => {
+const _calculateDiscount = (originalPrice: number, salePrice: number): number => {
   return Math.round(((originalPrice - salePrice) / originalPrice) * 100);
 };
 
@@ -35,7 +35,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   isInWishlist = false,
   className = '',
 }) => {
-  const [imageLoaded, setImageLoaded] = useState(false);
+  const [_imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 

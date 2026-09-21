@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Mail, Lock, Eye, EyeOff, Coffee, Loader2, ArrowRight } from 'lucide-react';
+import { Mail, Lock, Coffee, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';

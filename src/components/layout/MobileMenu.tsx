@@ -1,5 +1,4 @@
 import { Link, useLocation } from 'react-router-dom';
-import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { useThemeStore } from '@/stores/themeStore';
 import { X, Home, Package, Heart, ShoppingCart, User, Settings, LogOut } from 'lucide-react';

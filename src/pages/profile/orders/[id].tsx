@@ -8,13 +8,12 @@ import {
   X,
   ShoppingBag,
   RotateCcw,
-  Loader2,
   MapPin,
   CreditCard,
   Calendar,
   Hash,
+  Loader2,
 } from 'lucide-react';
-import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Modal } from '@/components/ui/Modal';
