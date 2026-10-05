@@ -8,9 +8,10 @@ pipeline {
     }
 
     environment {
-        // Tắt husky vì CI không cần git hooks
         HUSKY = '0'
         CI = 'true'
+        npm_config_audit = 'false'
+        npm_config_fund = 'false'
     }
 
     stages {
@@ -23,10 +24,8 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                // Cache ~/.npm để lần build sau cài nhanh hơn
-                cache(cachePath: '~/.npm', cacheId: 'npm-coffee-home-blend') {
-                    sh 'npm ci --no-audit --no-fund'
-                }
+                echo ">>> Cài dependencies (npm ci)"
+                sh 'npm ci'
                 sh 'node -v && npm -v'
             }
         }
@@ -74,9 +73,6 @@ pipeline {
         }
         failure {
             echo "❌ Build thất bại! Commit: ${env.GIT_COMMIT}"
-        }
-        always {
-            cleanWs()
         }
     }
 }
