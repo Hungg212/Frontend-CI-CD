@@ -33,7 +33,7 @@ const ReviewsPage: React.FC = () => {
   const [saving, setSaving] = useState(false);
 
   if (!isAuthenticated || !user) {
-    return <Navigate to="/auth/login" replace />;
+    return <Navigate to="/login" replace />;
   }
 
   const userReviews = reviews.filter((r) => r.userId === user.id);

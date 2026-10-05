@@ -73,12 +73,12 @@ const ForgotPasswordPage: React.FC = () => {
                   Vui lòng kiểm tra hộp thư đến (hoặc thư rác) trong vòng vài phút.
                 </p>
                 <div className="space-y-2">
-                  <Link to="/auth/reset-password?token=mock-token" className="block">
+                  <Link to="/reset-password?token=mock-token" className="block">
                     <Button variant="primary" fullWidth>
                       Tiếp Tục Đặt Lại Mật Khẩu (Demo)
                     </Button>
                   </Link>
-                  <Link to="/auth/login" className="block">
+                  <Link to="/login" className="block">
                     <Button variant="ghost" fullWidth leftIcon={<ArrowLeft className="h-4 w-4" />}>
                       Quay lại đăng nhập
                     </Button>
@@ -114,7 +114,7 @@ const ForgotPasswordPage: React.FC = () => {
                 >
                   {isSubmitting ? 'Đang gửi...' : 'Gửi Link Đặt Lại Mật Khẩu'}
                 </Button>
-                <Link to="/auth/login" className="block">
+                <Link to="/login" className="block">
                   <Button
                     type="button"
                     variant="ghost"

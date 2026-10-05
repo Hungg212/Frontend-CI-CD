@@ -217,7 +217,7 @@ const AddressesPage: React.FC = () => {
   const [deleting, setDeleting] = useState(false);
 
   if (!isAuthenticated || !user) {
-    return <Navigate to="/auth/login" replace />;
+    return <Navigate to="/login" replace />;
   }
 
   const handleOpenAdd = () => {

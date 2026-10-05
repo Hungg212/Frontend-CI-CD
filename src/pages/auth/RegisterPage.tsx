@@ -195,7 +195,7 @@ const RegisterPage: React.FC = () => {
           <div className="mt-6 border-t border-stone-200 pt-4 text-center text-sm text-stone-600 dark:border-zinc-700 dark:text-stone-400">
             Đã có tài khoản?{' '}
             <Link
-              to="/auth/login"
+              to="/login"
               className="font-medium text-amber-700 hover:underline dark:text-amber-500"
             >
               Đăng nhập

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -18,12 +18,14 @@ const loginSchema = z.object({
 type LoginData = z.infer<typeof loginSchema>;
 
 const DEMO_ACCOUNTS = [
-  { label: 'Demo Admin', email: 'admin@coffeehome.vn', password: '123456' },
-  { label: 'Demo User', email: 'user@coffeehome.vn', password: '123456' },
+  { label: 'Demo Admin', email: 'admin@coffee.com', password: 'admin123' },
+  { label: 'Demo User', email: 'customer@coffee.com', password: 'user123' },
+  { label: 'Demo VIP', email: 'vip@coffee.com', password: 'vip123' },
 ];
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const login = useAuthStore((s) => s.login);
   const pushNotification = useUIStore((s) => s.pushNotification);
   const [showHint, setShowHint] = useState(false);
@@ -46,7 +48,9 @@ const LoginPage: React.FC = () => {
         title: 'Đăng nhập thành công',
         message: 'Chào mừng bạn quay lại!',
       });
-      navigate('/profile');
+      // Quay lại trang đang truy cập trước đó, hoặc trang phù hợp với vai trò
+      const from = (location.state as { from?: string } | null)?.from;
+      navigate(from ?? (result.user?.role === 'admin' ? '/admin' : '/profile'), { replace: true });
     } else {
       pushNotification({
         type: 'error',
@@ -109,7 +113,7 @@ const LoginPage: React.FC = () => {
                 <span className="text-stone-700 dark:text-stone-300">Ghi nhớ đăng nhập</span>
               </label>
               <Link
-                to="/auth/forgot-password"
+                to="/forgot-password"
                 className="text-amber-700 hover:underline dark:text-amber-500"
               >
                 Quên mật khẩu?
@@ -166,7 +170,7 @@ const LoginPage: React.FC = () => {
           <div className="mt-6 border-t border-stone-200 pt-4 text-center text-sm text-stone-600 dark:border-zinc-700 dark:text-stone-400">
             Chưa có tài khoản?{' '}
             <Link
-              to="/auth/register"
+              to="/register"
               className="font-medium text-amber-700 hover:underline dark:text-amber-500"
             >
               Đăng ký ngay

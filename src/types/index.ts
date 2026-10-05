@@ -56,6 +56,7 @@ export interface User {
   phone?: string;
   message?: string;
   success?: boolean;
+  role?: 'customer' | 'admin';
   addresses: Address[];
   createdAt: string;
 }

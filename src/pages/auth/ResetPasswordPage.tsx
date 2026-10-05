@@ -43,12 +43,12 @@ const ResetPasswordPage: React.FC = () => {
         title: 'Liên kết không hợp lệ',
         message: 'Vui lòng yêu cầu đặt lại mật khẩu lại.',
       });
-      navigate('/auth/forgot-password');
+      navigate('/forgot-password');
       return;
     }
     await new Promise((r) => setTimeout(r, 700));
     setSuccess(true);
-    setTimeout(() => navigate('/auth/login'), 2000);
+    setTimeout(() => navigate('/login'), 2000);
   };
 
   return (
@@ -129,7 +129,7 @@ const ResetPasswordPage: React.FC = () => {
               >
                 {isSubmitting ? 'Đang cập nhật...' : 'Đặt Lại Mật Khẩu'}
               </Button>
-              <Link to="/auth/login" className="block">
+              <Link to="/login" className="block">
                 <Button
                   type="button"
                   variant="ghost"

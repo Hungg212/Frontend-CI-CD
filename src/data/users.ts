@@ -11,6 +11,7 @@ export const users: User[] = [
     name: 'Nguyễn Văn Admin',
     avatar: 'https://i.pravatar.cc/300?img=12',
     phone: '0901234567',
+    role: 'admin',
     addresses: [
       {
         id: 'addr-1',
@@ -32,6 +33,7 @@ export const users: User[] = [
     name: 'Trần Thị Khách Hàng',
     avatar: 'https://i.pravatar.cc/300?img=25',
     phone: '0912345678',
+    role: 'customer',
     addresses: [
       {
         id: 'addr-2',
@@ -64,6 +66,7 @@ export const users: User[] = [
     name: 'Lê Hoàng VIP',
     avatar: 'https://i.pravatar.cc/300?img=33',
     phone: '0923456789',
+    role: 'customer',
     addresses: [
       {
         id: 'addr-4',

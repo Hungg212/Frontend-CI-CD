@@ -12,6 +12,7 @@ import {
   ChevronLeft,
   ChevronRight,
   LogOut,
+  Rocket,
 } from 'lucide-react';
 
 const adminNavItems = [
@@ -22,6 +23,7 @@ const adminNavItems = [
   { href: '/admin/reviews', label: 'Đánh giá', icon: Star },
   { href: '/admin/messages', label: 'Tin nhắn', icon: MessageSquare },
   { href: '/admin/analytics', label: 'Thống kê', icon: BarChart3 },
+  { href: '/admin/devops', label: 'DevOps', icon: Rocket },
   { href: '/admin/settings', label: 'Cài đặt', icon: Settings },
 ];
 

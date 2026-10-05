@@ -1,4 +1,5 @@
 import { NavLink } from 'react-router-dom';
+import { Rocket } from 'lucide-react';
 import { cn } from '@/utils/cn';
 
 const links = [
@@ -10,6 +11,7 @@ const links = [
   { to: '/admin/reviews', label: 'Reviews' },
   { to: '/admin/coupons', label: 'Coupons' },
   { to: '/admin/analytics', label: 'Analytics' },
+  { to: '/admin/devops', label: 'DevOps' },
   { to: '/admin/settings', label: 'Settings' },
 ];
 
@@ -47,6 +49,7 @@ export default function AdminSidebar({
                 )
               }
             >
+              {link.label === 'DevOps' && <Rocket className="mr-2 inline h-3.5 w-3.5" />}
               {link.label}
             </NavLink>
           ))}

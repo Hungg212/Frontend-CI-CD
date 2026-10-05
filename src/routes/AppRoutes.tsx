@@ -43,8 +43,10 @@ const AdminCoupons = lazy(() => import('@/pages/admin/AdminCoupons'));
 const AdminReviews = lazy(() => import('@/pages/admin/AdminReviews'));
 const AdminAnalytics = lazy(() => import('@/pages/admin/AdminAnalytics'));
 const AdminSettings = lazy(() => import('@/pages/admin/AdminSettings'));
+const AdminDevOps = lazy(() => import('@/pages/admin/AdminDevOps'));
 
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'));
+const StaticPage = lazy(() => import('@/pages/StaticPage'));
 
 const PageLoader = () => (
   <div className="flex min-h-[60vh] items-center justify-center">
@@ -69,6 +71,9 @@ export default function AppRoutes() {
 
           <Route path="checkout" element={<CheckoutPage />} />
           <Route path="order-success/:id" element={<OrderSuccessPage />} />
+
+          <Route path="terms" element={<StaticPage page="terms" />} />
+          <Route path="privacy" element={<StaticPage page="privacy" />} />
 
           <Route
             path="profile"
@@ -141,6 +146,7 @@ export default function AppRoutes() {
           <Route path="coupons" element={<AdminCoupons />} />
           <Route path="reviews" element={<AdminReviews />} />
           <Route path="analytics" element={<AdminAnalytics />} />
+          <Route path="devops" element={<AdminDevOps />} />
           <Route path="settings" element={<AdminSettings />} />
         </Route>
 
