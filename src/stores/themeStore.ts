@@ -1,21 +1,17 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
+type ThemeMode = 'light' | 'dark' | 'system';
+type ResolvedTheme = 'light' | 'dark';
+
 interface ThemeStore {
-  theme: 'light' | 'dark' | 'system';
-  resolvedTheme: 'light' | 'dark';
-  setTheme: (theme: 'light' | 'dark' | 'system') => void;
+  theme: ThemeMode;
+  resolvedTheme: ResolvedTheme;
+  setTheme: (theme: ThemeMode) => void;
   toggleTheme: () => void;
 }
 
-const getSystemTheme = (): 'light' | 'dark' => {
-  if (typeof window !== 'undefined') {
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-  }
-  return 'light';
-};
-
-const applyTheme = (_theme: 'light' | 'dark') => {
+const applyTheme = (_theme: ResolvedTheme): void => {
   // Force light mode always to avoid dark-on-light contrast issues
   if (typeof document !== 'undefined') {
     document.documentElement.classList.remove('dark');
@@ -26,15 +22,15 @@ const applyTheme = (_theme: 'light' | 'dark') => {
 export const useThemeStore = create<ThemeStore>()(
   persist(
     (set) => ({
-      theme: 'light',
-      resolvedTheme: 'light',
-      setTheme: (theme) => {
-        applyTheme(theme);
-        set({ theme: 'light', resolvedTheme: 'light' });
+      theme: 'light' as ThemeMode,
+      resolvedTheme: 'light' as ResolvedTheme,
+      setTheme: (theme: ThemeMode) => {
+        applyTheme('light');
+        set({ theme: 'light' as ThemeMode, resolvedTheme: 'light' as ResolvedTheme });
       },
       toggleTheme: () => {
         applyTheme('light');
-        set({ theme: 'light', resolvedTheme: 'light' });
+        set({ theme: 'light' as ThemeMode, resolvedTheme: 'light' as ResolvedTheme });
       },
     }),
     {
