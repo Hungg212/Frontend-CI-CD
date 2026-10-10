@@ -2,16 +2,23 @@ pipeline {
     agent any
 
     options {
-        buildDiscarder(logRotator(numToKeepStr: '10'))
+        buildDiscarder(logRotator(numToKeepStr: '20'))
         timeout(time: 30, unit: 'MINUTES')
         disableConcurrentBuilds()
+        timestamps()
     }
 
     environment {
-        HUSKY = '0'
-        CI = 'true'
-        npm_config_audit = 'false'
-        npm_config_fund = 'false'
+        HUSKY         = '0'
+        CI            = 'true'
+        APP_NAME      = 'coffee-home-blend'
+        // Thư mục deploy trên server (sẽ dùng cho nginx + ansible)
+        DEPLOY_DIR    = '/var/www/coffee-home-blend'
+    }
+
+    triggers {
+        // Poll SCM mỗi 5 phút nếu repo không có webhook GitHub
+        pollSCM('H/5 * * * *')
     }
 
     stages {
@@ -24,36 +31,26 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                echo ">>> Cài dependencies (npm ci)"
                 sh 'npm ci'
                 sh 'node -v && npm -v'
             }
         }
 
         stage('Type Check') {
-            steps {
-                echo ">>> Kiểm tra kiểu dữ liệu TypeScript"
-                sh 'npm run type-check'
-            }
+            steps { sh 'npm run type-check' }
         }
 
         stage('Lint') {
-            steps {
-                echo ">>> Kiểm tra chất lượng code"
-                sh 'npm run lint'
-            }
+            steps { sh 'npm run lint' }
         }
 
         stage('Test') {
-            steps {
-                echo ">>> Chạy unit test"
-                sh 'npm run test'
-            }
+            steps { sh 'npm run test' }
         }
 
         stage('Build') {
             steps {
-                echo ">>> Build production bundle"
+                // Vite đọc VITE_* từ env lúc build
                 sh 'npm run build'
                 sh 'du -sh dist && ls -lh dist/assets | head -15'
             }
@@ -61,18 +58,26 @@ pipeline {
 
         stage('Archive Artifacts') {
             steps {
-                echo ">>> Lưu trữ kết quả build"
-                archiveArtifacts artifacts: 'dist/**', fingerprint: true, allowEmptyArchive: false
+                archiveArtifacts artifacts: 'dist/**', fingerprint: true
+            }
+        }
+
+        stage('Deploy to Staging') {
+            when { branch 'main' }
+            steps {
+                sshagent(['ec2-ssh-key']) {
+                    sh """
+                        rsync -avz --delete \
+                            -e "ssh -o StrictHostKeyChecking=no" \
+                            dist/ ubuntu@${STAGING_HOST}:${DEPLOY_DIR}/
+                    """
+                }
             }
         }
     }
 
     post {
-        success {
-            echo "✅ Build thành công! Commit: ${env.GIT_COMMIT}"
-        }
-        failure {
-            echo "❌ Build thất bại! Commit: ${env.GIT_COMMIT}"
-        }
+        success { echo "✅ Build thành công! Commit: ${env.GIT_COMMIT}" }
+        failure { echo "❌ Build thất bại! Commit: ${env.GIT_COMMIT}" }
     }
 }

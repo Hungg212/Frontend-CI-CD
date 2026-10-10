@@ -1,0 +1,9 @@
+aws_region          = "ap-southeast-1"
+environment         = "staging"
+project_name        = "coffee-home-blend"
+key_pair_name       = "chb-keypair" # <-- đổi thành KeyPair bạn đã tạo ở AWS console
+instance_type       = "t3.micro"
+min_size            = 2
+max_size            = 4
+desired_capacity    = 2
+artifact_bucket_name = "chb-artifacts-vi-2026"
