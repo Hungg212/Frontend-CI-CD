@@ -1,0 +1,15 @@
+services:
+  - type: static_site
+    name: coffee-home-blend
+    runtime: static
+    root_dir: .
+    build_command: npm ci && npm run build
+    publish_path: dist
+    auto_deploy: true
+    env_vars:
+      - key: VITE_APP_NAME
+        value: Coffee Home Blend
+      - key: VITE_APP_ENV
+        value: production
+      - key: VITE_API_BASE_URL
+        value: https://coffee.com
