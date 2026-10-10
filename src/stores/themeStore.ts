@@ -15,27 +15,26 @@ const getSystemTheme = (): 'light' | 'dark' => {
   return 'light';
 };
 
-const applyTheme = (theme: 'light' | 'dark') => {
+const applyTheme = (_theme: 'light' | 'dark') => {
+  // Force light mode always to avoid dark-on-light contrast issues
   if (typeof document !== 'undefined') {
-    document.documentElement.classList.toggle('dark', theme === 'dark');
+    document.documentElement.classList.remove('dark');
+    document.documentElement.style.colorScheme = 'light';
   }
 };
 
 export const useThemeStore = create<ThemeStore>()(
   persist(
-    (set, get) => ({
-      theme: 'system',
-      resolvedTheme: getSystemTheme(),
+    (set) => ({
+      theme: 'light',
+      resolvedTheme: 'light',
       setTheme: (theme) => {
-        const resolvedTheme = theme === 'system' ? getSystemTheme() : theme;
-        applyTheme(resolvedTheme);
-        set({ theme, resolvedTheme });
+        applyTheme(theme);
+        set({ theme: 'light', resolvedTheme: 'light' });
       },
       toggleTheme: () => {
-        const { resolvedTheme } = get();
-        const newTheme = resolvedTheme === 'light' ? 'dark' : 'light';
-        applyTheme(newTheme);
-        set({ theme: newTheme, resolvedTheme: newTheme });
+        applyTheme('light');
+        set({ theme: 'light', resolvedTheme: 'light' });
       },
     }),
     {

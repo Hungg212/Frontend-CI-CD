@@ -53,7 +53,7 @@ export function Header() {
                 <path d="M8 8h24v4c0 8.837-7.163 16-16 16S0 20.837 0 12V8h8zm0 4v4h24V12H8zm2 8v16c0 6.627 5.373 12 12 12s12-5.373 12-12V20H10z" />
                 <circle cx="20" cy="20" r="6" fill="none" stroke="currentColor" strokeWidth="2" />
               </svg>
-              <span className="font-display text-xl font-bold text-stone-900 dark:text-stone-100">
+              <span className="font-display text-xl font-bold text-coffee-900">
                 Coffee Home Blend
               </span>
             </Link>

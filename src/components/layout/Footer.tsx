@@ -56,20 +56,20 @@ export function Footer() {
   };
 
   return (
-    <footer className="bg-stone-900 text-stone-300 dark:bg-zinc-950">
+    <footer className="bg-white text-coffee-700 border-t border-warm-200">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Main Footer */}
         <div className="grid gap-12 py-16 md:grid-cols-2 lg:grid-cols-4">
           {/* About */}
           <div>
             <Link to="/" className="flex items-center gap-2">
-              <svg viewBox="0 0 40 40" className="h-10 w-10 text-amber-500" fill="currentColor">
+              <svg viewBox="0 0 40 40" className="h-10 w-10 text-amber-600" fill="currentColor">
                 <path d="M8 8h24v4c0 8.837-7.163 16-16 16S0 20.837 0 12V8h8zm0 4v4h24V12H8zm2 8v16c0 6.627 5.373 12 12 12s12-5.373 12-12V20H10z" />
                 <circle cx="20" cy="20" r="6" fill="none" stroke="currentColor" strokeWidth="2" />
               </svg>
-              <span className="font-display text-xl font-bold text-white">Coffee Home Blend</span>
+              <span className="font-display text-xl font-bold text-coffee-900">Coffee Home Blend</span>
             </Link>
-            <p className="mt-4 text-sm leading-relaxed text-stone-400">
+            <p className="mt-4 text-sm leading-relaxed text-coffee-600">
               Mang đến cho bạn những hạt cà phê chất lượng nhất từ những vùng trồng nổi tiếng Việt
               Nam. Hương vị đậm đà, tinh túy từng ly.
             </p>
@@ -81,7 +81,7 @@ export function Footer() {
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex h-10 w-10 items-center justify-center rounded-full bg-stone-800 text-stone-400 transition-colors hover:bg-amber-700 hover:text-white"
+                  className="flex h-10 w-10 items-center justify-center rounded-full bg-cream-100 text-coffee-600 transition-colors hover:bg-coffee-700 hover:text-white"
                   aria-label={social.label}
                 >
                   <social.icon className="h-5 w-5" />
@@ -92,11 +92,11 @@ export function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h3 className="mb-6 text-lg font-semibold text-white">Liên kết nhanh</h3>
+            <h3 className="mb-6 text-lg font-semibold text-coffee-900">Liên kết nhanh</h3>
             <ul className="space-y-3">
               {quickLinks.map((link) => (
                 <li key={link.href}>
-                  <Link to={link.href} className="text-sm transition-colors hover:text-amber-500">
+                  <Link to={link.href} className="text-sm transition-colors hover:text-amber-600">
                     {link.label}
                   </Link>
                 </li>
@@ -106,13 +106,13 @@ export function Footer() {
 
           {/* Categories */}
           <div>
-            <h3 className="mb-6 text-lg font-semibold text-white">Danh mục</h3>
+            <h3 className="mb-6 text-lg font-semibold text-coffee-900">Danh mục</h3>
             <ul className="space-y-3">
               {categories.map((category) => (
                 <li key={category.href}>
                   <Link
                     to={category.href}
-                    className="text-sm transition-colors hover:text-amber-500"
+                    className="text-sm transition-colors hover:text-amber-600"
                   >
                     {category.label}
                   </Link>
@@ -123,11 +123,11 @@ export function Footer() {
 
           {/* Contact */}
           <div>
-            <h3 className="mb-6 text-lg font-semibold text-white">Liên hệ</h3>
+            <h3 className="mb-6 text-lg font-semibold text-coffee-900">Liên hệ</h3>
             <ul className="space-y-4">
               {contactInfo.map((item, index) => (
                 <li key={index} className="flex items-start gap-3">
-                  <item.icon className="mt-0.5 h-5 w-5 flex-shrink-0 text-amber-500" />
+                  <item.icon className="mt-0.5 h-5 w-5 flex-shrink-0 text-amber-600" />
                   <span className="text-sm">{item.text}</span>
                 </li>
               ))}
@@ -135,14 +135,14 @@ export function Footer() {
 
             {/* Newsletter */}
             <div className="mt-6">
-              <h4 className="mb-3 text-sm font-semibold text-white">Đăng ký nhận tin</h4>
+              <h4 className="mb-3 text-sm font-semibold text-coffee-900">Đăng ký nhận tin</h4>
               <form onSubmit={handleSubscribe} className="flex gap-2">
                 <Input
                   type="email"
                   placeholder="Email của bạn"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="flex-1 border-stone-700 bg-stone-800 text-white placeholder:text-stone-500"
+                  className="flex-1 border-warm-200 bg-white text-coffee-900 placeholder:text-warm-400"
                 />
                 <Button type="submit" size="sm" disabled={subscribed}>
                   {subscribed ? '✓' : <Send className="h-4 w-4" />}
@@ -153,16 +153,16 @@ export function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-stone-800 py-6">
+        <div className="border-t border-warm-200 py-6">
           <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
             {/* Payment Methods */}
             <div className="flex items-center gap-4">
-              <span className="text-sm text-stone-500">Thanh toán:</span>
+              <span className="text-sm text-coffee-500">Thanh toán:</span>
               <div className="flex gap-2">
                 {paymentMethods.map((method) => (
                   <div
                     key={method.name}
-                    className="flex h-8 w-12 items-center justify-center rounded bg-stone-800 text-lg"
+                    className="flex h-8 w-12 items-center justify-center rounded bg-cream-100 text-lg"
                     title={method.name}
                   >
                     {method.icon}
@@ -172,14 +172,14 @@ export function Footer() {
             </div>
 
             {/* Copyright */}
-            <p className="text-sm text-stone-500">
+            <p className="text-sm text-coffee-500">
               © {new Date().getFullYear()} Coffee Home Blend. Tất cả quyền được bảo lưu.
             </p>
 
             {/* Back to Top */}
             <button
               onClick={scrollToTop}
-              className="flex items-center gap-2 text-sm text-stone-500 transition-colors hover:text-amber-500"
+              className="flex items-center gap-2 text-sm text-coffee-500 transition-colors hover:text-amber-600"
             >
               Quay lên đầu trang
               <ArrowUp className="h-4 w-4" />
