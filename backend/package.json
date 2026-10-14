@@ -1,0 +1,21 @@
+{
+  "name": "coffee-home-blend-backend",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx src/server.js",
+    "start": "tsx src/server.js",
+    "seed": "tsx src/seed.js",
+    "convert-data": "tsx src/convert-data.mjs"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "better-sqlite3": "^11.10.0",
+    "cors": "^2.8.6",
+    "dotenv": "^16.6.1",
+    "express": "^4.22.3",
+    "jsonwebtoken": "^9.0.3",
+    "tsx": "^4.23.15"
+  }
+}
