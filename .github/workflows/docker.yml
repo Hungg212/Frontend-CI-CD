@@ -58,10 +58,19 @@ jobs:
         run: |
           status=$(docker inspect --format='{{.State.Health.Status}}' ${{ env.IMAGE_NAME }}-test || echo "no-health")
           echo "Container health: $status"
-          if [ "$status" = "no-health" ]; then
-            echo "Healthcheck not configured — falling back to HTTP probe"
-            curl -fsS http://127.0.0.1:8080/healthz || exit 1
-          fi
+          # Try both healthcheck and HTTP probe (healthcheck may take 5-30s to become healthy)
+          for i in 1 2 3 4 5; do
+            if [ "$status" = "healthy" ]; then
+              echo "Container is healthy"
+              exit 0
+            fi
+            sleep 5
+            status=$(docker inspect --format='{{.State.Health.Status}}' ${{ env.IMAGE_NAME }}-test 2>/dev/null || echo "no-health")
+            echo "Retry $i - Container health: $status"
+          done
+          # Fallback to HTTP probe
+          echo "Falling back to HTTP probe"
+          curl -fsS http://127.0.0.1:8080/healthz || exit 1
 
       - name: Probe index page
         run: |
