@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, FormEvent, ChangeEvent } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { ShieldCheck, CreditCard, Wallet, Banknote, Smartphone } from 'lucide-react';
+import { ShieldCheck, CreditCard, Banknote, Smartphone } from 'lucide-react';
 import { useCartStore } from '@/stores/cartStore';
 import { useAuthStore } from '@/stores/authStore';
 import { useNotificationStore } from '@/stores/notificationStore';
@@ -10,8 +10,9 @@ const formatPrice = (n: number) =>
   new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND', maximumFractionDigits: 0 }).format(n);
 
 type PaymentMethod = 'COD' | 'BANK_TRANSFER' | 'MOMO' | 'CREDIT_CARD';
+type IconComponent = typeof Banknote;
 
-const paymentOptions: { value: PaymentMethod; label: string; icon: any; desc: string }[] = [
+const paymentOptions: { value: PaymentMethod; label: string; icon: IconComponent; desc: string }[] = [
   { value: 'COD', label: 'Thanh toán khi nhận hàng (COD)', icon: Banknote, desc: 'Trả tiền mặt cho shipper' },
   { value: 'BANK_TRANSFER', label: 'Chuyển khoản ngân hàng', icon: CreditCard, desc: 'Vietcombank, Techcombank, ...' },
   { value: 'MOMO', label: 'Ví MoMo', icon: Smartphone, desc: 'Quét QR MoMo' },
@@ -54,11 +55,11 @@ export default function CheckoutPage() {
     );
   }
 
-  const handleChange = (field: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (field: keyof typeof form) => (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setForm({ ...form, [field]: e.target.value });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!form.name || !form.phone || !form.province || !form.district || !form.ward || !form.detail) {
       useNotificationStore.getState().warning('Thiếu thông tin', 'Vui lòng điền đầy đủ địa chỉ giao hàng');
@@ -102,8 +103,9 @@ export default function CheckoutPage() {
       clearCart();
       useNotificationStore.getState().success('Đặt hàng thành công!', `Mã đơn: ${order.orderNumber}`);
       navigate(`/order-success/${order.id}`);
-    } catch (err: any) {
-      useNotificationStore.getState().error('Lỗi', err.message || 'Không thể đặt hàng');
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Không thể đặt hàng';
+      useNotificationStore.getState().error('Lỗi', message);
     } finally {
       setSubmitting(false);
     }

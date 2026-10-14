@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Plus, Search, Edit2, Trash2, Star } from 'lucide-react';
-import { productApi } from '@/lib/api';
 import { useAuthStore } from '@/stores/authStore';
 import { Button } from '@/components/ui';
 import { useNotificationStore } from '@/stores/notificationStore';
@@ -33,15 +32,17 @@ export default function AdminProducts() {
   const [items, setItems] = useState<AdminProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const [keyword, setKeyword] = useState('');
-  const notify = useNotificationStore((s) => s);
+  const notify = useNotificationStore();
   const token = useAuthStore((s) => s.token) || '';
 
   const load = async () => {
     setLoading(true);
     try {
-      const data: { products: AdminProduct[]; pagination: unknown } = await productApi.getAll({
-        limit: 100,
+      const res = await fetch('/api/admin/products?limit=100', {
+        headers: { Authorization: `Bearer ${token}` },
       });
+      if (!res.ok) throw new Error('Tải sản phẩm thất bại');
+      const data: { products: AdminProduct[]; pagination: unknown } = await res.json();
       setItems(data.products || []);
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : 'Không thể tải sản phẩm';

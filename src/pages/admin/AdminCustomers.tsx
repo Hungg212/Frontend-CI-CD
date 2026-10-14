@@ -26,7 +26,7 @@ export default function AdminCustomers() {
   const [loading, setLoading] = useState(true);
   const [keyword, setKeyword] = useState('');
   const token = useAuthStore((s) => s.token) || '';
-  const notify = useNotificationStore((s) => s);
+  const notify = useNotificationStore();
 
   const load = async () => {
     setLoading(true);

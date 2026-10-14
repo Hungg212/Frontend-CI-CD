@@ -7,7 +7,7 @@ const API_BASE_URL = (() => {
   return `${base}/api`;
 })();
 
-interface RequestOptions extends RequestInit {
+interface RequestOptions extends globalThis.RequestInit {
   token?: string;
 }
 
@@ -85,6 +85,9 @@ export const productApi = {
     const query = searchParams.toString();
     return request<{ products: unknown[]; pagination: unknown }>(`/products${query ? `?${query}` : ''}`);
   },
+
+  getAllAdmin: (token: string) =>
+    request<{ products: unknown[]; pagination: unknown }>('/admin/products', { token }),
 
   getFeatured: () =>
     request<unknown[]>('/products/featured'),

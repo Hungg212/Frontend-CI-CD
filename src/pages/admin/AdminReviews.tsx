@@ -18,7 +18,7 @@ export default function AdminReviews() {
   const [items, setItems] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
   const token = useAuthStore((s) => s.token) || '';
-  const notify = useNotificationStore((s) => s);
+  const notify = useNotificationStore();
 
   const load = async () => {
     setLoading(true);
@@ -49,7 +49,7 @@ export default function AdminReviews() {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!res.ok) throw new Error('Xóa thất bại');
-      notify.success('Đã xóa đánh giá');
+      notify.success('Đã xóa đánh giá', '');
       load();
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : 'Không thể xóa';

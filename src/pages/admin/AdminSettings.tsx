@@ -6,7 +6,7 @@ import { Button } from '@/components/ui';
 type Settings = Record<string, string | number | boolean>;
 
 export default function AdminSettings() {
-  const notify = useNotificationStore((s) => s);
+  const notify = useNotificationStore();
   const [settings, setSettings] = useState<Settings>({
     storeName: 'Coffee Home Blend',
     email: 'contact@coffeehomeblend.com',
@@ -26,7 +26,7 @@ export default function AdminSettings() {
     e.preventDefault();
     setSaving(true);
     await new Promise((r) => setTimeout(r, 500));
-    notify.success('Đã lưu cài đặt');
+    notify.success('Đã lưu cài đặt', '');
     setSaving(false);
   };
 

@@ -24,7 +24,7 @@ export const useThemeStore = create<ThemeStore>()(
     (set) => ({
       theme: 'light' as ThemeMode,
       resolvedTheme: 'light' as ResolvedTheme,
-      setTheme: (theme: ThemeMode) => {
+      setTheme: (_theme: ThemeMode) => {
         applyTheme('light');
         set({ theme: 'light' as ThemeMode, resolvedTheme: 'light' as ResolvedTheme });
       },

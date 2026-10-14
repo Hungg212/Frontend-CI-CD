@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, FormEvent } from 'react';
 import { cn } from '@/lib/utils';
 import { useCartStore } from '@/stores/cartStore';
 import { useAuthStore } from '@/stores/authStore';
@@ -33,7 +33,7 @@ export function Header() {
     setIsMobileMenuOpen(false);
   }, [location.pathname]);
 
-  const handleSearch = (e: React.FormEvent) => {
+  const handleSearch = (e: FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
       window.location.href = `/products?search=${encodeURIComponent(searchQuery.trim())}`;

@@ -37,7 +37,7 @@ export default function AdminCoupons() {
     expiresAt: '',
   });
   const token = useAuthStore((s) => s.token) || '';
-  const notify = useNotificationStore((s) => s);
+  const notify = useNotificationStore();
 
   const load = async () => {
     setLoading(true);

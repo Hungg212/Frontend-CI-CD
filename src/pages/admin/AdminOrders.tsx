@@ -49,7 +49,7 @@ export default function AdminOrders() {
   const [loading, setLoading] = useState(true);
   const [keyword, setKeyword] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
-  const notify = useNotificationStore((s) => s);
+  const notify = useNotificationStore();
   const token = useAuthStore((s) => s.token) || '';
 
   const load = async () => {
