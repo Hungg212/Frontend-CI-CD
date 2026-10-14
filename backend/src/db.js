@@ -1,20 +1,34 @@
-// Database initialization and helpers (SQLite via better-sqlite3)
-import Database from 'better-sqlite3';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+// Database connection (PostgreSQL via pg)
+import pg from 'pg';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const { Pool } = pg;
 
-import fs from 'node:fs';
-const dbPath = path.resolve(__dirname, '../../data/app.db');
-fs.mkdirSync(path.dirname(dbPath), { recursive: true });
-export const db = new Database(dbPath);
-db.pragma('journal_mode = WAL');
-db.pragma('foreign_keys = ON');
+const connectionString = process.env.DATABASE_URL;
 
-export function initSchema() {
-  db.exec(`
+if (!connectionString) {
+  console.error('DATABASE_URL is not set. Did you provision a Postgres instance on Render?');
+}
+
+export const pool = new Pool({
+  connectionString,
+  ssl: connectionString && connectionString.includes('render.com')
+    ? { rejectUnauthorized: false }
+    : false,
+  max: 10,
+  idleTimeoutMillis: 30_000,
+});
+
+pool.on('error', (err) => {
+  console.error('Unexpected pg pool error', err);
+});
+
+export async function query(text, params) {
+  const res = await pool.query(text, params);
+  return res;
+}
+
+export async function initSchema() {
+  await pool.query(`
     CREATE TABLE IF NOT EXISTS users (
       id TEXT PRIMARY KEY,
       email TEXT UNIQUE NOT NULL,
@@ -22,12 +36,12 @@ export function initSchema() {
       name TEXT NOT NULL,
       phone TEXT,
       role TEXT NOT NULL DEFAULT 'customer',
-      created_at TEXT NOT NULL DEFAULT (datetime('now'))
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
     );
 
     CREATE TABLE IF NOT EXISTS addresses (
       id TEXT PRIMARY KEY,
-      user_id TEXT NOT NULL,
+      user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
       label TEXT NOT NULL,
       name TEXT NOT NULL,
       phone TEXT NOT NULL,
@@ -35,8 +49,7 @@ export function initSchema() {
       district TEXT NOT NULL,
       ward TEXT NOT NULL,
       detail TEXT NOT NULL,
-      is_default INTEGER NOT NULL DEFAULT 0,
-      FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+      is_default BOOLEAN NOT NULL DEFAULT FALSE
     );
 
     CREATE TABLE IF NOT EXISTS categories (
@@ -58,42 +71,46 @@ export function initSchema() {
       sale_price INTEGER,
       discount INTEGER,
       category_slug TEXT NOT NULL,
-      images TEXT NOT NULL,
+      images JSONB NOT NULL DEFAULT '[]'::jsonb,
       rating REAL NOT NULL DEFAULT 0,
       review_count INTEGER NOT NULL DEFAULT 0,
       stock INTEGER NOT NULL DEFAULT 0,
       sku TEXT,
-      tags TEXT,
+      tags JSONB NOT NULL DEFAULT '[]'::jsonb,
       origin TEXT,
       roast_level TEXT,
-      flavor_notes TEXT,
-      brewing_method TEXT,
+      flavor_notes JSONB NOT NULL DEFAULT '[]'::jsonb,
+      brewing_method JSONB NOT NULL DEFAULT '[]'::jsonb,
       weight TEXT,
-      is_featured INTEGER NOT NULL DEFAULT 0,
-      is_new_arrival INTEGER NOT NULL DEFAULT 0,
-      is_best_seller INTEGER NOT NULL DEFAULT 0,
-      created_at TEXT NOT NULL DEFAULT (datetime('now')),
-      updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+      is_featured BOOLEAN NOT NULL DEFAULT FALSE,
+      is_new_arrival BOOLEAN NOT NULL DEFAULT FALSE,
+      is_best_seller BOOLEAN NOT NULL DEFAULT FALSE,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
     );
+
+    CREATE INDEX IF NOT EXISTS idx_products_category ON products(category_slug);
+    CREATE INDEX IF NOT EXISTS idx_products_featured ON products(is_featured);
+    CREATE INDEX IF NOT EXISTS idx_products_new_arrival ON products(is_new_arrival);
+    CREATE INDEX IF NOT EXISTS idx_products_best_seller ON products(is_best_seller);
 
     CREATE TABLE IF NOT EXISTS reviews (
       id TEXT PRIMARY KEY,
-      product_id TEXT NOT NULL,
-      user_id TEXT,
+      product_id TEXT NOT NULL REFERENCES products(id) ON DELETE CASCADE,
+      user_id TEXT REFERENCES users(id) ON DELETE SET NULL,
       user_name TEXT NOT NULL,
       user_avatar TEXT,
-      rating INTEGER NOT NULL,
+      rating INTEGER NOT NULL CHECK (rating BETWEEN 1 AND 5),
       comment TEXT,
-      created_at TEXT NOT NULL DEFAULT (datetime('now')),
-      is_verified INTEGER NOT NULL DEFAULT 1,
-      FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      is_verified BOOLEAN NOT NULL DEFAULT TRUE
     );
 
     CREATE TABLE IF NOT EXISTS orders (
       id TEXT PRIMARY KEY,
       order_number TEXT UNIQUE NOT NULL,
-      user_id TEXT,
-      items TEXT NOT NULL,
+      user_id TEXT REFERENCES users(id) ON DELETE SET NULL,
+      items JSONB NOT NULL,
       subtotal INTEGER NOT NULL,
       shipping_fee INTEGER NOT NULL,
       discount INTEGER NOT NULL DEFAULT 0,
@@ -101,12 +118,13 @@ export function initSchema() {
       status TEXT NOT NULL DEFAULT 'PENDING',
       payment_method TEXT NOT NULL,
       payment_status TEXT NOT NULL DEFAULT 'PENDING',
-      shipping_address TEXT NOT NULL,
+      shipping_address JSONB NOT NULL,
       note TEXT,
-      created_at TEXT NOT NULL DEFAULT (datetime('now')),
-      updated_at TEXT NOT NULL DEFAULT (datetime('now')),
-      FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
     );
+
+    CREATE INDEX IF NOT EXISTS idx_orders_user ON orders(user_id);
   `);
 }
 
