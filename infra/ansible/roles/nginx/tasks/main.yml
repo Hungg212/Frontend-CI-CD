@@ -1,0 +1,128 @@
+---
+# Role: nginx
+# Cài đặt + cấu hình Nginx reverse proxy cho backend Node.js
+
+- name: Cài đặt Nginx
+  ansible.builtin.apt:
+    name:
+      - nginx
+      - python3-passlib
+    state: present
+
+- name: Khởi động + bật Nginx
+  ansible.builtin.service:
+    name: nginx
+    state: started
+    enabled: yes
+
+- name: Xoá site mặc định
+  ansible.builtin.file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  notify: Reload nginx
+
+- name: Tạo cấu hình reverse proxy cho {{ app_name }}
+  ansible.builtin.template:
+    src: site.conf.j2
+    dest: "{{ nginx_sites_dir }}/{{ app_name }}.conf"
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Reload nginx
+
+- name: Enable site {{ app_name }}
+  ansible.builtin.file:
+    src: "{{ nginx_sites_dir }}/{{ app_name }}.conf"
+    dest: "{{ nginx_enabled_dir }}/{{ app_name }}.conf"
+    state: link
+  notify: Reload nginx
+
+- name: Cấu hình rate limiting
+  ansible.builtin.copy:
+    dest: /etc/nginx/conf.d/rate-limit.conf
+    content: |
+      # Rate limit zones
+      limit_req_zone $binary_remote_addr zone={{ app_name }}_req:10m rate={{ nginx_limit_req_zone }};
+      limit_req_status 429;
+      limit_conn_zone $binary_remote_addr zone={{ app_name }}_conn:10m;
+    mode: '0644'
+  notify: Reload nginx
+
+- name: Cấu hình nginx.conf chính
+  ansible.builtin.copy:
+    dest: /etc/nginx/nginx.conf
+    content: |
+      user www-data;
+      worker_processes auto;
+      pid /run/nginx.pid;
+      include /etc/nginx/modules-enabled/*.conf;
+
+      events {
+          worker_connections 1024;
+          multi_accept on;
+          use epoll;
+      }
+
+      http {
+          sendfile on;
+          tcp_nopush on;
+          tcp_nodelay on;
+          keepalive_timeout 65;
+          types_hash_max_size 2048;
+          server_tokens off;
+
+          include /etc/nginx/mime.types;
+          default_type application/octet-stream;
+
+          log_format main '$remote_addr - $remote_user [$time_local] '
+                          '"$request" $status $body_bytes_sent '
+                          '"$http_referer" "$http_user_agent"';
+          log_format json_combined escape=json
+                          '{'
+                          '"time":"$time_iso8601",'
+                          '"remote_addr":"$remote_addr",'
+                          '"request":"$request",'
+                          '"status":$status,'
+                          '"body_bytes_sent":$body_bytes_sent,'
+                          '"request_time":$request_time,'
+                          '"http_referrer":"$http_referer",'
+                          '"http_user_agent":"$http_user_agent"'
+                          '}';
+
+          access_log /var/log/nginx/access.log json_combined;
+          error_log /var/log/nginx/error.log;
+
+          gzip on;
+          gzip_vary on;
+          gzip_proxied any;
+          gzip_comp_level 6;
+          gzip_types text/plain text/css text/xml application/json application/javascript application/xml+rss application/atom+xml image/svg+xml;
+
+          client_max_body_size {{ nginx_client_max_size }};
+
+          include /etc/nginx/conf.d/*.conf;
+          include /etc/nginx/sites-enabled/*;
+      }
+    mode: '0644'
+    validate: 'nginx -t -c %s'
+  notify: Reload nginx
+
+- name: Cài đặt logrotate cho nginx
+  ansible.builtin.copy:
+    dest: /etc/logrotate.d/nginx
+    content: |
+      /var/log/nginx/*.log {
+          daily
+          missingok
+          rotate {{ logrotate_rotate }}
+          compress
+          delaycompress
+          notifempty
+          create 0640 www-data adm
+          sharedscripts
+          postrotate
+              [ -f /var/run/nginx.pid ] && kill -USR1 $(cat /var/run/nginx.pid)
+          endscript
+      }
+    mode: '0644'
+  when: enable_logrotate

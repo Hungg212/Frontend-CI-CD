@@ -1,0 +1,16 @@
+---
+galaxy_info:
+  role_name: common
+  author: Coffee Home Blend Team
+  description: Chuẩn bị máy chủ cơ bản cho deploy Node.js + PostgreSQL
+  license: MIT
+  min_ansible_version: "2.14"
+  platforms:
+    - name: Ubuntu
+      versions:
+        - jammy
+        - noble
+  galaxy_tags:
+    - common
+    - setup
+    - server

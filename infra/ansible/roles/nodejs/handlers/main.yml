@@ -1,0 +1,9 @@
+---
+- name: Check node version
+  ansible.builtin.command: node -v
+  register: node_version_out
+  changed_when: false
+
+- name: Show installed Node version
+  ansible.builtin.debug:
+    msg: "Node.js version installed: {{ node_version_out.stdout }}"

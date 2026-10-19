@@ -1,0 +1,55 @@
+# ============================================
+# Biến chung — áp dụng cho TẤT CẢ máy chủ
+# ============================================
+
+# --- Application ---
+app_name: coffee-home-blend-backend
+app_user: deploy
+app_group: deploy
+app_home: /home/{{ app_user }}/{{ app_name }}
+app_port: 4000
+app_health_path: /api/health
+
+# --- Directories ---
+app_releases_dir: "{{ app_home }}/releases"
+app_shared_dir: "{{ app_home }}/shared"
+app_current_link: "{{ app_home }}/current"
+app_logs_dir: "{{ app_home }}/logs"
+app_backup_dir: "{{ app_home }}/backups"
+
+# --- Node.js ---
+node_version: "20"
+# Build command: npm ci --omit=dev --prefer-offline
+# Hoặc dùng npm install nếu thiếu lockfile
+
+# --- PostgreSQL ---
+pg_version: "16"
+pg_port: 5432
+pg_user: coffeeapp
+pg_db: coffeehome
+pg_encoding: UTF8
+
+# --- Nginx ---
+nginx_version: "1.26"
+nginx_sites_dir: /etc/nginx/sites-available
+nginx_enabled_dir: /etc/nginx/sites-enabled
+nginx_health_path: /healthz
+
+# --- Security ---
+ufw_allow_ssh: true
+ufw_allow_http: true
+ufw_allow_https: true
+fail2ban_enabled: true
+
+# --- Monitoring ---
+enable_logrotate: true
+logrotate_maxsize: 100M
+logrotate_rotate: 14
+
+# --- Backup ---
+backup_enabled: true
+backup_retention_days: 7
+
+# --- Flags cho ansible-playbook ---
+deploy_strategy: rolling  # rolling | blue_green
+keep_releases: 5

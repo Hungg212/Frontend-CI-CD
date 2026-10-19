@@ -1,0 +1,114 @@
+---
+# ============================================
+# Playbook: health-check.yml
+# Kiểm tra tình trạng toàn bộ hệ thống
+#
+# Chạy:
+#   ansible-playbook -i inventories/prod.ini playbooks/health-check.yml
+# ============================================
+
+- name: Health check toàn bộ hệ thống
+  hosts: all
+  become: yes
+  gather_facts: yes
+
+  tasks:
+    - name: Kiểm tra uptime
+      ansible.builtin.command: uptime -p
+      register: uptime
+      changed_when: false
+
+    - name: Kiểm tra disk usage
+      ansible.builtin.command: df -h / | tail -1
+      register: disk
+      changed_when: false
+
+    - name: Kiểm tra memory
+      ansible.builtin.command: free -h | grep Mem
+      register: memory
+      changed_when: false
+
+    - name: Kiểm tra load average
+      ansible.builtin.command: uptime
+      register: load
+      changed_when: false
+
+    - name: Tổng hợp thông tin
+      ansible.builtin.debug:
+        msg: |
+          ===================================
+          🖥️  Host: {{ inventory_hostname }} ({{ ansible_host }})
+          ⏱️  Uptime: {{ uptime.stdout }}
+          💾 Disk: {{ disk.stdout }}
+          🧠 Memory: {{ memory.stdout }}
+          📊 Load: {{ load.stdout }}
+          ===================================
+
+- name: Health check web servers
+  hosts: webservers
+  become: yes
+
+  tasks:
+    - name: Kiểm tra Nginx đang chạy
+      ansible.builtin.systemd:
+        name: nginx
+      register: nginx_status
+
+    - name: Kiểm tra Node process
+      ansible.builtin.shell: |
+        if pgrep -f "node.*server.js" > /dev/null; then
+          echo "✅ Node app is running"
+          ps -ef | grep -E "node.*server.js" | grep -v grep | head -3
+        else
+          echo "❌ Node app is NOT running"
+        fi
+      register: node_status
+      changed_when: false
+
+    - name: Test HTTP endpoint
+      ansible.builtin.uri:
+        url: "http://127.0.0.1:{{ app_port }}{{ app_health_path }}"
+        method: GET
+        status_code: 200
+        timeout: 10
+      register: http_health
+      ignore_errors: yes
+
+    - name: Báo cáo tổng hợp
+      ansible.builtin.debug:
+        msg: |
+          🌐 Web server: {{ inventory_hostname }}
+          ├── Nginx: {{ 'running' if nginx_status.status.ActiveState == 'active' else 'stopped' }}
+          ├── {{ node_status.stdout_lines[0] }}
+          ├── API health: {{ '✅ OK' if http_health.status == 200 else '❌ FAILED' }}
+          └── Response time: {{ http_health.elapsed | default(0) }}s
+
+- name: Health check database servers
+  hosts: dbservers
+  become: yes
+
+  tasks:
+    - name: Kiểm tra PostgreSQL status
+      ansible.builtin.systemd:
+        name: postgresql
+      register: pg_status
+
+    - name: Kiểm tra kết nối database
+      ansible.builtin.command: |
+        sudo -u postgres psql -c "SELECT version();" -t
+      register: pg_version_out
+      changed_when: false
+
+    - name: Đếm số connections hiện tại
+      ansible.builtin.command: |
+        sudo -u postgres psql -c "SELECT count(*) FROM pg_stat_activity;" -t
+      register: pg_connections
+      changed_when: false
+
+    - name: Báo cáo DB
+      ansible.builtin.debug:
+        msg: |
+          🗄️  DB server: {{ inventory_hostname }}
+          ├── PostgreSQL: {{ 'running' if pg_status.status.ActiveState == 'active' else 'stopped' }}
+          ├── {{ pg_version_out.stdout | trim }}
+          └── Active connections: {{ pg_connections.stdout | trim }}

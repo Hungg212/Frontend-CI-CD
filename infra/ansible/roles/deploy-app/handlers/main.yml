@@ -1,0 +1,7 @@
+---
+- name: Restart PM2
+  ansible.builtin.command: pm2 restart all
+  args:
+    chdir: "/home/{{ app_user }}"
+  become_user: "{{ app_user }}"
+  changed_when: true

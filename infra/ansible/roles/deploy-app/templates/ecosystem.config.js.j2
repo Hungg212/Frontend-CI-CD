@@ -1,0 +1,25 @@
+// PM2 Ecosystem file cho {{ app_name }}
+module.exports = {
+  apps: [{
+    name: '{{ app_name }}',
+    script: 'src/server.js',
+    cwd: '{{ app_releases_dir }}/{{ release_dir_name | default("current") }}',
+    instances: {{ pm2_instances | default('max') }},
+    exec_mode: '{{ pm2_exec_mode | default("cluster") }}',
+    autorestart: true,
+    watch: false,
+    max_memory_restart: '{{ pm2_max_memory | default("512M") }}',
+    env: {
+      NODE_ENV: '{{ env_name | default("production") }}',
+      PORT: {{ app_port }}
+    },
+    error_file: '{{ app_logs_dir }}/error.log',
+    out_file: '{{ app_logs_dir }}/out.log',
+    merge_logs: true,
+    time: true,
+    log_date_format: 'YYYY-MM-DD HH:mm:ss Z',
+    kill_timeout: 5000,
+    wait_ready: false,
+    listen_timeout: 10000
+  }]
+};

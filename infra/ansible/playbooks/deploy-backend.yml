@@ -1,0 +1,55 @@
+---
+# ============================================
+# Playbook: deploy-backend.yml
+# Deploy backend lên web servers qua artifact từ Jenkins
+#
+# Chạy thủ công:
+#   ansible-playbook -i inventories/dev.ini playbooks/deploy-backend.yml \
+#     -e "app_artifact=/path/to/backend.tar.gz app_version=v1.0.0"
+#
+# Từ Jenkins xem Jenkinsfile.backend
+# ============================================
+
+- name: Deploy backend {{ app_name }} version {{ app_version | default('latest') }}
+  hosts: webservers
+  become: yes
+  serial: "{{ deploy_serial | default('50%') }}"   # rolling deploy
+  max_fail_percentage: 25
+
+  pre_tasks:
+    - name: Kiểm tra file artifact có tồn tại không
+      ansible.builtin.stat:
+        path: "{{ app_artifact }}"
+      delegate_to: localhost
+      become: no
+      register: artifact_stat
+
+    - name: Fail nếu artifact không tồn tại
+      ansible.builtin.fail:
+        msg: "Artifact file not found: {{ app_artifact }}"
+      when: not artifact_stat.stat.exists
+
+    - name: Hiển thị thông tin deploy
+      ansible.builtin.debug:
+        msg: |
+          🚀 Deploying {{ app_name }}
+          📦 Version: {{ app_version | default('latest') }}
+          📁 Artifact: {{ app_artifact }}
+          🎯 Target: {{ inventory_hostname }}
+          👤 User: {{ deploy_user | default('deploy') }}
+
+  roles:
+    - role: deploy-app
+      tags: deploy
+
+  post_tasks:
+    - name: Thông báo deploy thành công
+      ansible.builtin.debug:
+        msg: "✅ {{ inventory_hostname }}: {{ app_name }} v{{ app_version | default('latest') }} deployed successfully!"
+
+    - name: Cập nhật deploy log
+      ansible.builtin.lineinfile:
+        path: "{{ app_logs_dir }}/deploy.log"
+        line: "{{ ansible_date_time.iso8601 }} | DEPLOY OK | host={{ inventory_hostname }} | version={{ app_version | default('latest') }}"
+        create: yes
+        state: present

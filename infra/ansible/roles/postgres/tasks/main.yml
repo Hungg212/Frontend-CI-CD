@@ -1,0 +1,109 @@
+---
+# Role: postgres
+# Cài đặt PostgreSQL, tạo user + database
+
+- name: Thêm PostgreSQL GPG key
+  ansible.builtin.shell: |
+    curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor -o /usr/share/keyrings/postgresql.gpg
+  args:
+    creates: /usr/share/keyrings/postgresql.gpg
+  changed_when: false
+
+- name: Thêm PostgreSQL apt repository
+  ansible.builtin.apt_repository:
+    repo: "deb [signed-by=/usr/share/keyrings/postgresql.gpg] http://apt.postgresql.org/pub/repos/apt {{ ansible_distribution_release }}-pgdg main"
+    state: present
+    update_cache: yes
+    filename: postgresql
+
+- name: Cài đặt PostgreSQL {{ pg_version }}
+  ansible.builtin.apt:
+    name:
+      - postgresql-{{ pg_version }}
+      - postgresql-client-{{ pg_version }}
+      - python3-psycopg2
+    state: present
+
+- name: Khởi động + bật PostgreSQL
+  ansible.builtin.service:
+    name: postgresql
+    state: started
+    enabled: yes
+
+- name: Cấu hình listen_addresses
+  ansible.builtin.lineinfile:
+    path: "/etc/postgresql/{{ pg_version }}/main/postgresql.conf"
+    regexp: "^#?listen_addresses"
+    line: "listen_addresses = 'localhost'"
+    state: present
+  notify: Restart PostgreSQL
+
+- name: Tạo user {{ pg_user }}
+  community.postgresql.postgresql_user:
+    name: "{{ pg_user }}"
+    password: "{{ pg_password }}"
+    encrypted: yes
+    state: present
+  no_log: true
+
+- name: Tạo database {{ pg_db }}
+  community.postgresql.postgresql_db:
+    name: "{{ pg_db }}"
+    owner: "{{ pg_user }}"
+    encoding: "{{ pg_encoding }}"
+    state: present
+
+- name: Grant privileges cho user trên database
+  community.postgresql.postgresql_privs:
+    database: "{{ pg_db }}"
+    roles: "{{ pg_user }}"
+    privs: ALL
+    type: database
+    state: present
+
+- name: Cho phép user kết nối local qua password
+  ansible.builtin.template:
+    src: pg_hba.conf.j2
+    dest: "/etc/postgresql/{{ pg_version }}/main/pg_hba.conf"
+    owner: postgres
+    group: postgres
+    mode: '0640'
+  notify: Restart PostgreSQL
+
+- name: Cấu hình performance tuning
+  ansible.builtin.template:
+    src: postgresql.conf.j2
+    dest: "/etc/postgresql/{{ pg_version }}/main/conf.d/99-tuning.conf"
+    owner: postgres
+    group: postgres
+    mode: '0644'
+  notify: Restart PostgreSQL
+
+- name: Tạo thư mục backup
+  ansible.builtin.file:
+    path: "{{ pg_backup_path }}"
+    state: directory
+    owner: postgres
+    group: postgres
+    mode: '0750'
+  when: pg_backup_enabled
+
+- name: Cài đặt cron job backup PostgreSQL
+  ansible.builtin.cron:
+    name: "PostgreSQL daily backup"
+    minute: "30"
+    hour: "2"
+    user: postgres
+    job: "/usr/bin/pg_dump {{ pg_db }} | gzip > {{ pg_backup_path }}/{{ pg_db }}-$(date +\\%Y\\%m\\%d).sql.gz"
+    cron_file: postgres_backup
+  when: pg_backup_enabled
+
+- name: Cài đặt cron job cleanup backup cũ
+  ansible.builtin.cron:
+    name: "PostgreSQL cleanup old backups"
+    minute: "0"
+    hour: "3"
+    user: postgres
+    job: "find {{ pg_backup_path }} -name '{{ pg_db }}-*.sql.gz' -mtime +{{ pg_backup_retention }} -delete"
+    cron_file: postgres_cleanup
+  when: pg_backup_enabled

@@ -1,0 +1,157 @@
+// Coffee Home Blend — Backend CI/CD Pipeline
+// Tự động build + deploy lên VPS qua Ansible khi push lên main/develop
+
+pipeline {
+    agent any
+
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '20'))
+        timeout(time: 30, unit: 'MINUTES')
+        disableConcurrentBuilds()
+        timestamps()
+    }
+
+    environment {
+        CI                    = 'true'
+        APP_NAME              = 'coffee-home-blend-backend'
+        // Thư mục repo trên Jenkins workspace
+        BACKEND_DIR           = 'backend'
+        // Image tag dùng cho GHCR
+        IMAGE_TAG             = "${env.GIT_COMMIT?.take(7) ?: 'latest'}"
+        // Đường dẫn repo Ansible trên Jenkins controller
+        ANSIBLE_REPO          = 'https://github.com/Hungg212/coffee-home-blend-infra.git'
+        ANSIBLE_BRANCH        = 'main'
+        ANSIBLE_DIR           = 'infra/ansible'
+        // Biến deploy — set trong Jenkins Credentials/Env
+        DEPLOY_ENV            = 'dev'           // dev | staging | prod
+        SSH_USER              = 'deploy'        // user SSH trên VPS
+    }
+
+    triggers {
+        // Poll SCM mỗi 5 phút nếu repo không có webhook
+        pollSCM('H/5 * * * *')
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+                sh 'git log -1 --pretty="%h %an %s"'
+            }
+        }
+
+        stage('Install Backend Dependencies') {
+            steps {
+                dir("${BACKEND_DIR}") {
+                    sh 'node -v && npm -v'
+                    sh 'npm install --omit=dev=false'   // cần dev để chạy test
+                }
+            }
+        }
+
+        stage('Type Check') {
+            steps {
+                dir("${BACKEND_DIR}") {
+                    sh 'npx tsc --noEmit'
+                }
+            }
+        }
+
+        stage('Lint') {
+            steps {
+                dir("${BACKEND_DIR}") {
+                    sh 'npx eslint src/ --ext .js,.ts || true'
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                dir("${BACKEND_DIR}") {
+                    sh '''
+                        if [ -f package.json ] && grep -q "\"test\"" package.json; then
+                          npm test
+                        else
+                          echo "No tests defined — smoke test via syntax check"
+                          node -c src/server.js
+                        fi
+                    '''
+                }
+            }
+        }
+
+        stage('Build (TypeScript)') {
+            steps {
+                dir("${BACKEND_DIR}") {
+                    sh 'npm run build'
+                    sh 'ls -lh dist/ 2>/dev/null | head -20 || echo "No dist dir (pure JS project)"'
+                }
+            }
+        }
+
+        stage('Package Artifact') {
+            steps {
+                dir("${BACKEND_DIR}") {
+                    // Đóng gói source + node_modules prod-only thành tar.gz
+                    sh '''
+                        rm -rf node_modules
+                        npm install --omit=dev
+                        tar --exclude='./.git' --exclude='./node_modules/.cache' \
+                            -czf "${WORKSPACE}/backend-${IMAGE_TAG}.tar.gz" .
+                    '''
+                }
+                archiveArtifacts artifacts: "backend-${IMAGE_TAG}.tar.gz", fingerprint: true
+            }
+        }
+
+        stage('Deploy with Ansible') {
+            when { anyOf { branch 'main'; branch 'develop' } }
+            steps {
+                // Lấy playbook + inventory từ repo infra riêng (hoặc cùng repo)
+                dir('infra-ansible') {
+                    git branch: ANSIBLE_BRANCH, url: ANSIBLE_REPO, credentialsId: 'github-ssh'
+                }
+                sshagent(['vps-ssh-key']) {
+                    sh """
+                        set -e
+                        cd ${ANSIBLE_DIR}
+                        ansible --version
+                        ansible-playbook -i inventories/${DEPLOY_ENV}.ini \
+                            playbooks/deploy-backend.yml \
+                            -e "app_version=${IMAGE_TAG} \
+                                app_artifact=${WORKSPACE}/backend-${IMAGE_TAG}.tar.gz \
+                                deploy_user=${SSH_USER}" \
+                            --diff
+                    """
+                }
+            }
+        }
+
+        stage('Smoke Test') {
+            when { anyOf { branch 'main'; branch 'develop' } }
+            steps {
+                sshagent(['vps-ssh-key']) {
+                    sh """
+                        echo "Waiting for app to be ready..."
+                        sleep 10
+                        curl -fsS --max-time 15 http://${env.DEPLOY_HOST}/api/health || (echo "Health check failed!"; exit 1)
+                    """
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "✅ Build & deploy thành công! Commit: ${env.GIT_COMMIT} → env=${DEPLOY_ENV}"
+            // Optional: gửi Slack/Telegram
+        }
+        failure {
+            echo "❌ Pipeline thất bại! Commit: ${env.GIT_COMMIT}"
+        }
+        always {
+            // Cleanup workspace
+            cleanWs(deleteDirs: true, patterns: [[pattern: 'node_modules/**', type: 'INCLUDE']])
+        }
+    }
+}

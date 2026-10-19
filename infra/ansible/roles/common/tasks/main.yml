@@ -1,0 +1,130 @@
+---
+# Role: common
+# Chuẩn bị máy chủ: cập nhật package, tạo user, cấu hình SSH key, UFW, fail2ban
+
+- name: Cập nhật apt cache
+  ansible.builtin.apt:
+    update_cache: yes
+    cache_valid_time: 3600
+  when: ansible_os_family == "Debian"
+
+- name: Cài đặt các gói cơ bản
+  ansible.builtin.apt:
+    name:
+      - curl
+      - wget
+      - git
+      - vim
+      - htop
+      - net-tools
+      - ca-certificates
+      - gnupg
+      - lsb-release
+      - software-properties-common
+      - apt-transport-https
+      - ufw
+      - fail2ban
+      - rsync
+      - unzip
+      - acl
+      - sysstat
+    state: present
+
+- name: Tạo group {{ app_group }}
+  ansible.builtin.group:
+    name: "{{ app_group }}"
+    state: present
+
+- name: Tạo user {{ app_user }}
+  ansible.builtin.user:
+    name: "{{ app_user }}"
+    group: "{{ app_group }}"
+    shell: /bin/bash
+    home: /home/{{ app_user }}
+    create_home: yes
+    generate_ssh_key: yes
+    ssh_key_bits: 4096
+    ssh_key_file: .ssh/id_ed25519
+    password: "!"  # không cho password login
+
+- name: Cấu hình sudo NOPASSWD cho {{ app_user }}
+  ansible.builtin.copy:
+    dest: "/etc/sudoers.d/{{ app_user }}"
+    content: "{{ app_user }} ALL=(ALL) NOPASSWD:ALL"
+    mode: '0440'
+    validate: 'visudo -cf %s'
+
+- name: Tạo cấu trúc thư mục cho ứng dụng
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ app_user }}"
+    group: "{{ app_group }}"
+    mode: '0755'
+  loop:
+    - "{{ app_home }}"
+    - "{{ app_releases_dir }}"
+    - "{{ app_shared_dir }}"
+    - "{{ app_logs_dir }}"
+    - "{{ app_backup_dir }}"
+    - "{{ app_shared_dir }}/env"
+
+- name: Cấu hình UFW — mặc định deny
+  community.general.ufw:
+    state: reset
+    rule: allow
+    name: OpenSSH
+  when: ufw_allow_ssh
+
+- name: UFW — mở HTTP
+  community.general.ufw:
+    rule: allow
+    port: '80'
+    proto: tcp
+  when: ufw_allow_http
+
+- name: UFW — mở HTTPS
+  community.general.ufw:
+    rule: allow
+    port: '443'
+    proto: tcp
+  when: ufw_allow_https
+
+- name: Kích hoạt UFW
+  community.general.ufw:
+    state: enabled
+
+- name: Cấu hình fail2ban
+  ansible.builtin.copy:
+    dest: /etc/fail2ban/jail.local
+    content: |
+      [DEFAULT]
+      bantime  = 1h
+      findtime = 10m
+      maxretry = 5
+
+      [sshd]
+      enabled = true
+      port    = ssh
+      filter  = sshd
+      logpath = /var/log/auth.log
+    mode: '0644'
+  when: fail2ban_enabled
+  notify: Restart fail2ban
+
+- name: Cấu hình timezone
+  community.general.timezone:
+    name: Asia/Ho_Chi_Minh
+
+- name: Cấu hình swap 2GB nếu chưa có
+  ansible.builtin.shell: |
+    if [ ! -f /swapfile ]; then
+      fallocate -l 2G /swapfile
+      chmod 600 /swapfile
+      mkswap /swapfile
+      swapon /swapfile
+      echo '/swapfile none swap sw 0 0' >> /etc/fstab
+    fi
+  args:
+    creates: /swapfile
+  when: ansible_swaptotal_mb < 2048

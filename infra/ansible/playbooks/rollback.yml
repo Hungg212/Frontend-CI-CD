@@ -1,0 +1,86 @@
+---
+# ============================================
+# Playbook: rollback.yml
+# Quay lại release trước đó
+#
+# Chạy:
+#   ansible-playbook -i inventories/prod.ini playbooks/rollback.yml
+#   ansible-playbook -i inventories/prod.ini playbooks/rollback.yml -e "rollback_to=20251019143000-v1.0.0"
+# ============================================
+
+- name: Rollback {{ app_name }} về release trước
+  hosts: webservers
+  become: yes
+  serial: "{{ deploy_serial | default('50%') }}"
+
+  vars:
+    rollback_to: "{{ rollback_to | default('') }}"
+
+  tasks:
+    - name: Lấy danh sách releases
+      ansible.builtin.find:
+        paths: "{{ app_releases_dir }}"
+        file_type: directory
+      register: releases
+
+    - name: Sắp xếp releases theo thời gian (mới → cũ)
+      ansible.builtin.set_fact:
+        sorted_releases: "{{ releases.files | map(attribute='path') | map('basename') | sort(reverse=true) | list }}"
+
+    - name: Hiển thị danh sách releases
+      ansible.builtin.debug:
+        msg: "Available releases: {{ sorted_releases }}"
+
+    - name: Xác định release cần rollback
+      ansible.builtin.set_fact:
+        target_release: >-
+          {% if rollback_to != '' %}
+            {{ sorted_releases | select('match', '^' ~ rollback_to) | first | default('') }}
+          {% else %}
+            {{ sorted_releases[1] | default('') }}
+          {% endif %}
+
+    - name: Fail nếu không tìm thấy release
+      ansible.builtin.fail:
+        msg: "No rollback target found!"
+      when: target_release == ''
+
+    - name: Thông báo rollback target
+      ansible.builtin.debug:
+        msg: "🔄 Rolling back to: {{ target_release }}"
+
+    - name: Cập nhật symlink current
+      ansible.builtin.file:
+        src: "{{ app_releases_dir }}/{{ target_release }}"
+        dest: "{{ app_current_link }}"
+        state: link
+        force: yes
+
+    - name: Restart PM2
+      ansible.builtin.command: pm2 restart {{ app_name }}
+      args:
+        chdir: "/home/{{ app_user }}"
+      become_user: "{{ app_user }}"
+      changed_when: true
+
+    - name: Smoke test
+      ansible.builtin.uri:
+        url: "http://127.0.0.1:{{ app_port }}{{ app_health_path }}"
+        method: GET
+        status_code: 200
+        timeout: 30
+      register: health
+      retries: 5
+      delay: 3
+      until: health.status == 200
+
+    - name: Ghi log rollback
+      ansible.builtin.lineinfile:
+        path: "{{ app_logs_dir }}/deploy.log"
+        line: "{{ ansible_date_time.iso8601 }} | ROLLBACK OK | host={{ inventory_hostname }} | to={{ target_release }}"
+        create: yes
+        state: present
+
+    - name: Thông báo rollback thành công
+      ansible.builtin.debug:
+        msg: "✅ Rollback to {{ target_release }} on {{ inventory_hostname }} complete!"

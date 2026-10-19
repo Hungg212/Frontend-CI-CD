@@ -1,0 +1,23 @@
+# ============================================
+# Biến cho nhóm webservers
+# ============================================
+
+# Nginx config
+nginx_server_name: coffeehome.vn
+nginx_ssl_enabled: false  # Bật true khi có SSL cert
+nginx_ssl_cert_path: /etc/letsencrypt/live/{{ nginx_server_name }}/fullchain.pem
+nginx_ssl_key_path: /etc/letsencrypt/live/{{ nginx_server_name }}/privkey.pem
+
+# Reverse proxy
+nginx_proxy_timeout: 60s
+nginx_client_max_size: 10M
+
+# Static files (nếu có frontend trên cùng server)
+static_root: /var/www/coffee-home-blend
+static_alias: /static
+
+# SSL redirect
+force_https: false
+
+# Rate limiting
+nginx_limit_req_zone: "10r/s"

@@ -1,0 +1,6 @@
+# Ansible Galaxy Collections cho coffee-home-blend
+collections:
+  - name: community.general
+    version: ">=9.0.0"
+  - name: community.postgresql
+    version: ">=3.0.0"

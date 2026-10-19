@@ -1,0 +1,112 @@
+---
+# ============================================
+# Playbook: deploy-frontend.yml
+# Deploy frontend static files (Vite build) lên web servers
+#
+# Chạy thủ công:
+#   ansible-playbook -i inventories/dev.ini playbooks/deploy-frontend.yml \
+#     -e "static_artifact=./dist static_target=/var/www/coffee-home-blend"
+#
+# Từ Jenkins xem Jenkinsfile (frontend)
+# ============================================
+
+- name: Deploy frontend {{ app_name }} lên web servers
+  hosts: webservers
+  become: yes
+  serial: "{{ deploy_serial | default('100%') }}"
+
+  vars:
+    static_artifact: "{{ static_artifact | default('./dist') }}"
+    static_target: "{{ static_target | default('/var/www/coffee-home-blend') }}"
+    backup_keep: 3
+
+  pre_tasks:
+    - name: Kiểm tra thư mục artifact tồn tại
+      ansible.builtin.stat:
+        path: "{{ static_artifact }}"
+      delegate_to: localhost
+      become: no
+      register: artifact_stat
+
+    - name: Fail nếu không tìm thấy artifact
+      ansible.builtin.fail:
+        msg: "Artifact directory not found: {{ static_artifact }}"
+      when: not artifact_stat.stat.exists
+
+    - name: Hiển thị thông tin deploy
+      ansible.builtin.debug:
+        msg: |
+          🌐 Deploying frontend
+          📁 Artifact: {{ static_artifact }}
+          🎯 Target: {{ static_target }} trên {{ inventory_hostname }}
+          🔖 Version: {{ app_version | default('latest') }}
+
+  tasks:
+    - name: Tạo thư mục đích
+      ansible.builtin.file:
+        path: "{{ static_target }}"
+        state: directory
+        owner: "{{ app_user | default('www-data') }}"
+        group: "{{ app_group | default('www-data') }}"
+        mode: '0755'
+
+    - name: Backup version hiện tại (nếu có)
+      ansible.builtin.shell: |
+        if [ -d {{ static_target }}/current ]; then
+          TS=$(date +%Y%m%d%H%M%S)
+          mv {{ static_target }}/current {{ static_target }}/backup-$TS
+          # Cleanup old backups
+          ls -1dt {{ static_target }}/backup-* 2>/dev/null | tail -n +{{ backup_keep + 1 }} | xargs -r rm -rf
+        fi
+      changed_when: false
+
+    - name: Sync static files lên server
+      ansible.posix.synchronize:
+        src: "{{ static_artifact }}/"
+        dest: "{{ static_target }}/current/"
+        delete: yes
+        recursive: yes
+        rsync_opts:
+          - "--chmod=D755,F644"
+          - "--exclude=.git"
+          - "--exclude=node_modules"
+      delegate_to: localhost
+
+    - name: Set ownership cho static files
+      ansible.builtin.file:
+        path: "{{ static_target }}/current"
+        owner: "{{ app_user | default('www-data') }}"
+        group: "{{ app_group | default('www-data') }}"
+        recurse: yes
+
+    - name: Test Nginx config
+      ansible.builtin.command: nginx -t
+      changed_when: false
+
+    - name: Reload Nginx
+      ansible.builtin.service:
+        name: nginx
+        state: reloaded
+
+    - name: Smoke test qua Nginx
+      ansible.builtin.uri:
+        url: "http://{{ ansible_host }}/index.html"
+        method: GET
+        status_code: 200
+        timeout: 15
+      register: frontend_health
+      retries: 3
+      delay: 3
+      until: frontend_health.status == 200
+
+    - name: Ghi log deploy
+      ansible.builtin.lineinfile:
+        path: "/var/log/deploy-frontend.log"
+        line: "{{ ansible_date_time.iso8601 }} | DEPLOY OK | host={{ inventory_hostname }} | version={{ app_version | default('latest') }}"
+        create: yes
+        state: present
+
+  post_tasks:
+    - name: Thông báo thành công
+      ansible.builtin.debug:
+        msg: "✅ Frontend deployed to {{ inventory_hostname }}:{{ static_target }}/current"

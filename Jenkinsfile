@@ -1,3 +1,6 @@
+// Coffee Home Blend — Frontend CI/CD Pipeline
+// Build static (Vite) → upload lên Nginx root
+
 pipeline {
     agent any
 
@@ -9,15 +12,18 @@ pipeline {
     }
 
     environment {
-        HUSKY         = '0'
-        CI            = 'true'
-        APP_NAME      = 'coffee-home-blend'
-        // Thư mục deploy trên server (sẽ dùng cho nginx + ansible)
-        DEPLOY_DIR    = '/var/www/coffee-home-blend'
+        HUSKY            = '0'
+        CI               = 'true'
+        APP_NAME         = 'coffee-home-blend-frontend'
+        IMAGE_TAG        = "${env.GIT_COMMIT?.take(7) ?: 'latest'}"
+        ANSIBLE_REPO     = 'https://github.com/Hungg212/coffee-home-blend-infra.git'
+        ANSIBLE_DIR      = 'infra/ansible'
+        DEPLOY_ENV       = 'dev'           // dev | staging | prod
+        SSH_USER         = 'deploy'
+        STATIC_DIR       = '/var/www/coffee-home-blend'
     }
 
     triggers {
-        // Poll SCM mỗi 5 phút nếu repo không có webhook GitHub
         pollSCM('H/5 * * * *')
     }
 
@@ -29,10 +35,10 @@ pipeline {
             }
         }
 
-        stage('Install Dependencies') {
+        stage('Install') {
             steps {
-                sh 'npm ci'
                 sh 'node -v && npm -v'
+                sh 'npm ci'
             }
         }
 
@@ -50,7 +56,6 @@ pipeline {
 
         stage('Build') {
             steps {
-                // Vite đọc VITE_* từ env lúc build
                 sh 'npm run build'
                 sh 'du -sh dist && ls -lh dist/assets | head -15'
             }
@@ -62,14 +67,22 @@ pipeline {
             }
         }
 
-        stage('Deploy to Staging') {
-            when { branch 'main' }
+        stage('Deploy Static (via Ansible)') {
+            when { anyOf { branch 'main'; branch 'develop' } }
             steps {
-                sshagent(['ec2-ssh-key']) {
+                dir('infra-ansible') {
+                    git branch: 'main', url: ANSIBLE_REPO, credentialsId: 'github-ssh'
+                }
+                sshagent(['vps-ssh-key']) {
                     sh """
-                        rsync -avz --delete \
-                            -e "ssh -o StrictHostKeyChecking=no" \
-                            dist/ ubuntu@${STAGING_HOST}:${DEPLOY_DIR}/
+                        set -e
+                        cd ${ANSIBLE_DIR}
+                        ansible-playbook -i inventories/${DEPLOY_ENV}.ini \
+                            playbooks/deploy-frontend.yml \
+                            -e "static_artifact=${WORKSPACE}/dist \
+                                static_target=${STATIC_DIR} \
+                                deploy_user=${SSH_USER}" \
+                            --diff
                     """
                 }
             }
@@ -77,7 +90,8 @@ pipeline {
     }
 
     post {
-        success { echo "✅ Build thành công! Commit: ${env.GIT_COMMIT}" }
-        failure { echo "❌ Build thất bại! Commit: ${env.GIT_COMMIT}" }
+        success { echo "✅ Frontend deployed! Commit: ${env.GIT_COMMIT} → env=${DEPLOY_ENV}" }
+        failure { echo "❌ Frontend pipeline thất bại! Commit: ${env.GIT_COMMIT}" }
+        always  { cleanWs(deleteDirs: true, patterns: [[pattern: 'node_modules/**', type: 'INCLUDE']]) }
     }
 }

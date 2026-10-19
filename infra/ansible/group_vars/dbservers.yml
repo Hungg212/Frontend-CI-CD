@@ -1,0 +1,27 @@
+# ============================================
+# Biến cho nhóm dbservers
+# ============================================
+
+# PostgreSQL
+pg_data_dir: /var/lib/postgresql/{{ pg_version }}/main
+pg_log_dir: /var/log/postgresql
+pg_max_connections: 200
+pg_shared_buffers: 256MB
+pg_effective_cache_size: 1GB
+pg_maintenance_work_mem: 64MB
+pg_work_mem: 4MB
+pg_wal_buffers: 16MB
+pg_checkpoint_completion_target: 0.9
+pg_max_wal_size: 1GB
+pg_min_wal_size: 80MB
+
+# Connection pool
+pgbouncer_enabled: false
+pgbouncer_version: "1.23"
+pgbouncer_pool_size: 25
+pgbouncer_max_client_conn: 100
+
+# Backup
+pg_backup_enabled: true
+pg_backup_path: /var/backups/postgres
+pg_backup_retention: 7

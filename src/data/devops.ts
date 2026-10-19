@@ -169,18 +169,35 @@ export interface PlaybookInfo {
 
 export const playbooks: PlaybookInfo[] = [
   {
-    file: 'playbooks/webserver.yml',
-    name: 'Web Server Setup',
-    purpose: 'Cài Nginx, cấu hình reverse proxy, deploy ứng dụng và kiểm tra /healthz',
-    hosts: 'webservers',
-    command: 'ansible-playbook playbooks/webserver.yml -i inventory/dev.ini',
+    file: 'playbooks/site.yml',
+    name: 'Bootstrap toàn bộ',
+    purpose: 'Cài Node.js, PostgreSQL, Nginx cho toàn bộ servers — chạy 1 lần khi setup môi trường',
+    hosts: 'all (webservers + dbservers)',
+    command: 'ansible-playbook playbooks/site.yml -i inventories/dev.ini --ask-vault-pass',
   },
   {
-    file: 'playbooks/deploy.yml',
-    name: 'Container Deploy',
-    purpose: 'Kéo image mới từ GHCR, khởi động lại container, xác nhận trạng thái',
+    file: 'playbooks/deploy-backend.yml',
+    name: 'Deploy Backend (Rolling)',
+    purpose:
+      'Upload artifact từ Jenkins → extract → symlink → reload PM2 → smoke-test. Zero-downtime.',
+    hosts: 'webservers (serial 50%)',
+    command:
+      'ansible-playbook playbooks/deploy-backend.yml -i inventories/prod.ini -e "app_artifact=./backend.tar.gz app_version=v1.2.0"',
+  },
+  {
+    file: 'playbooks/rollback.yml',
+    name: 'Rollback Release',
+    purpose: 'Quay lại release trước đó (giữ 5 bản gần nhất) — khôi phục trong vài giây',
     hosts: 'webservers',
-    command: 'ansible-playbook playbooks/deploy.yml -i inventory/prod.ini',
+    command:
+      'ansible-playbook playbooks/rollback.yml -i inventories/prod.ini [-e "rollback_to=20251019143000"]',
+  },
+  {
+    file: 'playbooks/health-check.yml',
+    name: 'Health Check tổng thể',
+    purpose: 'Kiểm tra uptime, disk, memory, services (Nginx, PM2, PostgreSQL), HTTP /healthz',
+    hosts: 'all',
+    command: 'ansible-playbook playbooks/health-check.yml -i inventories/prod.ini',
   },
 ];
 

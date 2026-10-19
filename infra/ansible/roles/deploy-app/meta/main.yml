@@ -1,0 +1,19 @@
+---
+galaxy_info:
+  role_name: deploy-app
+  author: Coffee Home Blend Team
+  description: Triển khai Node.js app theo mô hình rolling release với PM2
+  license: MIT
+  min_ansible_version: "2.14"
+  platforms:
+    - name: Ubuntu
+      versions:
+        - jammy
+        - noble
+  dependencies:
+    - role: common
+    - role: nodejs
+  galaxy_tags:
+    - deploy
+    - nodejs
+    - pm2

@@ -1,0 +1,25 @@
+---
+# ============================================
+# Playbook: site.yml
+# Bootstrap toàn bộ infrastructure cho Coffee Home Blend
+# Chạy: ansible-playbook -i inventories/dev.ini playbooks/site.yml
+# ============================================
+
+- name: Setup chung cho tất cả máy chủ
+  hosts: all
+  become: yes
+  roles:
+    - role: common
+
+- name: Cài đặt + cấu hình Database servers
+  hosts: dbservers
+  become: yes
+  roles:
+    - role: postgres
+
+- name: Cài đặt + cấu hình Web servers
+  hosts: webservers
+  become: yes
+  roles:
+    - role: nodejs
+    - role: nginx
