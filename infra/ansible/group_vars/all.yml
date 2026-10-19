@@ -3,12 +3,13 @@
 # ============================================
 
 # --- Secrets: load từ Ansible Vault ---
-# Vault file: group_vars/all/vault.yml
+# Vault file: group_vars/all/vault.yml (Ansible TỰ ĐỘNG load file này)
 # Tạo bằng:  ansible-vault create group_vars/all/vault.yml
-# Encrypt lại: ansible-vault encrypt group_vars/all/vault.yml
-# Sửa:        ansible-vault edit group_vars/all/vault.yml
-vars_files:
-  - vault.yml
+# Vault PHẢI chứa 2 biến: vault_db_password, vault_jwt_secret
+# Roles sử dụng: {{ vault_db_password }} / {{ vault_jwt_secret }}
+# Hoặc gián tiếp: {{ db_password }} / {{ jwt_secret }} (set dưới đây)
+db_password: "{{ vault_db_password | default('') }}"
+jwt_secret: "{{ vault_jwt_secret | default('') }}"
 
 # --- Application ---
 app_name: coffee-home-blend-backend

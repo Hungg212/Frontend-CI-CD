@@ -23,24 +23,31 @@
 - name: Create database
   become: true
   become_user: postgres
-  shell: psql -c "SELECT 1 FROM pg_database WHERE datname='backend_db'" | grep -q 1 || psql -c "CREATE DATABASE backend_db"
-  changed_when: false
+  community.postgresql.postgresql_db:
+    name: "{{ pg_db }}"
+    state: present
 
 - name: Create database user
   become: true
   become_user: postgres
-  shell: "psql -t -c \"SELECT 1 FROM pg_roles WHERE rolname='backend_user'\" | grep -q 1 || psql -c \"CREATE USER backend_user WITH PASSWORD '{{ db_password }}'\""
-  register: user_created
-  changed_when: "'CREATE ROLE' in user_created.stdout"
-- name: Grant privileges
+  community.postgresql.postgresql_user:
+    name: "{{ pg_user }}"
+    password: "{{ db_password | default(vault_db_password) }}"
+    state: present
+
+- name: Grant privileges on database
   become: true
   become_user: postgres
-  shell: psql -c "GRANT ALL PRIVILEGES ON DATABASE backend_db TO backend_user"
-  when: user_created.changed
+  community.postgresql.postgresql_privs:
+    database: "{{ pg_db }}"
+    privs: ALL
+    type: database
+    roles: "{{ pg_user }}"
+    state: present
 
 - name: Set PostgreSQL password authentication
   lineinfile:
-    path: /etc/postgresql/14/main/pg_hba.conf
+    path: /etc/postgresql/{{ pg_version }}/main/pg_hba.conf
     regexp: "^local.*all.*all.*peer"
     line: "local   all             all                                     md5"
     state: present
@@ -48,7 +55,7 @@
 
 - name: Update PostgreSQL listen address
   lineinfile:
-    path: /etc/postgresql/14/main/postgresql.conf
+    path: /etc/postgresql/{{ pg_version }}/main/postgresql.conf
     regexp: "^listen_addresses"
     line: "listen_addresses = '*'"
     state: present

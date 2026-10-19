@@ -5,9 +5,17 @@
 *.swp
 
 # Vault — KHÔNG BAO GIỜ COMMIT
+group_vars/vault.yml
 group_vars/all/vault.yml
 group_vars/*/vault.yml
 host_vars/*/vault.yml
 .vault-pass
 .vault-pass.txt
 *.vault
+
+# Test files (local-only, không deploy)
+test-local.sh
+test-playbook.yml
+inventories/local-test.ini
+/tmp/ansible-*
+
