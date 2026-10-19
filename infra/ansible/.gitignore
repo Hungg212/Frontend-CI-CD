@@ -1,0 +1,13 @@
+# Ansible
+*.retry
+*.tmp
+*.bak
+*.swp
+
+# Vault — KHÔNG BAO GIỜ COMMIT
+group_vars/all/vault.yml
+group_vars/*/vault.yml
+host_vars/*/vault.yml
+.vault-pass
+.vault-pass.txt
+*.vault

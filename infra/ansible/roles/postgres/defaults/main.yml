@@ -1,5 +1,0 @@
----
-# Defaults cho role postgres
-# Bạn nên override pg_password trong Ansible Vault để bảo mật
-
-pg_password: "CHANGEME_USE_VAULT"

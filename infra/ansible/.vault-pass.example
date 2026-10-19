@@ -1,0 +1,17 @@
+---
+# Ansible Vault password file
+# Dùng để tự động giải mã vault trong CI/CD
+#
+# CÁCH DÙNG:
+#   ansible-playbook --vault-password-file .vault-pass ...
+#
+# CÁCH TẠO:
+#   echo "your-vault-password-here" > .vault-pass
+#   chmod 600 .vault-pass
+#
+# ⚠️ KHÔNG COMMIT FILE NÀY LÊN GIT — đã có trong .gitignore
+#
+# TRONG JENKINS:
+#   - Tạo credential "Secret text" với ID: vault-password
+#   - Trong pipeline, thêm: --vault-password-file <(echo $VAULT_PASSWORD)
+#   - Hoặc dùng plugin "Ansible Vault" để bind credential

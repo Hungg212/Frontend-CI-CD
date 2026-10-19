@@ -1,0 +1,26 @@
+# ============================================
+# VAULT SECRETS — mã hoá bằng Ansible Vault
+# ============================================
+# Tạo file thật bằng:
+#   cd infra/ansible
+#   ansible-vault create group_vars/all/vault.yml
+#   (sẽ hỏi password — nhớ kỹ, cần dùng cho Jenkins credentials)
+#
+# Hoặc nếu đã có file .vault-pass:
+#   ansible-vault create --vault-password-file .vault-pass group_vars/all/vault.yml
+#
+# Nội dung MẪU (copy vào vault editor):
+# ----------------------------------------
+# vault_db_password: "CoffeeDB_StrongP@ss_2026!"
+# vault_jwt_secret: "change-me-to-random-64-chars-min-abc123xyz789..."
+# ----------------------------------------
+#
+# Tên biến vault phải bắt đầu bằng "vault_" (quy ước)
+# Map sang biến thường trong roles qua group_vars/all.yml:
+#   db_password: "{{ vault_db_password }}"
+#   jwt_secret:  "{{ vault_jwt_secret }}"
+# ============================================
+
+# KHÔNG commit nội dung thật vào file này.
+# File này chỉ là template/documentation.
+# Ansible sẽ tự tạo file vault.yml thật khi bạn chạy `ansible-vault create`.

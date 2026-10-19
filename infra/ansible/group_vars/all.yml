@@ -2,6 +2,14 @@
 # Biến chung — áp dụng cho TẤT CẢ máy chủ
 # ============================================
 
+# --- Secrets: load từ Ansible Vault ---
+# Vault file: group_vars/all/vault.yml
+# Tạo bằng:  ansible-vault create group_vars/all/vault.yml
+# Encrypt lại: ansible-vault encrypt group_vars/all/vault.yml
+# Sửa:        ansible-vault edit group_vars/all/vault.yml
+vars_files:
+  - vault.yml
+
 # --- Application ---
 app_name: coffee-home-blend-backend
 app_user: deploy
@@ -9,6 +17,8 @@ app_group: deploy
 app_home: /home/{{ app_user }}/{{ app_name }}
 app_port: 4000
 app_health_path: /api/health
+app_env: production
+app_dir: /opt/backend
 
 # --- Directories ---
 app_releases_dir: "{{ app_home }}/releases"
@@ -19,14 +29,12 @@ app_backup_dir: "{{ app_home }}/backups"
 
 # --- Node.js ---
 node_version: "20"
-# Build command: npm ci --omit=dev --prefer-offline
-# Hoặc dùng npm install nếu thiếu lockfile
 
 # --- PostgreSQL ---
 pg_version: "16"
 pg_port: 5432
-pg_user: coffeeapp
-pg_db: coffeehome
+pg_user: backend_user
+pg_db: backend_db
 pg_encoding: UTF8
 
 # --- Nginx ---
@@ -53,3 +61,6 @@ backup_retention_days: 7
 # --- Flags cho ansible-playbook ---
 deploy_strategy: rolling  # rolling | blue_green
 keep_releases: 5
+
+# --- CORS (frontend URL được phép gọi API) ---
+frontend_url: "http://localhost:5173"

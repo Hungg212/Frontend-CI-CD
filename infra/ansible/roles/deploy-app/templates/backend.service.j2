@@ -1,0 +1,19 @@
+[Unit]
+Description=Backend API Service
+After=network.target postgresql.service
+Wants=postgresql.service
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/backend
+Environment=NODE_ENV=development
+ExecStart=/usr/bin/node server.js
+Restart=always
+RestartSec=5
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=backend
+
+[Install]
+WantedBy=multi-user.target

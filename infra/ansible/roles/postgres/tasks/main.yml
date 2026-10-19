@@ -1,109 +1,55 @@
 ---
-# Role: postgres
-# Cài đặt PostgreSQL, tạo user + database
-
-- name: Thêm PostgreSQL GPG key
-  ansible.builtin.shell: |
-    curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor -o /usr/share/keyrings/postgresql.gpg
-  args:
-    creates: /usr/share/keyrings/postgresql.gpg
-  changed_when: false
-
-- name: Thêm PostgreSQL apt repository
-  ansible.builtin.apt_repository:
-    repo: "deb [signed-by=/usr/share/keyrings/postgresql.gpg] http://apt.postgresql.org/pub/repos/apt {{ ansible_distribution_release }}-pgdg main"
-    state: present
-    update_cache: yes
-    filename: postgresql
-
-- name: Cài đặt PostgreSQL {{ pg_version }}
-  ansible.builtin.apt:
+- name: Install PostgreSQL
+  apt:
     name:
-      - postgresql-{{ pg_version }}
-      - postgresql-client-{{ pg_version }}
-      - python3-psycopg2
+      - postgresql
+      - postgresql-contrib
+      - libpq-dev
     state: present
+    update_cache: true
 
-- name: Khởi động + bật PostgreSQL
-  ansible.builtin.service:
+- name: Start PostgreSQL service
+  systemd:
     name: postgresql
     state: started
-    enabled: yes
+    enabled: true
 
-- name: Cấu hình listen_addresses
-  ansible.builtin.lineinfile:
-    path: "/etc/postgresql/{{ pg_version }}/main/postgresql.conf"
-    regexp: "^#?listen_addresses"
-    line: "listen_addresses = 'localhost'"
+- name: Wait for PostgreSQL
+  wait_for:
+    port: 5432
+    delay: 2
+    timeout: 30
+
+- name: Create database
+  become: true
+  become_user: postgres
+  shell: psql -c "SELECT 1 FROM pg_database WHERE datname='backend_db'" | grep -q 1 || psql -c "CREATE DATABASE backend_db"
+  changed_when: false
+
+- name: Create database user
+  become: true
+  become_user: postgres
+  shell: "psql -t -c \"SELECT 1 FROM pg_roles WHERE rolname='backend_user'\" | grep -q 1 || psql -c \"CREATE USER backend_user WITH PASSWORD '{{ db_password }}'\""
+  register: user_created
+  changed_when: "'CREATE ROLE' in user_created.stdout"
+- name: Grant privileges
+  become: true
+  become_user: postgres
+  shell: psql -c "GRANT ALL PRIVILEGES ON DATABASE backend_db TO backend_user"
+  when: user_created.changed
+
+- name: Set PostgreSQL password authentication
+  lineinfile:
+    path: /etc/postgresql/14/main/pg_hba.conf
+    regexp: "^local.*all.*all.*peer"
+    line: "local   all             all                                     md5"
     state: present
   notify: Restart PostgreSQL
 
-- name: Tạo user {{ pg_user }}
-  community.postgresql.postgresql_user:
-    name: "{{ pg_user }}"
-    password: "{{ pg_password }}"
-    encrypted: yes
+- name: Update PostgreSQL listen address
+  lineinfile:
+    path: /etc/postgresql/14/main/postgresql.conf
+    regexp: "^listen_addresses"
+    line: "listen_addresses = '*'"
     state: present
-  no_log: true
-
-- name: Tạo database {{ pg_db }}
-  community.postgresql.postgresql_db:
-    name: "{{ pg_db }}"
-    owner: "{{ pg_user }}"
-    encoding: "{{ pg_encoding }}"
-    state: present
-
-- name: Grant privileges cho user trên database
-  community.postgresql.postgresql_privs:
-    database: "{{ pg_db }}"
-    roles: "{{ pg_user }}"
-    privs: ALL
-    type: database
-    state: present
-
-- name: Cho phép user kết nối local qua password
-  ansible.builtin.template:
-    src: pg_hba.conf.j2
-    dest: "/etc/postgresql/{{ pg_version }}/main/pg_hba.conf"
-    owner: postgres
-    group: postgres
-    mode: '0640'
   notify: Restart PostgreSQL
-
-- name: Cấu hình performance tuning
-  ansible.builtin.template:
-    src: postgresql.conf.j2
-    dest: "/etc/postgresql/{{ pg_version }}/main/conf.d/99-tuning.conf"
-    owner: postgres
-    group: postgres
-    mode: '0644'
-  notify: Restart PostgreSQL
-
-- name: Tạo thư mục backup
-  ansible.builtin.file:
-    path: "{{ pg_backup_path }}"
-    state: directory
-    owner: postgres
-    group: postgres
-    mode: '0750'
-  when: pg_backup_enabled
-
-- name: Cài đặt cron job backup PostgreSQL
-  ansible.builtin.cron:
-    name: "PostgreSQL daily backup"
-    minute: "30"
-    hour: "2"
-    user: postgres
-    job: "/usr/bin/pg_dump {{ pg_db }} | gzip > {{ pg_backup_path }}/{{ pg_db }}-$(date +\\%Y\\%m\\%d).sql.gz"
-    cron_file: postgres_backup
-  when: pg_backup_enabled
-
-- name: Cài đặt cron job cleanup backup cũ
-  ansible.builtin.cron:
-    name: "PostgreSQL cleanup old backups"
-    minute: "0"
-    hour: "3"
-    user: postgres
-    job: "find {{ pg_backup_path }} -name '{{ pg_db }}-*.sql.gz' -mtime +{{ pg_backup_retention }} -delete"
-    cron_file: postgres_cleanup
-  when: pg_backup_enabled
