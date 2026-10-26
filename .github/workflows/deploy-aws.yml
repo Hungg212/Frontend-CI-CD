@@ -22,6 +22,10 @@ jobs:
   deploy:
     name: Deploy frontend + API to AWS
     runs-on: ubuntu-latest
+    # Skip cleanly until the OIDC role and stack names are configured (see
+    # infra/aws/README.md section 4). Without this guard, every push to main
+    # would fail on a missing secret.
+    if: vars.FRONTEND_STACK_NAME != '' && vars.BACKEND_STACK_NAME != ''
     steps:
       - uses: actions/checkout@v4
 
