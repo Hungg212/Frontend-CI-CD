@@ -1,0 +1,173 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >
+  Coffee Home Blend - Backend stack (EC2 t3.micro + Elastic IP + Security Group).
+  Runs Docker Compose (Node API + PostgreSQL) on Amazon Linux 2023.
+
+Parameters:
+  ProjectName:
+    Type: String
+    Default: coffee-home-blend
+    Description: Prefix used for resource names.
+
+  KeyName:
+    Type: AWS::EC2::KeyPair::KeyName
+    Description: Existing EC2 key pair used for SSH (create it with 01-stack-backend.ps1).
+
+  InstanceType:
+    Type: String
+    Default: t3.micro
+    AllowedValues:
+      - t3.micro
+      - t3.small
+      - t3.medium
+    Description: t3.micro is free tier eligible (750h/month).
+
+  SshLocation:
+    Type: String
+    Default: 0.0.0.0/0
+    Description: CIDR allowed to SSH (port 22). Prefer your public IP /32.
+
+  LatestAmiId:
+    Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
+    Default: /aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64
+    Description: Latest Amazon Linux 2023 AMI (resolved by SSM, always current).
+
+Resources:
+  InstanceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ec2.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
+      Tags:
+        - Key: Project
+          Value: !Ref ProjectName
+
+  InstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Roles:
+        - !Ref InstanceRole
+
+  SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Coffee Home Blend API - HTTP from internet, SSH restricted
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+          Description: HTTP (CloudFront origin + direct health check)
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: !Ref SshLocation
+          Description: SSH
+      Tags:
+        - Key: Name
+          Value: !Sub '${ProjectName}-api-sg'
+        - Key: Project
+          Value: !Ref ProjectName
+
+  Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: !Ref LatestAmiId
+      InstanceType: !Ref InstanceType
+      KeyName: !Ref KeyName
+      IamInstanceProfile: !Ref InstanceProfile
+      SecurityGroups:
+        - !Ref SecurityGroup
+      BlockDeviceMappings:
+        - DeviceName: /dev/xvda
+          Ebs:
+            VolumeType: gp3
+            VolumeSize: 20
+            DeleteOnTermination: true
+            Encrypted: true
+      Tags:
+        - Key: Name
+          Value: !Sub '${ProjectName}-api'
+        - Key: Project
+          Value: !Ref ProjectName
+      UserData:
+        Fn::Base64: |
+          #!/bin/bash
+          set -euxo pipefail
+
+          # --- 2 GB swap (t3.micro only has 1 GB RAM) ---
+          if [ ! -f /swapfile ]; then
+            fallocate -l 2G /swapfile || dd if=/dev/zero of=/swapfile bs=1M count=2048
+            chmod 600 /swapfile
+            mkswap /swapfile
+            swapon /swapfile
+            echo '/swapfile none swap sw 0 0' >> /etc/fstab
+          fi
+
+          # --- Docker + git ---
+          dnf install -y docker git
+          systemctl enable --now docker
+          usermod -aG docker ec2-user
+
+          # --- Docker Compose v2 plugin ---
+          mkdir -p /usr/libexec/docker/cli-plugins
+          curl -sSL https://github.com/docker/compose/releases/latest/download/docker-compose-linux-x86_64 \
+            -o /usr/libexec/docker/cli-plugins/docker-compose
+          chmod +x /usr/libexec/docker/cli-plugins/docker-compose
+
+          # --- App directory ---
+          mkdir -p /opt/coffee/app
+          chown -R ec2-user:ec2-user /opt/coffee
+
+          # --- Weekly image cleanup so the 20 GB disk never fills up ---
+          cat > /etc/cron.weekly/docker-prune <<'EOF'
+          #!/bin/bash
+          docker image prune -af --filter "until=168h" || true
+          docker builder prune -af --filter "until=168h" || true
+          EOF
+          chmod +x /etc/cron.weekly/docker-prune
+
+          echo "bootstrap done" > /opt/coffee/bootstrap.log
+
+  ElasticIp:
+    Type: AWS::EC2::EIP
+    Properties:
+      Domain: vpc
+      InstanceId: !Ref Instance
+      Tags:
+        - Key: Project
+          Value: !Ref ProjectName
+
+Outputs:
+  InstanceId:
+    Description: EC2 instance id
+    Value: !Ref Instance
+
+  PublicIp:
+    Description: Stable public IP of the API server
+    Value: !Ref ElasticIp
+
+  PublicDns:
+    Description: Public DNS name of the API server (use this as ApiOriginDomain)
+    Value: !GetAtt Instance.PublicDnsName
+
+  ApiOriginDomain:
+    Description: >
+      Origin domain to pass to the frontend stack. CloudFront rejects raw IPs,
+      so prefer PublicDns; if it is empty use <PublicIp>.nip.io instead.
+    Value: !GetAtt Instance.PublicDnsName
+
+  ApiHealthUrl:
+    Description: Health check endpoint
+    Value: !Sub 'http://${ElasticIp}/api/health'
+
+  SshCommand:
+    Description: SSH into the server
+    Value: !Sub 'ssh -i <path-to-${KeyName}.pem> ec2-user@${ElasticIp}'

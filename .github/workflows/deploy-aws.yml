@@ -1,0 +1,131 @@
+name: Deploy AWS
+
+# Manual + on push to main. Requires the github-oidc stack (see infra/aws/README.md).
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-aws-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  id-token: write # OIDC -> assume the deploy role
+  contents: read
+
+env:
+  AWS_REGION: ap-southeast-1
+  NODE_VERSION: '20'
+
+jobs:
+  deploy:
+    name: Deploy frontend + API to AWS
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+          role-session-name: gha-deploy-${{ github.run_id }}
+
+      - name: Resolve stack outputs
+        id: stacks
+        run: |
+          set -euo pipefail
+          backend="${{ vars.BACKEND_STACK_NAME }}"
+          frontend="${{ vars.FRONTEND_STACK_NAME }}"
+          {
+            echo "bucket=$(aws cloudformation describe-stacks --stack-name "$frontend" \
+              --query "Stacks[0].Outputs[?OutputKey=='BucketName'].OutputValue" --output text)"
+            echo "dist_id=$(aws cloudformation describe-stacks --stack-name "$frontend" \
+              --query "Stacks[0].Outputs[?OutputKey=='DistributionId'].OutputValue" --output text)"
+            echo "site_url=$(aws cloudformation describe-stacks --stack-name "$frontend" \
+              --query "Stacks[0].Outputs[?OutputKey=='FrontendUrl'].OutputValue" --output text)"
+            echo "instance_id=$(aws cloudformation describe-stacks --stack-name "$backend" \
+              --query "Stacks[0].Outputs[?OutputKey=='InstanceId'].OutputValue" --output text)"
+          } >> "$GITHUB_OUTPUT"
+
+      # ---------------------------------------------------------------- API
+      - name: Deploy API (SSM Run Command)
+        run: |
+          set -euo pipefail
+          command_id=$(aws ssm send-command \
+            --instance-ids "${{ steps.stacks.outputs.instance_id }}" \
+            --document-name AWS-RunShellScript \
+            --comment "deploy ${GITHUB_SHA::7}" \
+            --parameters 'commands=["sudo bash /opt/coffee/app/infra/aws/remote/deploy-api.sh"]' \
+            --query 'Command.CommandId' --output text)
+          echo "command id: $command_id"
+
+          for i in $(seq 1 60); do
+            status=$(aws ssm get-command-invocation --command-id "$command_id" \
+              --instance-id "${{ steps.stacks.outputs.instance_id }}" \
+              --query 'Status' --output text 2>/dev/null || echo Pending)
+            echo "attempt $i: $status"
+            case "$status" in
+              Success) break ;;
+              Failed|Cancelled|TimedOut)
+                aws ssm get-command-invocation --command-id "$command_id" \
+                  --instance-id "${{ steps.stacks.outputs.instance_id }}" \
+                  --query '{out:StandardOutputContent,err:StandardErrorContent}' --output json
+                exit 1 ;;
+            esac
+            sleep 10
+          done
+
+      # ----------------------------------------------------------- Frontend
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - run: npm ci
+      - name: Build
+        # .env.production sets VITE_API_BASE_URL empty (same origin via CloudFront).
+        run: npm run build
+
+      - name: Guard against dev URLs in the bundle
+        run: |
+          if grep -rl 'localhost:4000' dist/assets/*.js; then
+            echo "::error::Build leaked a dev API URL. Check .env.production"
+            exit 1
+          fi
+
+      - name: Upload to S3
+        run: |
+          set -euo pipefail
+          bucket="${{ steps.stacks.outputs.bucket }}"
+          aws s3 sync dist "s3://$bucket" --delete --exclude 'index.html' --exclude '*.map' \
+            --cache-control 'public,max-age=31536000,immutable'
+          aws s3 cp dist/index.html "s3://$bucket/index.html" \
+            --cache-control 'no-cache,no-store,must-revalidate' \
+            --content-type 'text/html; charset=utf-8'
+
+      - name: Invalidate CloudFront
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id "${{ steps.stacks.outputs.dist_id }}" --paths '/*'
+
+      - name: Smoke test
+        run: |
+          set -euo pipefail
+          site="${{ steps.stacks.outputs.site_url }}"
+          echo "checking $site/api/health"
+          for i in $(seq 1 10); do
+            if curl -fsS "$site/api/health"; then echo; exit 0; fi
+            sleep 10
+          done
+          echo "health check failed"; exit 1
+
+      - name: Summary
+        run: |
+          {
+            echo "### Deployed"
+            echo ""
+            echo "- Site: ${{ steps.stacks.outputs.site_url }}"
+            echo "- Commit: \`${GITHUB_SHA::7}\`"
+          } >> "$GITHUB_STEP_SUMMARY"

@@ -1,0 +1,216 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >
+  Coffee Home Blend - Frontend stack (S3 + CloudFront + OAC).
+  Serves the Vite build and reverse-proxies /api/* to the EC2 backend,
+  so the browser talks to a single HTTPS origin (no CORS, no mixed content).
+
+Parameters:
+  ProjectName:
+    Type: String
+    Default: coffee-home-blend
+
+  ApiOriginDomain:
+    Type: String
+    Description: >
+      Hostname of the EC2 backend, e.g. ec2-1-2-3-4.ap-southeast-1.compute.amazonaws.com
+      or 1.2.3.4.nip.io. Must be a DNS name: CloudFront rejects raw IPs.
+      Use the backend stack output "ApiOriginDomain".
+
+  PriceClass:
+    Type: String
+    Default: PriceClass_All
+    AllowedValues: [PriceClass_100, PriceClass_200, PriceClass_All]
+    Description: >
+      PriceClass_All is recommended for a Vietnam audience: it includes the
+      Singapore/Hong Kong edges. CloudFront's free tier (1 TB/month) applies
+      regardless of price class, so this costs nothing extra within the tier.
+      PriceClass_100 (US/CA/EU only) would serve Asian users from far-away edges.
+
+Resources:
+  # ---------------------------------------------------------------- S3 bucket
+  Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub '${ProjectName}-web-${AWS::AccountId}'
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: BucketOwnerEnforced
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      VersioningConfiguration:
+        Status: Enabled
+      # Keep old versions only briefly: protects against a bad deploy, without
+      # letting historical builds accumulate in the 5 GB free tier forever.
+      LifecycleConfiguration:
+        Rules:
+          - Id: expire-old-versions
+            Status: Enabled
+            NoncurrentVersionExpiration:
+              NoncurrentDays: 14
+          - Id: abort-incomplete-uploads
+            Status: Enabled
+            AbortIncompleteMultipartUpload:
+              DaysAfterInitiation: 7
+      Tags:
+        - Key: Project
+          Value: !Ref ProjectName
+
+  # ------------------------------------------------------------------- OAC
+  OriginAccessControl:
+    Type: AWS::CloudFront::OriginAccessControl
+    Properties:
+      OriginAccessControlConfig:
+        Name: !Sub '${ProjectName}-oac'
+        Description: CloudFront OAC for the SPA bucket
+        OriginAccessControlOriginType: s3
+        SigningBehavior: always
+        SigningProtocol: sigv4
+
+  # ------------------------------------------------- CloudFront Function (SPA)
+  # Rewrites extensionless paths (/admin/products) to /index.html so React Router
+  # can handle them. Attached only to the default behavior, so API 404/403
+  # responses pass through untouched.
+  SpaRouterFunction:
+    Type: AWS::CloudFront::Function
+    Properties:
+      Name: !Sub '${ProjectName}-spa-router'
+      AutoPublish: true
+      FunctionConfig:
+        Comment: SPA fallback for the Vite app
+        Runtime: cloudfront-js-2.0
+      FunctionCode: |
+        function handler(event) {
+          var request = event.request;
+          var uri = request.uri;
+
+          // Hashed build assets and real files keep their path.
+          if (/\.[a-zA-Z0-9]+$/.test(uri)) {
+            return request;
+          }
+
+          // Directory-style or extensionless path -> let React Router resolve it.
+          if (uri.endsWith('/')) {
+            request.uri = uri + 'index.html';
+          } else {
+            request.uri = '/index.html';
+          }
+          return request;
+        }
+
+  # ------------------------------------------------------------- distribution
+  Distribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        Comment: !Sub '${ProjectName} frontend + /api proxy'
+        PriceClass: !Ref PriceClass
+        HttpVersion: http2and3
+        IPV6Enabled: true
+        DefaultRootObject: index.html
+
+        Origins:
+          - Id: s3-origin
+            DomainName: !Sub '${Bucket}.s3.${AWS::Region}.amazonaws.com'
+            OriginAccessControlId: !GetAtt OriginAccessControl.Id
+            S3OriginConfig:
+              OriginAccessIdentity: ''
+          - Id: api-origin
+            DomainName: !Ref ApiOriginDomain
+            CustomOriginConfig:
+              OriginProtocolPolicy: http-only
+              HTTPPort: 80
+              HTTPSPort: 443
+              OriginReadTimeout: 30
+              OriginKeepaliveTimeout: 5
+
+        DefaultCacheBehavior:
+          TargetOriginId: s3-origin
+          ViewerProtocolPolicy: redirect-to-https
+          AllowedMethods: [GET, HEAD, OPTIONS]
+          CachedMethods: [GET, HEAD, OPTIONS]
+          Compress: true
+          # Managed-CachingOptimized
+          CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6
+          FunctionAssociations:
+            - EventType: viewer-request
+              FunctionARN: !GetAtt SpaRouterFunction.FunctionARN
+
+        CacheBehaviors:
+          # API traffic -> EC2. No caching, forward everything.
+          - PathPattern: /api/*
+            TargetOriginId: api-origin
+            ViewerProtocolPolicy: redirect-to-https
+            AllowedMethods: [GET, HEAD, OPTIONS, PUT, POST, PATCH, DELETE]
+            CachedMethods: [GET, HEAD, OPTIONS]
+            Compress: true
+            # Managed-CachingDisabled
+            CachePolicyId: 4135ea2d-6df8-44a3-9df3-4b5a84be39ad
+            # Managed-AllViewer (forwards all headers/cookies/query strings)
+            OriginRequestPolicyId: 216adef6-5c7f-47e4-b989-5492eafa07d3
+          # Vite hashed assets: long cache
+          - PathPattern: /assets/*
+            TargetOriginId: s3-origin
+            ViewerProtocolPolicy: redirect-to-https
+            AllowedMethods: [GET, HEAD, OPTIONS]
+            CachedMethods: [GET, HEAD, OPTIONS]
+            Compress: true
+            CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6
+
+        # SPA routing is handled by a CloudFront Function (below) attached ONLY to
+        # the default behavior. CustomErrorResponses is deliberately NOT used here:
+        # it applies to every behavior, so a 403/404 from the API (/api/*) would be
+        # replaced by index.html and the frontend would receive HTML instead of JSON.
+
+        Restrictions:
+          GeoRestriction:
+            RestrictionType: none
+
+        ViewerCertificate:
+          CloudFrontDefaultCertificate: true
+
+      Tags:
+        - Key: Project
+          Value: !Ref ProjectName
+
+  # Allow only this distribution to read the bucket
+  BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref Bucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: AllowCloudFrontServicePrincipalReadOnly
+            Effect: Allow
+            Principal:
+              Service: cloudfront.amazonaws.com
+            Action: s3:GetObject
+            Resource: !Sub '${Bucket.Arn}/*'
+            Condition:
+              StringEquals:
+                AWS:SourceArn: !Sub 'arn:aws:cloudfront::${AWS::AccountId}:distribution/${Distribution}'
+
+Outputs:
+  BucketName:
+    Description: S3 bucket that receives the Vite build
+    Value: !Ref Bucket
+
+  DistributionId:
+    Description: CloudFront distribution id (needed for cache invalidation)
+    Value: !Ref Distribution
+
+  FrontendUrl:
+    Description: Public HTTPS URL of the site
+    Value: !Sub 'https://${Distribution.DomainName}'
+
+  ApiThroughCloudFrontUrl:
+    Description: API base URL usable from the browser
+    Value: !Sub 'https://${Distribution.DomainName}/api'

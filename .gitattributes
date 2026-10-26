@@ -1,0 +1,17 @@
+# Shell scripts must keep LF endings or bash fails with "\r: command not found"
+*.sh text eol=lf
+infra/aws/remote/*.sh text eol=lf
+
+# YAML/JSON stay LF for consistent CloudFormation/GitHub Actions parsing
+*.yml text eol=lf
+*.yaml text eol=lf
+
+# PowerShell scripts: CRLF is fine, git normalizes on commit
+*.ps1 text eol=crlf
+
+# Generated/binary assets
+*.png binary
+*.jpg binary
+*.ico binary
+*.pem binary
+*.db binary
