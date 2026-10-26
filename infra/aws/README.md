@@ -1,16 +1,21 @@
 # Deploy Coffee Home Blend lên AWS (hướng tiết kiệm nhất)
 
-Bộ file này triển khai app lên AWS theo cách **gần như miễn phí**:
+Bộ file này triển khai app lên AWS theo cách **rẻ nhất có thể** (~$11.3/tháng, trừ vào credit $100):
 
 | Thành phần | Dịch vụ | Chi phí |
 |---|---|---|
-| Frontend (React/Vite) | **S3 + CloudFront** | Miễn phí vĩnh viễn (5GB S3, 1TB CloudFront/tháng) |
-| Backend API (Node/Express) | **EC2 t3.micro** + Docker | Free 12 tháng đầu (750h/tháng), sau đó ~$8/tháng |
-| Database (PostgreSQL 16) | **Container trên cùng EC2** | $0 (không dùng RDS — RDS không bao giờ free lâu dài) |
+| Frontend (React/Vite) | **S3 + CloudFront** | $0 (always-free: 5GB S3, 1TB CloudFront/tháng) |
+| Backend API (Node/Express) | **EC2 t3.micro** + Docker | ~$9.6/tháng (trừ vào credit $100) |
+| Database (PostgreSQL 16) | **Container trên cùng EC2** | $0 (không dùng RDS — RDS đắt hơn nhiều) |
+| Ổ đĩa | **EBS gp3 20GB** | ~$1.6/tháng (trừ vào credit) |
 | HTTPS | **CloudFront** (cert mặc định `*.cloudfront.net`) | $0 |
 | IP tĩnh | **Elastic IP** gắn vào instance đang chạy | $0 |
 
-**Tổng: $0 trong 12 tháng đầu.** Không dùng NAT Gateway (~$32/tháng) và không dùng ALB (~$16/tháng) — đây là 2 thứ làm "cháy" credit nhanh nhất.
+**Tổng thực tế: ~$11.3/tháng** → $100 credit đủ dùng **khoảng 8-9 tháng** phần cứng, nhưng **Free Plan chỉ kéo dài 6 tháng** nên thực tế bạn dùng thoải mái ~$68 trong 6 tháng, còn dư ~$32.
+
+Không dùng NAT Gateway (~$32/tháng) và không dùng ALB (~$16/tháng) — đây là 2 thứ làm "cháy" credit nhanh nhất.
+
+> ⚠️ **Tài khoản của bạn dùng mô hình credit mới** (tạo từ 15/7/2025), không phải "free tier 12 tháng" kiểu cũ. Đọc [0.1](#01-kiểm-tra-loại-tài-khoản-quan-trọng) trước khi bắt đầu — có một mốc thời gian bạn **bắt buộc** phải nhớ.
 
 CloudFront dùng `PriceClass_All` để có edge Singapore/Hong Kong (nhanh cho user Việt Nam); free tier 1 TB/tháng áp dụng như nhau ở mọi price class nên không tốn thêm.
 
@@ -34,13 +39,48 @@ Vì CloudFront proxy luôn `/api/*`, frontend gọi API **cùng origin** → kh�
 
 ## 0. Chuẩn bị (làm 1 lần)
 
-### 0.1. Gắn thẻ và bật quyền trên AWS
+### 0.1. Kiểm tra loại tài khoản (quan trọng)
 
-Bạn đã có thẻ Visa nhưng chưa gắn. Vào **AWS Console → Billing → Payment methods** để thêm thẻ. AWS sẽ trừ tạm ~$1 để xác minh (hoàn lại).
+AWS có **2 mô hình free tier khác nhau**, chi phí và thời hạn rất khác:
 
-> **Quan trọng:** tạo **Budget alert** ngay để không bị bất ngờ. Console → **Billing → Budgets → Create budget → Zero-Spend budget** (hoặc $1). Mọi chi phí phát sinh sẽ email cho bạn trong vòng 1 ngày.
+| | Tạo **trước** 15/7/2025 | Tạo **từ** 15/7/2025 |
+|---|---|---|
+| Cơ chế | Free tier theo **usage limit** (750h EC2/tháng…) | **Credit $100** trừ dần |
+| Thời hạn | 12 tháng | **6 tháng** hoặc hết credit, cái nào trước |
+| Quá giới hạn | Bị tính tiền pay-as-you-go | **Không thể vượt** — Free Plan chặn |
+| Hết hạn | Mất free tier, vẫn dùng được | **Tài khoản tự đóng**, dữ liệu xoá sau 90 ngày |
 
-### 0.2. Tạo tài khoản IAM có access key
+**Cách kiểm tra:** Console → **Billing** (hoặc trang chủ). Nếu thấy ô "Chi phí và mức sử dụng" với "Số tiền tín dụng còn lại" → bạn ở **mô hình credit mới**.
+
+**Nếu đang ở Free Plan (6 tháng)** — lưu ý:
+
+1. **Không tự động bị tính tiền.** Free Plan không cho vượt credit, nên bạn an toàn tuyệt đối. Hết 6 tháng tài khoản đóng lại (không có bill bất ngờ).
+2. **Muốn chạy tiếp sau 6 tháng** → phải **upgrade lên Paid plan** (Console → Settings → Billing → Upgrade). Credit còn dư vẫn áp dụng tiếp cho tới khi hết hạn 12 tháng.
+3. **Dịch vụ dùng trong kiến trúc này đều được phép.** EC2, EBS, S3, CloudFront, CloudFormation, IAM, Systems Manager (SSM), VPC, Budgets, Certificate Manager — tất cả nằm trong danh sách hỗ trợ của Free Plan, nên deploy chạy bình thường.
+4. **Hạn chế: tính năng cross-region.** CloudFront là dịch vụ toàn cầu, và ACM certificate cho CloudFront **bắt buộc phải tạo ở `us-east-1`** trong khi tài nguyên khác ở `ap-southeast-1`. Xem mục [5](#5-gắn-domain-riêng--https-sau-này).
+
+**Mốc thời gian của bạn** (theo ảnh Console: "183 ngày còn lại"):
+
+| Mốc | Ngày | Việc cần làm |
+|---|---|---|
+| Free Plan hết hạn | **26/4/2027** | Upgrade lên Paid nếu muốn app chạy tiếp |
+| Credit hết hạn | ~10/2027 | Dùng nốt trước khi mất |
+
+Sau 26/4/2027 mà không upgrade, tài khoản bị đóng và dữ liệu xoá sau 90 ngày.
+
+**Kiếm thêm $100 credit:** Trang chủ Console có widget **"Khám phá AWS"** liệt kê các hoạt động. Ví dụ "Khởi tạo một phiên bản bằng EC2" → **+$20** (bạn đạt được ngay khi chạy `01-stack-backend.ps1`). Làm hết các hoạt động để có tổng $200.
+
+### 0.2. Gắn thẻ (không bắt buộc nếu đã có credit)
+
+Bạn đã có $100 credit nên **không cần gắn thẻ ngay** trên Free Plan — vì Free Plan không thể phát sinh bill vượt credit. Nhưng nên gắn khi:
+- Có ý định upgrade lên Paid plan sau này
+- Muốn verify tài khoản đầy đủ
+
+Nếu gắn: **Console → Billing → Payment methods**. AWS trừ tạm ~$1 để xác minh (hoàn lại).
+
+> **Vẫn nên tạo Budget alert** để theo dõi tốc độ tiêu credit: Console → **Billing → Budgets → Create budget**. Đặt ngưỡng **$15/tháng** (chi phí thật ~$11.3) để biết khi nào có gì đó tiêu nhiều hơn dự kiến.
+
+### 0.3. Tạo tài khoản IAM có access key
 
 Không dùng tài khoản root cho CLI.
 
@@ -57,7 +97,7 @@ Không dùng tài khoản root cho CLI.
 
 > Với project học tập thì gán full-access là chấp nhận được. Production thật thì nên thu hẹp quyền.
 
-### 0.3. Cài AWS CLI và cấu hình
+### 0.4. Cài AWS CLI và cấu hình
 
 ```powershell
 winget install --id Amazon.AWSCLI --exact
@@ -71,8 +111,8 @@ aws configure
 
 Nhập:
 ```
-AWS Access Key ID     : <access key ở bước 0.2>
-AWS Secret Access Key : <secret key ở bước 0.2>
+AWS Access Key ID     : <access key ở bước 0.3>
+AWS Secret Access Key : <secret key ở bước 0.3>
 Default region name   : ap-southeast-1
 Default output format : json
 ```
@@ -82,7 +122,7 @@ Kiểm tra:
 aws sts get-caller-identity
 ```
 
-### 0.4. Chạy script kiểm tra
+### 0.5. Chạy script kiểm tra
 
 ```powershell
 cd d:\Devopp\coffee-home-blend\infra\aws\scripts
@@ -229,6 +269,8 @@ Workflow `.github/workflows/deploy-aws.yml` sẽ chạy mỗi lần push `main`:
 
 ## 5. Gắn domain riêng + HTTPS sau này
 
+> ⚠️ **Cần kiểm tra trước khi làm mục này.** Free Plan không hỗ trợ **tính năng cross-region**, mà ACM certificate cho CloudFront bắt buộc ở `us-east-1` trong khi tài nguyên của bạn ở `ap-southeast-1`. Nếu lệnh `request-certificate` báo lỗi region/cross-region, bạn cần **upgrade lên Paid plan** (Console → Settings → Billing → Upgrade). Credit còn dư vẫn áp dụng tiếp sau khi upgrade.
+
 Khi có domain (ví dụ `coffeehome.vn`):
 
 1. **ACM certificate** (bắt buộc ở region **us-east-1** cho CloudFront):
@@ -292,11 +334,61 @@ Get-Content backup-20261026.sql.gz -Raw | ssh -i .\coffee-home-blend-key.pem ec2
   "gunzip | sudo docker exec -i coffee-db psql -U coffee -d coffee"
 ```
 
-### Kiểm tra chi phí
-Console → **Billing → Cost Explorer**, group by **Service**. Những dòng cần thấy đều là **$0**:
-- EC2 (trong 750h đầu)
-- S3 / CloudFront (trong free tier)
-- **Không** được thấy NAT Gateway, RDS, Load Balancer
+### Kiểm tra chi phí & credit
+
+Console → **Billing → Cost Explorer**, group by **Service**. Với credit $100, bạn sẽ thấy:
+
+| Dịch vụ | ~$/tháng | Ghi chú |
+|---|---|---|
+| EC2 t3.micro | $9.64 | 730h × $0.0132/h |
+| EBS gp3 20GB | $1.60 | $0.08/GB-tháng |
+| S3 | ~$0.05 | vài MB assets trong 5GB free |
+| CloudFront | $0 | trong 1TB free |
+| Elastic IP (gắn instance) | $0 | chỉ tính phí khi **không** gắn |
+| **Tổng** | **~$11.3** | |
+
+**Kịch bản credit $100:**
+
+| | |
+|---|---|
+| Chi tiêu 6 tháng (Free Plan) | ~$68 |
+| Còn lại khi Free Plan hết hạn | **~$32** |
+| Credit hết hạn hoàn toàn | 12 tháng sau khi mở tài khoản |
+
+**Phải làm trước khi Free Plan hết 6 tháng:** upgrade lên Paid plan, nếu không tài khoản bị đóng và dữ liệu xoá sau 90 ngày. Sau khi upgrade, $32 còn lại tiếp tục trả cho ~2.5 tháng nữa.
+
+**Cảnh báo:** những dòng **không được** xuất hiện trong Cost Explorer:
+- **NAT Gateway** (~$32/tháng) — không có trong kiến trúc này
+- **Application Load Balancer** (~$16/tháng) — không dùng
+- **RDS** (~$15+/tháng) — Postgres chạy trong Docker trên EC2
+
+Nếu thấy các dòng trên, kiểm tra lại stack (rất có thể ai đó tạo tay trong Console).
+
+### Gia hạn kiểm soát chi phí
+
+Tạo Budget alert để không bị hết credit bất ngờ. Cách dễ nhất là qua Console:
+
+**Console → Billing → Budgets → Create budget → Cost budget** → đặt **$15/tháng**, thêm email cảnh báo ở ngưỡng **80%**.
+
+Nếu muốn làm bằng CLI, tạo file `budget.json`:
+
+```json
+{
+  "BudgetName": "coffee-monthly",
+  "BudgetLimit": { "Amount": "15", "Unit": "USD" },
+  "TimeUnit": "MONTHLY",
+  "BudgetType": "COST"
+}
+```
+
+Rồi:
+
+```powershell
+aws budgets create-budget --account-id (aws sts get-caller-identity --query Account --output text) `
+  --budget file://budget.json
+```
+
+> Dùng đúng **$15** vì chi phí thật chỉ ~$11.3/tháng. Nếu budget nhảy lên $30+ thì có tài nguyên lạ đang chạy.
 
 ---
 
