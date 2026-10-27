@@ -2,6 +2,7 @@ import { useState, FormEvent, ChangeEvent } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { ShieldCheck, CreditCard, Banknote, Smartphone } from 'lucide-react';
 import { useCartStore } from '@/stores/cartStore';
+import { useOrderStore } from '@/stores/orderStore';
 import { useAuthStore } from '@/stores/authStore';
 import { useNotificationStore } from '@/stores/notificationStore';
 import { Button, Spinner } from '@/components/ui';
@@ -100,6 +101,34 @@ export default function CheckoutPage() {
         throw new Error(err.error || 'Đặt hàng thất bại');
       }
       const order = await res.json();
+      // Record the real API order in the local store so "Đơn hàng của tôi" shows it
+      useOrderStore.getState().createOrder({
+        id: order.id,
+        orderNumber: order.orderNumber,
+        items: (order.items as Array<Record<string, unknown>>).map((it) => ({
+          product: {
+            id: it.productId as string,
+            slug: (it.slug as string) || '',
+            name: it.name as string,
+            imageUrl: (it.image as string) || '',
+            price: it.price as number,
+          },
+          quantity: it.quantity as number,
+          price: it.price as number,
+        })),
+        subtotal: order.subtotal,
+        shippingFee: order.shippingFee,
+        discount: order.discount,
+        total: order.total,
+        status: order.status,
+        paymentMethod: order.paymentMethod,
+        paymentStatus: order.paymentStatus,
+        shippingAddress: order.shippingAddress,
+        note: order.note,
+        createdAt: order.createdAt,
+        updatedAt: order.createdAt,
+        timeline: order.timeline || [{ status: order.status, timestamp: order.createdAt }],
+      });
       clearCart();
       useNotificationStore.getState().success('Đặt hàng thành công!', `Mã đơn: ${order.orderNumber}`);
       navigate(`/order-success/${order.id}`);
