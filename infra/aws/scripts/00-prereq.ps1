@@ -49,8 +49,7 @@ Write-Host "== Checking AWS credentials ==" -ForegroundColor Cyan
 try {
     $who = Assert-AwsCli
     Write-Host "[ok]   Account $($who.Account)  ARN: $($who.Arn)" -ForegroundColor Green
-} catch {
-    Write-Host "[miss] $($_.Exception.Message)" -ForegroundColor Yellow
+} catch {    Write-Host "[miss] $($_.Exception.Message)" -ForegroundColor Yellow
     Write-Host ""
     Write-Host "STEP 1 - create a user with an access key in the AWS Console:" -ForegroundColor Cyan
     Write-Host "  https://console.aws.amazon.com/iam/users -> Create user" -ForegroundColor Gray
@@ -80,9 +79,14 @@ try {
 }
 
 Write-Host ""
+Write-Host "== Resolving the Region this account can use ==" -ForegroundColor Cyan
+$resolvedRegion = Resolve-AwsRegion
+Write-Host "[ok]   Region: $resolvedRegion" -ForegroundColor Green
+
+Write-Host ""
 Write-Host "== Checking an existing key pair / stacks ==" -ForegroundColor Cyan
-aws ec2 describe-key-pairs --key-names $KEY_NAME --region $AWS_REGION *> $null
-if ($LASTEXITCODE -eq 0) {
+$existingKey = Invoke-Aws @('ec2', 'describe-key-pairs', '--key-names', $KEY_NAME, '--region', $AWS_REGION)
+if ($existingKey.Success) {
     Write-Host "[info] Key pair '$KEY_NAME' already exists in $AWS_REGION" -ForegroundColor Gray
     if (-not (Test-Path $KEY_PATH)) {
         Write-Host "       but $KEY_PATH is missing. Either restore it or delete the key pair" -ForegroundColor Yellow
@@ -91,10 +95,10 @@ if ($LASTEXITCODE -eq 0) {
 }
 
 foreach ($s in @($BACKEND_STACK, $FRONTEND_STACK)) {
-    $status = aws cloudformation describe-stacks --stack-name $s --region $AWS_REGION `
-        --query 'Stacks[0].StackStatus' --output text 2>$null
-    if ($LASTEXITCODE -eq 0 -and $status -ne 'None') {
-        Write-Host "[info] Stack '$s' exists (status: $status)" -ForegroundColor Gray
+    $status = Invoke-Aws @('cloudformation', 'describe-stacks', '--stack-name', $s, '--region', $AWS_REGION,
+        '--query', 'Stacks[0].StackStatus', '--output', 'text')
+    if ($status.Success -and $status.Output -ne 'None') {
+        Write-Host "[info] Stack '$s' exists (status: $($status.Output))" -ForegroundColor Gray
     }
 }
 
@@ -146,9 +150,9 @@ if ($plan) {
 
 Write-Host ""
 Write-Host "== Cost sanity check ==" -ForegroundColor Cyan
-Write-Host "Expected burn: ~\$11.3/month (t3.micro + 20GB gp3 EBS)." -ForegroundColor Gray
-Write-Host "That means \$100 lasts ~8 months of runtime, but the Free Plan" -ForegroundColor Gray
-Write-Host "expires at 6 months first - roughly \$68 spent, \$32 left over." -ForegroundColor Gray
+Write-Host "Expected burn: ~`$11.3/month (t3.micro + 20GB gp3 EBS)." -ForegroundColor Gray
+Write-Host "That means `$100 lasts ~8 months of runtime, but the Free Plan" -ForegroundColor Gray
+Write-Host "expires at 6 months first - roughly `$68 spent, `$32 left over." -ForegroundColor Gray
 Write-Host "Watch the burn rate: Console -> Billing -> Budgets." -ForegroundColor Gray
 
 Write-Host ""

@@ -51,7 +51,10 @@ aws cloudformation delete-stack --stack-name $BACKEND_STACK --region $AWS_REGION
 aws cloudformation wait stack-delete-complete --stack-name $BACKEND_STACK --region $AWS_REGION
 
 Write-Host "Deleting key pair..." -ForegroundColor Cyan
-aws ec2 delete-key-pair --key-name $KEY_NAME --region $AWS_REGION *> $null
+$deleted = Invoke-Aws @('ec2', 'delete-key-pair', '--key-name', $KEY_NAME, '--region', $AWS_REGION)
+if (-not $deleted.Success) {
+    Write-Host "[warn] Could not delete key pair (it may not exist)." -ForegroundColor Yellow
+}
 
 if (Test-Path $KEY_PATH) {
     Remove-Item $KEY_PATH -Force

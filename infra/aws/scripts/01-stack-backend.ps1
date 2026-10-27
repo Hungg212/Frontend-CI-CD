@@ -7,18 +7,25 @@ Assert-AwsCli | Out-Null
 
 $ErrorActionPreference = 'Stop'
 
+Write-Host "== 0/3 Region ==" -ForegroundColor Cyan
+$AWS_REGION = Resolve-AwsRegion
+Write-Host "[ok]   Using Region: $AWS_REGION" -ForegroundColor Green
+
+Write-Host ""
 Write-Host "== 1/3 Key pair ==" -ForegroundColor Cyan
-aws ec2 describe-key-pairs --key-names $KEY_NAME --region $AWS_REGION *> $null
-if ($LASTEXITCODE -eq 0) {
+$keyExists = Invoke-Aws @('ec2', 'describe-key-pairs', '--key-names', $KEY_NAME, '--region', $AWS_REGION)
+if ($keyExists.Success) {
     Write-Host "[skip] '$KEY_NAME' already exists" -ForegroundColor Gray
     if (-not (Test-Path $KEY_PATH)) {
         throw "Key pair exists in AWS but $KEY_PATH is missing locally. You will not be able to SSH. Delete the key pair with: aws ec2 delete-key-pair --key-name $KEY_NAME --region $AWS_REGION"
     }
 } else {
-    aws ec2 create-key-pair --key-name $KEY_NAME --region $AWS_REGION `
-        --key-type rsa --key-format pem `
-        --query 'KeyMaterial' --output text | Set-Content -Path $KEY_PATH -NoNewline -Encoding ascii
-    if ($LASTEXITCODE -ne 0) { throw 'Failed to create key pair.' }
+    $created = Invoke-Aws @('ec2', 'create-key-pair', '--key-name', $KEY_NAME, '--region', $AWS_REGION,
+        '--key-type', 'rsa', '--key-format', 'pem', '--query', 'KeyMaterial', '--output', 'text')
+    if (-not $created.Success) {
+        throw 'Failed to create key pair.'
+    }
+    Set-Content -Path $KEY_PATH -Value $created.Output -NoNewline -Encoding ascii
     Write-Host "[ok]   Saved private key to $KEY_PATH" -ForegroundColor Green
 }
 
