@@ -52,12 +52,30 @@ try {
 } catch {
     Write-Host "[miss] $($_.Exception.Message)" -ForegroundColor Yellow
     Write-Host ""
-    Write-Host "Create an access key first:" -ForegroundColor Gray
-    Write-Host "  AWS Console -> IAM -> Users -> your user -> Security credentials ->" -ForegroundColor Gray
-    Write-Host "  Create access key -> choose 'Command Line Interface (CLI)'" -ForegroundColor Gray
-    Write-Host "Then run:" -ForegroundColor Gray
+    Write-Host "STEP 1 - create a user with an access key in the AWS Console:" -ForegroundColor Cyan
+    Write-Host "  https://console.aws.amazon.com/iam/users -> Create user" -ForegroundColor Gray
+    Write-Host "  Name        : coffee-deployer" -ForegroundColor Gray
+    Write-Host "  Console access: leave UNCHECKED (CLI only)" -ForegroundColor Gray
+    Write-Host "  Permissions : attach these 6 policies directly:" -ForegroundColor Gray
+    Write-Host "                 AmazonEC2FullAccess" -ForegroundColor Gray
+    Write-Host "                 AmazonS3FullAccess" -ForegroundColor Gray
+    Write-Host "                 CloudFrontFullAccess" -ForegroundColor Gray
+    Write-Host "                 AWSCloudFormationFullAccess" -ForegroundColor Gray
+    Write-Host "                 IAMFullAccess" -ForegroundColor Gray
+    Write-Host "                 AmazonSSMFullAccess" -ForegroundColor Gray
+    Write-Host "  Security credentials -> Create access key -> 'Command Line Interface (CLI)'" -ForegroundColor Gray
+    Write-Host ""
+    Write-Host "STEP 2 - run this on your machine (it stores the key in ~/.aws):" -ForegroundColor Cyan
     Write-Host "  aws configure" -ForegroundColor White
-    Write-Host "  (region: $AWS_REGION, output: json)" -ForegroundColor Gray
+    Write-Host "    AWS Access Key ID     : <paste>" -ForegroundColor Gray
+    Write-Host "    AWS Secret Access Key : <paste>" -ForegroundColor Gray
+    Write-Host "    Default region name   : $AWS_REGION" -ForegroundColor Gray
+    Write-Host "    Default output format : json" -ForegroundColor Gray
+    Write-Host ""
+    Write-Host "STEP 3 - verify:" -ForegroundColor Cyan
+    Write-Host "  aws sts get-caller-identity" -ForegroundColor White
+    Write-Host ""
+    Write-Host "Then re-run .\00-prereq.ps1" -ForegroundColor Green
     exit 1
 }
 
