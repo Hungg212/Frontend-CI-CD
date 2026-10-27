@@ -4,7 +4,7 @@
     "name": "Cà phê hạt",
     "slug": "ca-phe-hat",
     "description": "Cà phê hạt nguyên chất được rang xay thủ công, giữ trọn hương vị tươi ngon",
-    "image": "https://picsum.photos/seed/coffee-beans/600/400",
+    "image": "https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=600&q=80",
     "productCount": 8
   },
   {
@@ -12,7 +12,7 @@
     "name": "Cà phê xay",
     "slug": "ca-phe-xay",
     "description": "Cà phê đã được xay sẵn với nhiều mức độ mịn phù hợp cho từng phương pháp pha",
-    "image": "https://picsum.photos/seed/ground-coffee/600/400",
+    "image": "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?auto=format&fit=crop&w=600&q=80",
     "productCount": 6
   },
   {
@@ -20,7 +20,7 @@
     "name": "Cà phê gói",
     "slug": "ca-phe-goi",
     "description": "Cà phê hòa tan tiện lợi, phù hợp cho văn phòng và mang theo",
-    "image": "https://picsum.photos/seed/instant-coffee/600/400",
+    "image": "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&w=600&q=80",
     "productCount": 4
   },
   {
@@ -28,7 +28,7 @@
     "name": "Cà phê rang mộc",
     "slug": "ca-phe-rang-moc",
     "description": "Cà phê rang mộc truyền thống, không tẩm ướp, giữ nguyên vị cà phê thuần khiết",
-    "image": "https://picsum.photos/seed/roasted-coffee/600/400",
+    "image": "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=600&q=80",
     "productCount": 5
   },
   {
@@ -36,7 +36,7 @@
     "name": "Phụ kiện",
     "slug": "phu-kien",
     "description": "Phụ kiện pha cà phê chất lượng cao: phin, ấm, ly, máy xay",
-    "image": "https://picsum.photos/seed/coffee-accessories/600/400",
+    "image": "https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&w=600&q=80",
     "productCount": 3
   },
   {
@@ -44,7 +44,7 @@
     "name": "Quà tặng",
     "slug": "qua-tang",
     "description": "Hộp quà cà phê sang trọng, ý nghĩa cho người thân và đối tác",
-    "image": "https://picsum.photos/seed/coffee-gift/600/400",
+    "image": "https://images.unsplash.com/photo-1521302080334-4bebac2763a6?auto=format&fit=crop&w=600&q=80",
     "productCount": 2
   }
 ]

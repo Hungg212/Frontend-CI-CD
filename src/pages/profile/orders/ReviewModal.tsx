@@ -48,7 +48,7 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
       });
       return;
     }
-    const placeholder = `https://picsum.photos/seed/${Date.now()}/200/200`;
+    const placeholder = 'https://images.unsplash.com/photo-1497935586351-b67a49e012bf?auto=format&fit=crop&w=200&q=80';
     setImages([...images, placeholder]);
   };
 

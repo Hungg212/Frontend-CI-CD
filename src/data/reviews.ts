@@ -46,7 +46,7 @@ export const reviews: Review[] = [
     rating: 5,
     comment:
       'Geisha Premium - đẳng cấp thật sự! Hương hoa quả nhiệt đới rất tinh tế, hậu vị kéo dài. Đáng đồng tiền.',
-    images: ['https://picsum.photos/seed/review-geisha-1/400/400'],
+    images: ['https://images.unsplash.com/photo-1497935586351-b67a49e012bf?auto=format&fit=crop&w=400&q=80'],
     createdAt: '2025-09-15T16:00:00Z',
     isVerified: true,
   },
@@ -81,7 +81,7 @@ export const reviews: Review[] = [
     productId: 'prod-27',
     rating: 5,
     comment: 'Hộp quà Premium rất đẹp và sang trọng. Mình mua tặng sếp, ai cũng khen!',
-    images: ['https://picsum.photos/seed/review-gift-1/400/400'],
+    images: ['https://images.unsplash.com/photo-1497935586351-b67a49e012bf?auto=format&fit=crop&w=400&q=80'],
     createdAt: '2025-09-14T13:00:00Z',
     isVerified: true,
   },

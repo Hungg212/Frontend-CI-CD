@@ -11,32 +11,19 @@
     "category": "Cà phê hạt",
     "categorySlug": "ca-phe-hat",
     "images": [
-      "https://picsum.photos/seed/arabica-cau-dat-1/800/800",
-      "https://picsum.photos/seed/arabica-cau-dat-2/800/800",
-      "https://picsum.photos/seed/arabica-cau-dat-3/800/800"
+      "https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=800&q=80"
     ],
     "rating": 4.8,
     "reviewCount": 245,
     "stock": 120,
     "sku": "CHB-ARA-001",
-    "tags": [
-      "arabica",
-      "specialty",
-      "cầu đất",
-      "đà lạt"
-    ],
+    "tags": ["arabica", "specialty", "cầu đất", "đà lạt"],
     "origin": "Cầu Đất, Đà Lạt, Lâm Đồng",
     "roastLevel": "Medium",
-    "flavorNotes": [
-      "Chocolate",
-      "Hạt dẻ",
-      "Cam nhẹ"
-    ],
-    "brewingMethod": [
-      "Pour Over",
-      "Phin",
-      "Espresso"
-    ],
+    "flavorNotes": ["Chocolate", "Hạt dẻ", "Cam nhẹ"],
+    "brewingMethod": ["Pour Over", "Phin", "Espresso"],
     "weight": "500g",
     "isFeatured": true,
     "isNewArrival": false,
@@ -54,30 +41,18 @@
     "category": "Cà phê hạt",
     "categorySlug": "ca-phe-hat",
     "images": [
-      "https://picsum.photos/seed/robusta-bmt-1/800/800",
-      "https://picsum.photos/seed/robusta-bmt-2/800/800"
+      "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=800&q=80"
     ],
     "rating": 4.6,
     "reviewCount": 189,
     "stock": 200,
     "sku": "CHB-ROB-002",
-    "tags": [
-      "robusta",
-      "truyền thống",
-      "buôn ma thuột"
-    ],
+    "tags": ["robusta", "truyền thống", "buôn ma thuột"],
     "origin": "Buôn Ma Thuột, Đắk Lắk",
     "roastLevel": "Dark",
-    "flavorNotes": [
-      "Đắng đậm",
-      "Ca cao",
-      "Khói nhẹ"
-    ],
-    "brewingMethod": [
-      "Phin",
-      "Espresso",
-      "Moka Pot"
-    ],
+    "flavorNotes": ["Đắng đậm", "Ca cao", "Khói nhẹ"],
+    "brewingMethod": ["Phin", "Espresso", "Moka Pot"],
     "weight": "500g",
     "isFeatured": true,
     "isNewArrival": false,
@@ -97,31 +72,19 @@
     "category": "Cà phê hạt",
     "categorySlug": "ca-phe-hat",
     "images": [
-      "https://picsum.photos/seed/blend-special-1/800/800",
-      "https://picsum.photos/seed/blend-special-2/800/800",
-      "https://picsum.photos/seed/blend-special-3/800/800"
+      "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=800&q=80"
     ],
     "rating": 4.9,
     "reviewCount": 412,
     "stock": 85,
     "sku": "CHB-BLD-003",
-    "tags": [
-      "blend",
-      "signature",
-      "best-seller"
-    ],
+    "tags": ["blend", "signature", "best-seller"],
     "origin": "Việt Nam",
     "roastLevel": "Medium-Dark",
-    "flavorNotes": [
-      "Caramel",
-      "Socola đen",
-      "Hạt rang"
-    ],
-    "brewingMethod": [
-      "Phin",
-      "Espresso",
-      "Pour Over"
-    ],
+    "flavorNotes": ["Caramel", "Socola đen", "Hạt rang"],
+    "brewingMethod": ["Phin", "Espresso", "Pour Over"],
     "weight": "500g",
     "isFeatured": true,
     "isNewArrival": false,
@@ -139,29 +102,18 @@
     "category": "Cà phê hạt",
     "categorySlug": "ca-phe-hat",
     "images": [
-      "https://picsum.photos/seed/arabica-honey-1/800/800",
-      "https://picsum.photos/seed/arabica-honey-2/800/800"
+      "https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=800&q=80"
     ],
     "rating": 4.7,
     "reviewCount": 98,
     "stock": 60,
     "sku": "CHB-ARA-004",
-    "tags": [
-      "arabica",
-      "honey",
-      "specialty"
-    ],
+    "tags": ["arabica", "honey", "specialty"],
     "origin": "Lâm Viên, Lâm Đồng",
     "roastLevel": "Light",
-    "flavorNotes": [
-      "Mật ong",
-      "Đào",
-      "Hoa nhài"
-    ],
-    "brewingMethod": [
-      "Pour Over",
-      "Chemex"
-    ],
+    "flavorNotes": ["Mật ong", "Đào", "Hoa nhài"],
+    "brewingMethod": ["Pour Over", "Chemex"],
     "weight": "250g",
     "isFeatured": false,
     "isNewArrival": true,
@@ -179,27 +131,18 @@
     "category": "Cà phê hạt",
     "categorySlug": "ca-phe-hat",
     "images": [
-      "https://picsum.photos/seed/robusta-honey-1/800/800"
+      "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=800&q=80"
     ],
     "rating": 4.5,
     "reviewCount": 67,
     "stock": 75,
     "sku": "CHB-ROB-005",
-    "tags": [
-      "robusta",
-      "honey"
-    ],
+    "tags": ["robusta", "honey"],
     "origin": "Đắk Nông",
     "roastLevel": "Medium",
-    "flavorNotes": [
-      "Mật ong",
-      "Hạt phỉ",
-      "Socola sữa"
-    ],
-    "brewingMethod": [
-      "Phin",
-      "French Press"
-    ],
+    "flavorNotes": ["Mật ong", "Hạt phỉ", "Socola sữa"],
+    "brewingMethod": ["Phin", "French Press"],
     "weight": "500g",
     "isFeatured": false,
     "isNewArrival": true,
@@ -217,28 +160,18 @@
     "category": "Cà phê hạt",
     "categorySlug": "ca-phe-hat",
     "images": [
-      "https://picsum.photos/seed/espresso-1/800/800",
-      "https://picsum.photos/seed/espresso-2/800/800"
+      "https://images.unsplash.com/photo-1510707577719-ae7c14805e3a?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&w=800&q=80"
     ],
     "rating": 4.7,
     "reviewCount": 156,
     "stock": 90,
     "sku": "CHB-ESP-006",
-    "tags": [
-      "espresso",
-      "italian"
-    ],
+    "tags": ["espresso", "italian"],
     "origin": "Blend nhiều vùng",
     "roastLevel": "Dark",
-    "flavorNotes": [
-      "Socola đen",
-      "Khói",
-      "Caramel đậm"
-    ],
-    "brewingMethod": [
-      "Espresso",
-      "Moka Pot"
-    ],
+    "flavorNotes": ["Socola đen", "Khói", "Caramel đậm"],
+    "brewingMethod": ["Espresso", "Moka Pot"],
     "weight": "1kg",
     "isFeatured": true,
     "isNewArrival": false,
@@ -258,31 +191,19 @@
     "category": "Cà phê hạt",
     "categorySlug": "ca-phe-hat",
     "images": [
-      "https://picsum.photos/seed/geisha-1/800/800",
-      "https://picsum.photos/seed/geisha-2/800/800",
-      "https://picsum.photos/seed/geisha-3/800/800"
+      "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1497935586351-b67a49e012bf?auto=format&fit=crop&w=800&q=80"
     ],
     "rating": 4.9,
     "reviewCount": 45,
     "stock": 25,
     "sku": "CHB-GSH-007",
-    "tags": [
-      "geisha",
-      "premium",
-      "limited"
-    ],
+    "tags": ["geisha", "premium", "limited"],
     "origin": "Cầu Đất, Đà Lạt",
     "roastLevel": "Light",
-    "flavorNotes": [
-      "Hoa nhài",
-      "Đào",
-      "Chanh dây",
-      "Mật ong"
-    ],
-    "brewingMethod": [
-      "Pour Over",
-      "Chemex"
-    ],
+    "flavorNotes": ["Hoa nhài", "Đào", "Chanh dây", "Mật ong"],
+    "brewingMethod": ["Pour Over", "Chemex"],
     "weight": "200g",
     "isFeatured": true,
     "isNewArrival": true,
@@ -300,27 +221,18 @@
     "category": "Cà phê hạt",
     "categorySlug": "ca-phe-hat",
     "images": [
-      "https://picsum.photos/seed/cherry-natural-1/800/800"
+      "https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=800&q=80"
     ],
     "rating": 4.6,
     "reviewCount": 34,
     "stock": 40,
     "sku": "CHB-ARA-008",
-    "tags": [
-      "arabica",
-      "natural"
-    ],
+    "tags": ["arabica", "natural"],
     "origin": "Sơn La",
     "roastLevel": "Medium",
-    "flavorNotes": [
-      "Dâu tây",
-      "Socola",
-      "Rượu vang"
-    ],
-    "brewingMethod": [
-      "Pour Over",
-      "Aeropress"
-    ],
+    "flavorNotes": ["Dâu tây", "Socola", "Rượu vang"],
+    "brewingMethod": ["Pour Over", "Aeropress"],
     "weight": "250g",
     "isFeatured": false,
     "isNewArrival": true,
@@ -340,28 +252,18 @@
     "category": "Cà phê xay",
     "categorySlug": "ca-phe-xay",
     "images": [
-      "https://picsum.photos/seed/ground-traditional-1/800/800",
-      "https://picsum.photos/seed/ground-traditional-2/800/800"
+      "https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?auto=format&fit=crop&w=800&q=80"
     ],
     "rating": 4.7,
     "reviewCount": 523,
     "stock": 250,
     "sku": "CHB-GRD-009",
-    "tags": [
-      "xay",
-      "truyền thống",
-      "phin"
-    ],
+    "tags": ["xay", "truyền thống", "phin"],
     "origin": "Việt Nam",
     "roastLevel": "Medium-Dark",
-    "flavorNotes": [
-      "Caramel",
-      "Socola",
-      "Đắng nhẹ"
-    ],
-    "brewingMethod": [
-      "Phin"
-    ],
+    "flavorNotes": ["Caramel", "Socola", "Đắng nhẹ"],
+    "brewingMethod": ["Phin"],
     "weight": "500g",
     "isFeatured": true,
     "isNewArrival": false,
@@ -379,26 +281,18 @@
     "category": "Cà phê xay",
     "categorySlug": "ca-phe-xay",
     "images": [
-      "https://picsum.photos/seed/ground-espresso-1/800/800"
+      "https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1510707577719-ae7c14805e3a?auto=format&fit=crop&w=800&q=80"
     ],
     "rating": 4.6,
     "reviewCount": 167,
     "stock": 130,
     "sku": "CHB-GRD-010",
-    "tags": [
-      "xay",
-      "espresso"
-    ],
+    "tags": ["xay", "espresso"],
     "origin": "Blend Việt Nam",
     "roastLevel": "Dark",
-    "flavorNotes": [
-      "Socola đen",
-      "Caramel đậm"
-    ],
-    "brewingMethod": [
-      "Espresso",
-      "Moka Pot"
-    ],
+    "flavorNotes": ["Socola đen", "Caramel đậm"],
+    "brewingMethod": ["Espresso", "Moka Pot"],
     "weight": "500g",
     "isFeatured": false,
     "isNewArrival": false,
@@ -416,28 +310,18 @@
     "category": "Cà phê xay",
     "categorySlug": "ca-phe-xay",
     "images": [
-      "https://picsum.photos/seed/ground-pourover-1/800/800"
+      "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=800&q=80"
     ],
     "rating": 4.5,
     "reviewCount": 89,
     "stock": 95,
     "sku": "CHB-GRD-011",
-    "tags": [
-      "xay",
-      "pour over",
-      "arabica"
-    ],
+    "tags": ["xay", "pour over", "arabica"],
     "origin": "Cầu Đất",
     "roastLevel": "Light",
-    "flavorNotes": [
-      "Hoa",
-      "Trái cây",
-      "Mật ong"
-    ],
-    "brewingMethod": [
-      "Pour Over",
-      "Chemex"
-    ],
+    "flavorNotes": ["Hoa", "Trái cây", "Mật ong"],
+    "brewingMethod": ["Pour Over", "Chemex"],
     "weight": "500g",
     "isFeatured": false,
     "isNewArrival": false,
@@ -457,27 +341,18 @@
     "category": "Cà phê xay",
     "categorySlug": "ca-phe-xay",
     "images": [
-      "https://picsum.photos/seed/ground-french-1/800/800"
+      "https://images.unsplash.com/photo-1497935586351-b67a49e012bf?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=800&q=80"
     ],
     "rating": 4.4,
     "reviewCount": 112,
     "stock": 110,
     "sku": "CHB-GRD-012",
-    "tags": [
-      "xay",
-      "french press"
-    ],
+    "tags": ["xay", "french press"],
     "origin": "Việt Nam",
     "roastLevel": "Medium-Dark",
-    "flavorNotes": [
-      "Caramel",
-      "Hạt dẻ",
-      "Socola sữa"
-    ],
-    "brewingMethod": [
-      "French Press",
-      "Cold Brew"
-    ],
+    "flavorNotes": ["Caramel", "Hạt dẻ", "Socola sữa"],
+    "brewingMethod": ["French Press", "Cold Brew"],
     "weight": "500g",
     "isFeatured": false,
     "isNewArrival": false,
@@ -495,25 +370,18 @@
     "category": "Cà phê xay",
     "categorySlug": "ca-phe-xay",
     "images": [
-      "https://picsum.photos/seed/ground-moka-1/800/800"
+      "https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=800&q=80"
     ],
     "rating": 4.5,
     "reviewCount": 78,
     "stock": 140,
     "sku": "CHB-GRD-013",
-    "tags": [
-      "xay",
-      "moka"
-    ],
+    "tags": ["xay", "moka"],
     "origin": "Việt Nam",
     "roastLevel": "Dark",
-    "flavorNotes": [
-      "Socola đen",
-      "Đắng đậm"
-    ],
-    "brewingMethod": [
-      "Moka Pot"
-    ],
+    "flavorNotes": ["Socola đen", "Đắng đậm"],
+    "brewingMethod": ["Moka Pot"],
     "weight": "500g",
     "isFeatured": false,
     "isNewArrival": false,
@@ -531,26 +399,18 @@
     "category": "Cà phê xay",
     "categorySlug": "ca-phe-xay",
     "images": [
-      "https://picsum.photos/seed/ground-coldbrew-1/800/800"
+      "https://images.unsplash.com/photo-1572442388796-11668a67e53d?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=800&q=80"
     ],
     "rating": 4.7,
     "reviewCount": 92,
     "stock": 80,
     "sku": "CHB-GRD-014",
-    "tags": [
-      "xay",
-      "cold brew"
-    ],
+    "tags": ["xay", "cold brew"],
     "origin": "Việt Nam",
     "roastLevel": "Medium",
-    "flavorNotes": [
-      "Socola",
-      "Caramel",
-      "Hạt"
-    ],
-    "brewingMethod": [
-      "Cold Brew"
-    ],
+    "flavorNotes": ["Socola", "Caramel", "Hạt"],
+    "brewingMethod": ["Cold Brew"],
     "weight": "500g",
     "isFeatured": false,
     "isNewArrival": true,
@@ -570,27 +430,18 @@
     "category": "Cà phê gói",
     "categorySlug": "ca-phe-goi",
     "images": [
-      "https://picsum.photos/seed/instant-3in1-1/800/800"
+      "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1497935586351-b67a49e012bf?auto=format&fit=crop&w=800&q=80"
     ],
     "rating": 4.5,
     "reviewCount": 876,
     "stock": 500,
     "sku": "CHB-INS-015",
-    "tags": [
-      "3in1",
-      "hòa tan",
-      "instant"
-    ],
+    "tags": ["3in1", "hòa tan", "instant"],
     "origin": "Việt Nam",
     "roastLevel": "Medium-Dark",
-    "flavorNotes": [
-      "Caramel",
-      "Sữa",
-      "Cà phê"
-    ],
-    "brewingMethod": [
-      "Hòa tan"
-    ],
+    "flavorNotes": ["Caramel", "Sữa", "Cà phê"],
+    "brewingMethod": ["Hòa tan"],
     "weight": "20 gói x 16g",
     "isFeatured": false,
     "isNewArrival": false,
@@ -608,27 +459,18 @@
     "category": "Cà phê gói",
     "categorySlug": "ca-phe-goi",
     "images": [
-      "https://picsum.photos/seed/instant-black-1/800/800"
+      "https://images.unsplash.com/photo-1572442388796-11668a67e53d?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&w=800&q=80"
     ],
     "rating": 4.6,
     "reviewCount": 234,
     "stock": 320,
     "sku": "CHB-INS-016",
-    "tags": [
-      "hòa tan",
-      "đen đá",
-      "nguyên chất"
-    ],
+    "tags": ["hòa tan", "đen đá", "nguyên chất"],
     "origin": "Việt Nam",
     "roastLevel": "Dark",
-    "flavorNotes": [
-      "Đắng đậm",
-      "Khói",
-      "Ca cao"
-    ],
-    "brewingMethod": [
-      "Hòa tan"
-    ],
+    "flavorNotes": ["Đắng đậm", "Khói", "Ca cao"],
+    "brewingMethod": ["Hòa tan"],
     "weight": "20 gói x 2g",
     "isFeatured": false,
     "isNewArrival": false,
@@ -646,26 +488,18 @@
     "category": "Cà phê gói",
     "categorySlug": "ca-phe-goi",
     "images": [
-      "https://picsum.photos/seed/instant-milk-1/800/800"
+      "https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&w=800&q=80"
     ],
     "rating": 4.4,
     "reviewCount": 312,
     "stock": 400,
     "sku": "CHB-INS-017",
-    "tags": [
-      "hòa tan",
-      "sữa"
-    ],
+    "tags": ["hòa tan", "sữa"],
     "origin": "Việt Nam",
     "roastLevel": "Medium-Dark",
-    "flavorNotes": [
-      "Sữa",
-      "Caramel",
-      "Cà phê"
-    ],
-    "brewingMethod": [
-      "Hòa tan"
-    ],
+    "flavorNotes": ["Sữa", "Caramel", "Cà phê"],
+    "brewingMethod": ["Hòa tan"],
     "weight": "20 gói x 18g",
     "isFeatured": false,
     "isNewArrival": false,
@@ -685,27 +519,18 @@
     "category": "Cà phê gói",
     "categorySlug": "ca-phe-goi",
     "images": [
-      "https://picsum.photos/seed/instant-cappuccino-1/800/800"
+      "https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&w=800&q=80"
     ],
     "rating": 4.6,
     "reviewCount": 189,
     "stock": 240,
     "sku": "CHB-INS-018",
-    "tags": [
-      "cappuccino",
-      "hòa tan",
-      "italian"
-    ],
+    "tags": ["cappuccino", "hòa tan", "italian"],
     "origin": "Việt Nam",
     "roastLevel": "Medium",
-    "flavorNotes": [
-      "Sữa",
-      "Socola",
-      "Caramel"
-    ],
-    "brewingMethod": [
-      "Hòa tan"
-    ],
+    "flavorNotes": ["Sữa", "Socola", "Caramel"],
+    "brewingMethod": ["Hòa tan"],
     "weight": "10 gói x 25g",
     "isFeatured": true,
     "isNewArrival": true,
@@ -723,28 +548,18 @@
     "category": "Cà phê rang mộc",
     "categorySlug": "ca-phe-rang-moc",
     "images": [
-      "https://picsum.photos/seed/roasted-pure-1/800/800"
+      "https://images.unsplash.com/photo-1459755486867-b55449bb39ff?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=800&q=80"
     ],
     "rating": 4.8,
     "reviewCount": 298,
     "stock": 180,
     "sku": "CHB-RST-019",
-    "tags": [
-      "rang mộc",
-      "truyền thống",
-      "organic"
-    ],
+    "tags": ["rang mộc", "truyền thống", "organic"],
     "origin": "Buôn Ma Thuột",
     "roastLevel": "Medium-Dark",
-    "flavorNotes": [
-      "Đắng nhẹ",
-      "Khói",
-      "Hạt"
-    ],
-    "brewingMethod": [
-      "Phin",
-      "Espresso"
-    ],
+    "flavorNotes": ["Đắng nhẹ", "Khói", "Hạt"],
+    "brewingMethod": ["Phin", "Espresso"],
     "weight": "500g",
     "isFeatured": true,
     "isNewArrival": false,
@@ -762,28 +577,18 @@
     "category": "Cà phê rang mộc",
     "categorySlug": "ca-phe-rang-moc",
     "images": [
-      "https://picsum.photos/seed/roasted-beans-1/800/800"
+      "https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=800&q=80"
     ],
     "rating": 4.7,
     "reviewCount": 145,
     "stock": 150,
     "sku": "CHB-RST-020",
-    "tags": [
-      "rang mộc",
-      "nguyên hạt"
-    ],
+    "tags": ["rang mộc", "nguyên hạt"],
     "origin": "Tây Nguyên",
     "roastLevel": "Medium-Dark",
-    "flavorNotes": [
-      "Đắng",
-      "Socola",
-      "Khói nhẹ"
-    ],
-    "brewingMethod": [
-      "Phin",
-      "Espresso",
-      "Pour Over"
-    ],
+    "flavorNotes": ["Đắng", "Socola", "Khói nhẹ"],
+    "brewingMethod": ["Phin", "Espresso", "Pour Over"],
     "weight": "500g",
     "isFeatured": false,
     "isNewArrival": false,
@@ -801,28 +606,18 @@
     "category": "Cà phê rang mộc",
     "categorySlug": "ca-phe-rang-moc",
     "images": [
-      "https://picsum.photos/seed/roasted-light-1/800/800"
+      "https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=800&q=80"
     ],
     "rating": 4.6,
     "reviewCount": 87,
     "stock": 70,
     "sku": "CHB-RST-021",
-    "tags": [
-      "rang mộc",
-      "light roast",
-      "arabica"
-    ],
+    "tags": ["rang mộc", "light roast", "arabica"],
     "origin": "Đà Lạt",
     "roastLevel": "Light",
-    "flavorNotes": [
-      "Hoa",
-      "Trái cây",
-      "Chua thanh"
-    ],
-    "brewingMethod": [
-      "Pour Over",
-      "Chemex"
-    ],
+    "flavorNotes": ["Hoa", "Trái cây", "Chua thanh"],
+    "brewingMethod": ["Pour Over", "Chemex"],
     "weight": "250g",
     "isFeatured": false,
     "isNewArrival": true,
@@ -842,27 +637,18 @@
     "category": "Cà phê rang mộc",
     "categorySlug": "ca-phe-rang-moc",
     "images": [
-      "https://picsum.photos/seed/roasted-dark-1/800/800"
+      "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1459755486867-b55449bb39ff?auto=format&fit=crop&w=800&q=80"
     ],
     "rating": 4.7,
     "reviewCount": 213,
     "stock": 95,
     "sku": "CHB-RST-022",
-    "tags": [
-      "rang mộc",
-      "dark roast"
-    ],
+    "tags": ["rang mộc", "dark roast"],
     "origin": "Tây Nguyên",
     "roastLevel": "Dark",
-    "flavorNotes": [
-      "Đắng đậm",
-      "Khói",
-      "Ca cao"
-    ],
-    "brewingMethod": [
-      "Phin",
-      "Espresso"
-    ],
+    "flavorNotes": ["Đắng đậm", "Khói", "Ca cao"],
+    "brewingMethod": ["Phin", "Espresso"],
     "weight": "500g",
     "isFeatured": true,
     "isNewArrival": false,
@@ -880,26 +666,18 @@
     "category": "Cà phê rang mộc",
     "categorySlug": "ca-phe-rang-moc",
     "images": [
-      "https://picsum.photos/seed/roasted-espresso-1/800/800"
+      "https://images.unsplash.com/photo-1510707577719-ae7c14805e3a?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=800&q=80"
     ],
     "rating": 4.8,
     "reviewCount": 124,
     "stock": 85,
     "sku": "CHB-RST-023",
-    "tags": [
-      "rang mộc",
-      "espresso"
-    ],
+    "tags": ["rang mộc", "espresso"],
     "origin": "Blend",
     "roastLevel": "Dark",
-    "flavorNotes": [
-      "Socola đen",
-      "Khói",
-      "Caramel đậm"
-    ],
-    "brewingMethod": [
-      "Espresso"
-    ],
+    "flavorNotes": ["Socola đen", "Khói", "Caramel đậm"],
+    "brewingMethod": ["Espresso"],
     "weight": "500g",
     "isFeatured": false,
     "isNewArrival": false,
@@ -917,23 +695,18 @@
     "category": "Phụ kiện",
     "categorySlug": "phu-kien",
     "images": [
-      "https://picsum.photos/seed/phin-inox-1/800/800"
+      "https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1497935586351-b67a49e012bf?auto=format&fit=crop&w=800&q=80"
     ],
     "rating": 4.7,
     "reviewCount": 456,
     "stock": 300,
     "sku": "CHB-ACC-024",
-    "tags": [
-      "phin",
-      "inox",
-      "phụ kiện"
-    ],
+    "tags": ["phin", "inox", "phụ kiện"],
     "origin": "Việt Nam",
     "roastLevel": "Medium",
     "flavorNotes": [],
-    "brewingMethod": [
-      "Phin"
-    ],
+    "brewingMethod": ["Phin"],
     "weight": "200g",
     "isFeatured": false,
     "isNewArrival": false,
@@ -953,17 +726,14 @@
     "category": "Phụ kiện",
     "categorySlug": "phu-kien",
     "images": [
-      "https://picsum.photos/seed/grinder-manual-1/800/800"
+      "https://images.unsplash.com/photo-1610889556528-9a770e32642f?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=800&q=80"
     ],
     "rating": 4.6,
     "reviewCount": 89,
     "stock": 50,
     "sku": "CHB-ACC-025",
-    "tags": [
-      "máy xay",
-      "tay",
-      "ceramic"
-    ],
+    "tags": ["máy xay", "tay", "ceramic"],
     "origin": "Trung Quốc",
     "roastLevel": "Medium",
     "flavorNotes": [],
@@ -985,23 +755,18 @@
     "category": "Phụ kiện",
     "categorySlug": "phu-kien",
     "images": [
-      "https://picsum.photos/seed/v60-1/800/800"
+      "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1497935586351-b67a49e012bf?auto=format&fit=crop&w=800&q=80"
     ],
     "rating": 4.8,
     "reviewCount": 167,
     "stock": 75,
     "sku": "CHB-ACC-026",
-    "tags": [
-      "v60",
-      "pour over",
-      "gốm"
-    ],
+    "tags": ["v60", "pour over", "gốm"],
     "origin": "Nhật Bản",
     "roastLevel": "Medium",
     "flavorNotes": [],
-    "brewingMethod": [
-      "Pour Over"
-    ],
+    "brewingMethod": ["Pour Over"],
     "weight": "400g",
     "isFeatured": false,
     "isNewArrival": false,
@@ -1021,28 +786,18 @@
     "category": "Quà tặng",
     "categorySlug": "qua-tang",
     "images": [
-      "https://picsum.photos/seed/gift-premium-1/800/800",
-      "https://picsum.photos/seed/gift-premium-2/800/800"
+      "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1521302080334-4bebac2763a6?auto=format&fit=crop&w=800&q=80"
     ],
     "rating": 4.9,
     "reviewCount": 234,
     "stock": 50,
     "sku": "CHB-GFT-027",
-    "tags": [
-      "quà tặng",
-      "premium",
-      "hộp quà"
-    ],
+    "tags": ["quà tặng", "premium", "hộp quà"],
     "origin": "Việt Nam",
     "roastLevel": "Medium",
-    "flavorNotes": [
-      "Đa dạng"
-    ],
-    "brewingMethod": [
-      "Phin",
-      "Espresso",
-      "Pour Over"
-    ],
+    "flavorNotes": ["Đa dạng"],
+    "brewingMethod": ["Phin", "Espresso", "Pour Over"],
     "weight": "1.2kg",
     "isFeatured": true,
     "isNewArrival": true,
@@ -1060,24 +815,18 @@
     "category": "Quà tặng",
     "categorySlug": "qua-tang",
     "images": [
-      "https://picsum.photos/seed/gift-classic-1/800/800"
+      "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1497935586351-b67a49e012bf?auto=format&fit=crop&w=800&q=80"
     ],
     "rating": 4.7,
     "reviewCount": 156,
     "stock": 80,
     "sku": "CHB-GFT-028",
-    "tags": [
-      "quà tặng",
-      "classic"
-    ],
+    "tags": ["quà tặng", "classic"],
     "origin": "Việt Nam",
     "roastLevel": "Medium",
-    "flavorNotes": [
-      "Đa dạng"
-    ],
-    "brewingMethod": [
-      "Phin"
-    ],
+    "flavorNotes": ["Đa dạng"],
+    "brewingMethod": ["Phin"],
     "weight": "800g",
     "isFeatured": false,
     "isNewArrival": false,
