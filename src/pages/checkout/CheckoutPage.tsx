@@ -6,6 +6,7 @@ import { useOrderStore } from '@/stores/orderStore';
 import { useAuthStore } from '@/stores/authStore';
 import { useNotificationStore } from '@/stores/notificationStore';
 import { Button, Spinner } from '@/components/ui';
+import type { Order } from '@/types';
 
 const formatPrice = (n: number) =>
   new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND', maximumFractionDigits: 0 }).format(n);
@@ -112,7 +113,7 @@ export default function CheckoutPage() {
             name: it.name as string,
             imageUrl: (it.image as string) || '',
             price: it.price as number,
-          },
+          } as unknown as Order['items'][number]['product'],
           quantity: it.quantity as number,
           price: it.price as number,
         })),
