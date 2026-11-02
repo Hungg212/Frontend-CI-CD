@@ -32,7 +32,7 @@ export const CartItem: React.FC<CartItemProps> = ({ item }) => {
   return (
     <div className="flex gap-3 border-b border-stone-200 py-4 last:border-0 dark:border-zinc-700">
       <Link
-        to={`/product/${item.slug}`}
+        to={`/products/${item.slug}`}
         className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg bg-stone-100 dark:bg-zinc-700"
       >
         <img
@@ -44,7 +44,7 @@ export const CartItem: React.FC<CartItemProps> = ({ item }) => {
       </Link>
       <div className="min-w-0 flex-1">
         <Link
-          to={`/product/${item.slug}`}
+          to={`/products/${item.slug}`}
           className="line-clamp-2 text-sm font-medium text-stone-800 hover:text-amber-700 dark:text-stone-100 dark:hover:text-amber-500"
         >
           {item.name}

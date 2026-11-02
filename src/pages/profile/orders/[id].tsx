@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import {
   ChevronRight,
@@ -25,7 +25,8 @@ import { useReviewStore } from '@/stores/reviewStore';
 import { useCartStore } from '@/stores/cartStore';
 import { useUIStore } from '@/stores/uiStore';
 import { ReviewModal } from './ReviewModal';
-import type { Product } from '@/types';
+import { mapApiOrder } from '@/hooks/useOrders';
+import type { Order, Product } from '@/types';
 
 const formatCurrency = (amount: number): string =>
   new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
@@ -47,23 +48,61 @@ const OrderDetailPage: React.FC = () => {
   const getOrderById = useOrderStore((s) => s.getOrderById);
   const cancelOrder = useOrderStore((s) => s.cancelOrder);
   const user = useAuthStore((s) => s.user);
+  const token = useAuthStore((s) => s.token) || '';
   const hasReviewed = useReviewStore((s) => s.hasReviewed);
   const addItem = useCartStore((s) => s.addItem);
   const pushNotification = useUIStore((s) => s.pushNotification);
 
-  const order = id ? getOrderById(id) : undefined;
+  const storeOrder = id ? getOrderById(id) : undefined;
+  const [fetchedOrder, setFetchedOrder] = useState<Order | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  // Fall back to the API when the order is not in the local store
+  // (e.g. the user opens the detail page directly via a shared link).
+  useEffect(() => {
+    if (!id || storeOrder || !token) return;
+    let cancelled = false;
+    setLoading(true);
+    (async () => {
+      try {
+        const res = await fetch(`/api/orders/${id}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (!res.ok) return;
+        const data = await res.json();
+        if (!cancelled && data) setFetchedOrder(mapApiOrder(data));
+      } catch {
+        /* ignore */
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [id, storeOrder, token]);
+
+  const order = storeOrder ?? fetchedOrder;
 
   const [reviewModalOpen, setReviewModalOpen] = useState(false);
   const [reviewProduct, setReviewProduct] = useState<Product | null>(null);
   const [cancelModalOpen, setCancelModalOpen] = useState(false);
   const [cancelling, setCancelling] = useState(false);
 
+  if (!order && loading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center py-16">
+        <p className="text-stone-500 dark:text-stone-400">Đang tải đơn hàng...</p>
+      </div>
+    );
+  }
+
   if (!order) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center py-16">
         <Package className="mb-4 h-16 w-16 text-stone-300 dark:text-zinc-700" />
         <p className="mb-4 text-stone-600 dark:text-stone-400">Không tìm thấy đơn hàng</p>
-        <Link to="/orders" className="text-amber-700 hover:underline dark:text-amber-500">
+        <Link to="/profile/orders" className="text-amber-700 hover:underline dark:text-amber-500">
           Quay lại danh sách đơn hàng
         </Link>
       </div>
@@ -87,7 +126,20 @@ const OrderDetailPage: React.FC = () => {
   const handleConfirmCancel = async () => {
     setCancelling(true);
     try {
-      await new Promise((r) => setTimeout(r, 600));
+      if (token) {
+        const res = await fetch(`/api/orders/${order.id}/cancel`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ reason: 'Khách hàng hủy đơn' }),
+        });
+        if (!res.ok) {
+          const body = await res.json().catch(() => ({}));
+          throw new Error(body.error || 'Hủy đơn hàng thất bại');
+        }
+      }
       cancelOrder(order.id);
       pushNotification({
         type: 'success',
@@ -95,6 +147,12 @@ const OrderDetailPage: React.FC = () => {
         message: `Đơn hàng #${order.orderNumber} đã được hủy.`,
       });
       setCancelModalOpen(false);
+    } catch (err: unknown) {
+      pushNotification({
+        type: 'error',
+        title: 'Lỗi',
+        message: err instanceof Error ? err.message : 'Hủy đơn hàng thất bại',
+      });
     } finally {
       setCancelling(false);
     }
@@ -131,7 +189,7 @@ const OrderDetailPage: React.FC = () => {
             Trang chủ
           </Link>
           <ChevronRight className="h-3 w-3" />
-          <Link to="/orders" className="hover:text-amber-700 dark:hover:text-amber-500">
+          <Link to="/profile/orders" className="hover:text-amber-700 dark:hover:text-amber-500">
             Đơn hàng
           </Link>
           <ChevronRight className="h-3 w-3" />
@@ -171,7 +229,7 @@ const OrderDetailPage: React.FC = () => {
                       className="flex items-start gap-3 border-b border-stone-100 py-2 last:border-0 dark:border-zinc-700"
                     >
                       <Link
-                        to={`/product/${item.product.slug}`}
+                        to={`/products/${item.product.slug}`}
                         className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg bg-stone-100 dark:bg-zinc-700"
                       >
                         <img
@@ -182,7 +240,7 @@ const OrderDetailPage: React.FC = () => {
                       </Link>
                       <div className="min-w-0 flex-1">
                         <Link
-                          to={`/product/${item.product.slug}`}
+                          to={`/products/${item.product.slug}`}
                           className="line-clamp-2 font-medium text-stone-800 hover:text-amber-700 dark:text-stone-100 dark:hover:text-amber-500"
                         >
                           {item.product.name}

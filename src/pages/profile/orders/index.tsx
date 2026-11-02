@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Package, ChevronRight } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
 import { OrderCard } from '@/components/orders/OrderCard';
-import { useOrderStore } from '@/stores/orderStore';
+import { useOrders } from '@/hooks/useOrders';
 import type { OrderStatus } from '@/types';
 
 const TABS: {
@@ -22,7 +22,7 @@ const TABS: {
 ];
 
 const OrdersPage: React.FC = () => {
-  const orders = useOrderStore((s) => s.orders);
+  const { orders, filter, setFilter, counts } = useOrders(1000);
   const [activeTab, setActiveTab] = useState<(typeof TABS)[number]['id']>('ALL');
 
   const filteredOrders = useMemo(() => {
@@ -31,17 +31,23 @@ const OrdersPage: React.FC = () => {
     return orders.filter((o) => tab.statuses!.includes(o.status));
   }, [orders, activeTab]);
 
-  const counts = useMemo(
-    () => ({
-      ALL: orders.length,
-      PENDING_GROUP: orders.filter((o) =>
-        ['PENDING', 'CONFIRMED', 'PROCESSING', 'SHIPPING'].includes(o.status)
-      ).length,
-      COMPLETED: orders.filter((o) => o.status === 'DELIVERED').length,
-      CANCELLED: orders.filter((o) => o.status === 'CANCELLED').length,
-    }),
-    [orders]
-  );
+  const tabCounts: Record<string, number> = {
+    ALL: counts.all,
+    PENDING_GROUP: counts.pending,
+    COMPLETED: counts.delivered,
+    CANCELLED: counts.cancelled,
+  };
+
+  const handleTabChange = (id: (typeof TABS)[number]['id']) => {
+    setActiveTab(id);
+    const map: Record<string, typeof filter> = {
+      ALL: 'all',
+      PENDING_GROUP: 'pending',
+      COMPLETED: 'delivered',
+      CANCELLED: 'cancelled',
+    };
+    setFilter(map[id]);
+  };
 
   return (
     <div className="min-h-screen bg-stone-50 py-8 dark:bg-zinc-900">
@@ -69,7 +75,7 @@ const OrdersPage: React.FC = () => {
             <button
               key={tab.id}
               type="button"
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => handleTabChange(tab.id)}
               className={`whitespace-nowrap border-b-2 px-4 py-3 text-sm font-medium transition-colors ${
                 activeTab === tab.id
                   ? 'border-amber-600 text-amber-700 dark:text-amber-500'
@@ -78,7 +84,7 @@ const OrdersPage: React.FC = () => {
             >
               {tab.label}
               <span className="ml-2 rounded-full bg-stone-200 px-2 py-0.5 text-xs text-stone-700 dark:bg-zinc-700 dark:text-stone-300">
-                {counts[tab.id]}
+                {tabCounts[tab.id] ?? 0}
               </span>
             </button>
           ))}

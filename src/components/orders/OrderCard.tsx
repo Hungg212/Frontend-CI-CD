@@ -85,7 +85,7 @@ export function OrderCard({ order, className = '' }: OrderCardProps) {
         <div className="flex flex-wrap items-center justify-between gap-3 border-t border-stone-200 pt-3 dark:border-zinc-700">
           <PaymentStatusBadge status={order.paymentStatus} />
           <Link
-            to={`/orders/${order.id}`}
+            to={`/profile/orders/${order.id}`}
             className="inline-flex items-center gap-1 text-sm font-medium text-amber-700 transition-colors hover:text-amber-800 dark:text-amber-500 dark:hover:text-amber-400"
             aria-label={`Xem chi tiết đơn hàng ${order.orderNumber}`}
           >

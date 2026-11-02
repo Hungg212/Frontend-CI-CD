@@ -48,7 +48,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   if (variant === 'horizontal') {
     return (
       <Link
-        to={`/product/${product.slug}`}
+        to={`/products/${product.slug}`}
         className={`group flex gap-4 overflow-hidden rounded-xl border border-stone-200 bg-white p-3 transition-shadow hover:shadow-lg dark:border-zinc-700 dark:bg-zinc-800 ${className}`}
       >
         <div className="relative h-32 w-32 flex-shrink-0 overflow-hidden rounded-lg bg-stone-100 dark:bg-zinc-700">
@@ -96,7 +96,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   if (variant === 'compact') {
     return (
       <Link
-        to={`/product/${product.slug}`}
+        to={`/products/${product.slug}`}
         className={`group flex flex-col overflow-hidden rounded-xl border border-stone-200 bg-white p-3 transition-shadow hover:shadow-lg dark:border-zinc-700 dark:bg-zinc-800 ${className}`}
       >
         <div className="relative mb-2 aspect-square overflow-hidden rounded-lg bg-stone-100 dark:bg-zinc-700">
@@ -134,7 +134,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       onHoverEnd={() => setIsHovered(false)}
       className={`group relative overflow-hidden rounded-xl border border-stone-200 bg-white shadow-sm transition-shadow hover:shadow-xl dark:border-zinc-700 dark:bg-zinc-800 ${className}`}
     >
-      <Link to={`/product/${product.slug}`} className="block">
+      <Link to={`/products/${product.slug}`} className="block">
         <div className="relative aspect-square overflow-hidden bg-stone-100 dark:bg-zinc-700">
           {!imageError ? (
             <img
@@ -185,7 +185,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                 </button>
               )}
               <Link
-                to={`/product/${product.slug}`}
+                to={`/products/${product.slug}`}
                 onClick={(e) => e.stopPropagation()}
                 className="flex items-center justify-center rounded-lg bg-amber-700 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-amber-800"
               >
@@ -225,7 +225,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         >
           {product.category}
         </Link>
-        <Link to={`/product/${product.slug}`}>
+        <Link to={`/products/${product.slug}`}>
           <h3 className="mt-1 line-clamp-2 min-h-[3rem] font-semibold text-stone-800 transition-colors hover:text-amber-700 dark:text-stone-100 dark:hover:text-amber-500">
             {product.name}
           </h3>

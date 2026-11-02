@@ -50,7 +50,7 @@ export default function OrderSuccessPage() {
 
   useEffect(() => {
     if (!order) {
-      const timer = setTimeout(() => navigate('/orders'), 2000);
+      const timer = setTimeout(() => navigate('/profile/orders'), 2000);
       return () => clearTimeout(timer);
     }
   }, [order, navigate]);
@@ -212,7 +212,7 @@ export default function OrderSuccessPage() {
         </Card>
 
         <div className="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
-          <Link to={`/orders/${order.id}`} className="contents">
+          <Link to={`/profile/orders/${order.id}`} className="contents">
             <Button
               fullWidth
               size="lg"

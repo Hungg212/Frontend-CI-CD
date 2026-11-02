@@ -53,7 +53,7 @@ const CheckoutSuccessPage: React.FC = () => {
 
   useEffect(() => {
     if (!order) {
-      const timeout = setTimeout(() => navigate('/orders'), 2000);
+      const timeout = setTimeout(() => navigate('/profile/orders'), 2000);
       return () => clearTimeout(timeout);
     }
     return undefined;
@@ -244,7 +244,7 @@ const CheckoutSuccessPage: React.FC = () => {
           transition={{ delay: 0.7 }}
           className="grid grid-cols-1 gap-3 sm:grid-cols-2"
         >
-          <Link to={`/orders/${order.id}`} className="block">
+          <Link to={`/profile/orders/${order.id}`} className="block">
             <Button
               variant="primary"
               size="lg"

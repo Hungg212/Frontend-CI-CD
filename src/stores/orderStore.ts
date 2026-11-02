@@ -15,6 +15,7 @@ interface OrderState {
   addReview: (orderId: string, review: CreateReviewData | Review) => Review | null;
   resetOrders: () => void;
   setCurrentOrder: (order: Order | null) => void;
+  setOrders: (orders: Order[]) => void;
 }
 
 export const useOrderStore = create<OrderState>()(
@@ -165,6 +166,8 @@ export const useOrderStore = create<OrderState>()(
 
       resetOrders: () => set({ orders: initialOrders, currentOrder: null }),
       setCurrentOrder: (order) => set({ currentOrder: order }),
+      // Replace the list with data coming from the backend.
+      setOrders: (orders) => set({ orders }),
     }),
     {
       name: 'coffee-orders',

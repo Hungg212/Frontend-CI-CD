@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import {
   User as UserIcon,
@@ -39,9 +39,31 @@ const getInitials = (name: string): string => {
 const ProfilePage: React.FC = () => {
   const user = useAuthStore((s) => s.user);
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const token = useAuthStore((s) => s.token);
   const logout = useAuthStore((s) => s.logout);
   const orders = useOrderStore((s) => s.orders);
   const reviews = useReviewStore((s) => s.reviews);
+  const [addressCount, setAddressCount] = useState(0);
+
+  useEffect(() => {
+    if (!token) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch('/api/auth/addresses', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (!res.ok) return;
+        const data = await res.json();
+        if (!cancelled && Array.isArray(data)) setAddressCount(data.length);
+      } catch {
+        /* ignore */
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [token]);
 
   if (!isAuthenticated || !user) {
     return <Navigate to="/login" replace />;
@@ -52,7 +74,7 @@ const ProfilePage: React.FC = () => {
 
   const quickLinks = [
     {
-      to: '/orders',
+      to: '/profile/orders',
       icon: <Package className="h-5 w-5" />,
       label: 'Đơn hàng của tôi',
       description: `${orderCount} đơn hàng`,
@@ -62,7 +84,7 @@ const ProfilePage: React.FC = () => {
       to: '/profile/addresses',
       icon: <MapPin className="h-5 w-5" />,
       label: 'Sổ địa chỉ',
-      description: `0 địa chỉ`,
+      description: `${addressCount} địa chỉ`,
       color: 'bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400',
     },
     {

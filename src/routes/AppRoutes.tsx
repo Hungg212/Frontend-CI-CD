@@ -13,19 +13,20 @@ const ProductDetailPage = lazy(() => import('@/pages/product-detail/ProductDetai
 const CategoryPage = lazy(() => import('@/pages/category/CategoryPage'));
 const SearchPage = lazy(() => import('@/pages/search/SearchPage'));
 
-const CartPage = lazy(() => import('@/pages/cart/CartPage'));
-const WishlistPage = lazy(() => import('@/pages/wishlist/WishlistPage'));
+const CartPage = lazy(() => import('@/pages/cart'));
+const WishlistPage = lazy(() => import('@/pages/wishlist'));
 
 const LoginPage = lazy(() => import('@/pages/auth/LoginPage'));
 const RegisterPage = lazy(() => import('@/pages/auth/RegisterPage'));
 const ForgotPasswordPage = lazy(() => import('@/pages/auth/ForgotPasswordPage'));
 const ResetPasswordPage = lazy(() => import('@/pages/auth/ResetPasswordPage'));
 
-const ProfilePage = lazy(() => import('@/pages/profile/ProfilePage'));
+const ProfilePage = lazy(() => import('@/pages/profile'));
 const OrdersPage = lazy(() => import('@/pages/orders/OrdersPage'));
 const OrderDetailPage = lazy(() => import('@/pages/orders/OrderDetailPage'));
 const ReviewsPage = lazy(() => import('@/pages/profile/ReviewsPage'));
 const AddressesPage = lazy(() => import('@/pages/profile/AddressesPage'));
+const ProfileSettingsPage = lazy(() => import('@/pages/profile/Settings'));
 
 const CheckoutPage = lazy(() => import('@/pages/checkout/CheckoutPage'));
 const OrderSuccessPage = lazy(() => import('@/pages/checkout/OrderSuccessPage'));
@@ -113,6 +114,14 @@ export default function AppRoutes() {
             element={
               <ProtectedRoute>
                 <AddressesPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="profile/settings"
+            element={
+              <ProtectedRoute>
+                <ProfileSettingsPage />
               </ProtectedRoute>
             }
           />

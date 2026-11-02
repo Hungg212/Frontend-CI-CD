@@ -67,7 +67,7 @@ export default function OrderDetailPage() {
         <p className="mb-6 text-stone-500 dark:text-stone-400">
           Đơn hàng này không tồn tại hoặc đã bị xóa.
         </p>
-        <Link to="/orders">
+        <Link to="/profile/orders">
           <Button variant="outline" leftIcon={<ChevronLeft className="h-4 w-4" />}>
             Quay lại danh sách đơn hàng
           </Button>

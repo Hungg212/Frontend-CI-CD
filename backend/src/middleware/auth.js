@@ -23,6 +23,15 @@ export function authRequired(req, res, next) {
   next();
 }
 
+// Attaches req.user when a valid token is present, but never rejects the request.
+export function optionalAuth(req, _res, next) {
+  const header = req.headers.authorization || '';
+  const token = header.startsWith('Bearer ') ? header.slice(7) : null;
+  const decoded = token ? verifyToken(token) : null;
+  if (decoded) req.user = decoded;
+  next();
+}
+
 export function adminRequired(req, res, next) {
   if (!req.user || req.user.role !== 'admin') {
     return res.status(403).json({ error: 'Forbidden' });

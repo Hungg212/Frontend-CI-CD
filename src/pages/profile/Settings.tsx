@@ -1,16 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Settings as SettingsIcon, Lock, User as UserIcon, Save, CheckCircle2 } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
-
-const MOCK_USER = {
-  name: 'Nguyễn Văn A',
-  email: 'nguyenvana@example.com',
-  phone: '0901234567',
-};
+import { useAuthStore } from '@/stores/authStore';
+import { useNotificationStore } from '@/stores/notificationStore';
 
 const passwordSchema = {
   currentPassword: '',
@@ -19,20 +15,48 @@ const passwordSchema = {
 };
 
 export default function ProfileSettingsPage() {
+  const user = useAuthStore((s) => s.user);
+  const token = useAuthStore((s) => s.token) || '';
+  const notify = useNotificationStore();
   const [activeTab, setActiveTab] = useState<'profile' | 'password'>('profile');
-  const [profile, setProfile] = useState(MOCK_USER);
+  const [profile, setProfile] = useState({ name: '', email: '', phone: '' });
   const [passwords, setPasswords] = useState(passwordSchema);
   const [profileSaved, setProfileSaved] = useState(false);
   const [passwordSaved, setPasswordSaved] = useState(false);
   const [passwordError, setPasswordError] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
 
-  const handleSaveProfile = (e: React.FormEvent) => {
+  useEffect(() => {
+    if (!user) return;
+    setProfile({
+      name: user.name || '',
+      email: user.email || '',
+      phone: user.phone || '',
+    });
+  }, [user]);
+
+  const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
-    setProfileSaved(true);
-    setTimeout(() => setProfileSaved(false), 3000);
+    if (!token) return;
+    setSaving(true);
+    try {
+      const res = await fetch('/api/auth/profile', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ name: profile.name, phone: profile.phone }),
+      });
+      const body = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(body.error || 'Lưu thất bại');
+      setProfileSaved(true);
+      setTimeout(() => setProfileSaved(false), 3000);
+    } catch (err: unknown) {
+      notify.error('Lỗi', err instanceof Error ? err.message : 'Không thể lưu thông tin');
+    } finally {
+      setSaving(false);
+    }
   };
 
-  const handleChangePassword = (e: React.FormEvent) => {
+  const handleChangePassword = async (e: React.FormEvent) => {
     e.preventDefault();
     setPasswordError(null);
 
@@ -48,10 +72,28 @@ export default function ProfileSettingsPage() {
       setPasswordError('Mật khẩu xác nhận không khớp');
       return;
     }
+    if (!token) return;
 
-    setPasswordSaved(true);
-    setPasswords(passwordSchema);
-    setTimeout(() => setPasswordSaved(false), 3000);
+    setSaving(true);
+    try {
+      const res = await fetch('/api/auth/password', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({
+          currentPassword: passwords.currentPassword,
+          newPassword: passwords.newPassword,
+        }),
+      });
+      const body = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(body.error || 'Đổi mật khẩu thất bại');
+      setPasswordSaved(true);
+      setPasswords(passwordSchema);
+      setTimeout(() => setPasswordSaved(false), 3000);
+    } catch (err: unknown) {
+      setPasswordError(err instanceof Error ? err.message : 'Đổi mật khẩu thất bại');
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -130,6 +172,7 @@ export default function ProfileSettingsPage() {
                     value={profile.email}
                     onChange={(e) => setProfile({ ...profile, email: e.target.value })}
                     required
+                    disabled
                   />
                   <Input
                     label="Số điện thoại"
@@ -140,7 +183,7 @@ export default function ProfileSettingsPage() {
                   />
 
                   <div className="flex justify-end pt-2">
-                    <Button type="submit" leftIcon={<Save className="h-4 w-4" />}>
+                    <Button type="submit" isLoading={saving} disabled={saving} leftIcon={<Save className="h-4 w-4" />}>
                       Lưu thay đổi
                     </Button>
                   </div>
@@ -208,7 +251,7 @@ export default function ProfileSettingsPage() {
                   />
 
                   <div className="flex justify-end pt-2">
-                    <Button type="submit" leftIcon={<Save className="h-4 w-4" />}>
+                    <Button type="submit" isLoading={saving} disabled={saving} leftIcon={<Save className="h-4 w-4" />}>
                       Đổi mật khẩu
                     </Button>
                   </div>

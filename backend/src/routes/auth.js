@@ -70,6 +70,59 @@ router.get('/me', authRequired, async (req, res) => {
 });
 
 // ---------------------------------------------------------------------------
+// Profile update / password change
+// ---------------------------------------------------------------------------
+router.put('/profile', authRequired, async (req, res) => {
+  const { name, phone } = req.body || {};
+  if (!name || !String(name).trim()) {
+    return res.status(400).json({ error: 'Thiếu họ và tên' });
+  }
+  try {
+    const result = await pool.query(
+      'UPDATE users SET name = $1, phone = $2 WHERE id = $3 RETURNING id, email, name, phone, role',
+      [String(name).trim(), phone || null, req.user.id]
+    );
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error('Profile update error:', err);
+    res.status(500).json({ error: 'Lỗi máy chủ' });
+  }
+});
+
+router.put('/password', authRequired, async (req, res) => {
+  const { currentPassword, newPassword } = req.body || {};
+  if (!currentPassword || !newPassword) {
+    return res.status(400).json({ error: 'Thiếu mật khẩu hiện tại hoặc mật khẩu mới' });
+  }
+  if (String(newPassword).length < 6) {
+    return res.status(400).json({ error: 'Mật khẩu mới phải có ít nhất 6 ký tự' });
+  }
+  try {
+    const result = await pool.query(
+      'SELECT password_hash FROM users WHERE id = $1',
+      [req.user.id]
+    );
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    if (!bcrypt.compareSync(currentPassword, result.rows[0].password_hash)) {
+      return res.status(400).json({ error: 'Mật khẩu hiện tại không đúng' });
+    }
+    await pool.query('UPDATE users SET password_hash = $1 WHERE id = $2', [
+      bcrypt.hashSync(newPassword, 10),
+      req.user.id,
+    ]);
+    res.json({ message: 'Đổi mật khẩu thành công' });
+  } catch (err) {
+    console.error('Password change error:', err);
+    res.status(500).json({ error: 'Lỗi máy chủ' });
+  }
+});
+
+// ---------------------------------------------------------------------------
 // Saved addresses
 // ---------------------------------------------------------------------------
 router.get('/addresses', authRequired, async (req, res) => {

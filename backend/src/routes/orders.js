@@ -1,10 +1,11 @@
 import { Router } from 'express';
 import { pool, uid } from '../db.js';
-import { authRequired } from '../middleware/auth.js';
+import { authRequired, optionalAuth } from '../middleware/auth.js';
 
 const router = Router();
 
-router.post('/', authRequired, async (req, res) => {
+// Guest checkout is allowed: user_id may be NULL for orders placed without login.
+router.post('/', optionalAuth, async (req, res) => {
   const { items, shippingAddress, paymentMethod, note, shippingFee = 0, discount = 0 } = req.body || {};
   if (!items || !Array.isArray(items) || items.length === 0) {
     return res.status(400).json({ error: 'Giỏ hàng trống' });
@@ -47,7 +48,7 @@ router.post('/', authRequired, async (req, res) => {
          status, payment_method, payment_status, shipping_address, note)
        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)`,
       [
-        id, orderNumber, req.user.id, JSON.stringify(lineItems),
+        id, orderNumber, req.user ? req.user.id : null, JSON.stringify(lineItems),
         realSubtotal, Number(shippingFee), Number(discount), total,
         status, paymentMethod, paymentStatus,
         JSON.stringify(shippingAddress), note || null,
@@ -84,6 +85,7 @@ function mapOrder(r) {
     note: r.note,
     createdAt: r.created_at,
     updatedAt: r.updated_at,
+    timeline: r.timeline || [{ status: r.status, timestamp: r.created_at }],
   };
 }
 
@@ -112,6 +114,35 @@ router.get('/:id', authRequired, async (req, res) => {
     res.json(mapOrder(result.rows[0]));
   } catch (err) {
     console.error('Order get error:', err);
+    res.status(500).json({ error: 'Lỗi máy chủ' });
+  }
+});
+
+router.put('/:id/cancel', authRequired, async (req, res) => {
+  try {
+    const result = await pool.query(
+      "SELECT * FROM orders WHERE id = $1 AND user_id = $2 AND status IN ('PENDING','CONFIRMED')",
+      [req.params.id, req.user.id]
+    );
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: 'Không tìm thấy đơn hàng hoặc không thể hủy' });
+    }
+    const updated = await pool.query(
+      "UPDATE orders SET status = 'CANCELLED', updated_at = NOW() WHERE id = $1 RETURNING *",
+      [req.params.id]
+    );
+    const order = mapOrder(updated.rows[0]);
+    order.timeline = [
+      ...(order.timeline || []),
+      {
+        status: 'CANCELLED',
+        timestamp: new Date().toISOString(),
+        note: req.body?.reason || 'Khách hàng hủy đơn',
+      },
+    ];
+    res.json(order);
+  } catch (err) {
+    console.error('Order cancel error:', err);
     res.status(500).json({ error: 'Lỗi máy chủ' });
   }
 });
