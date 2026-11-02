@@ -69,4 +69,121 @@ router.get('/me', authRequired, async (req, res) => {
   }
 });
 
+// ---------------------------------------------------------------------------
+// Saved addresses
+// ---------------------------------------------------------------------------
+router.get('/addresses', authRequired, async (req, res) => {
+  try {
+    const result = await pool.query(
+      'SELECT * FROM addresses WHERE user_id = $1 ORDER BY is_default DESC, created_at DESC',
+      [req.user.id]
+    );
+    res.json(result.rows.map((r) => ({
+      id: r.id,
+      label: r.label,
+      name: r.name,
+      phone: r.phone,
+      province: r.province,
+      district: r.district,
+      ward: r.ward,
+      detail: r.detail,
+      isDefault: r.is_default,
+    })));
+  } catch (err) {
+    console.error('Addresses list error:', err);
+    res.status(500).json({ error: 'Lỗi máy chủ' });
+  }
+});
+
+router.post('/addresses', authRequired, async (req, res) => {
+  const b = req.body || {};
+  if (!b.name || !b.phone || !b.province || !b.district || !b.ward || !b.detail) {
+    return res.status(400).json({ error: 'Thiếu thông tin địa chỉ' });
+  }
+  try {
+    const id = uid('adr_');
+    // Only one default address per user
+    if (b.isDefault) {
+      await pool.query('UPDATE addresses SET is_default = FALSE WHERE user_id = $1', [req.user.id]);
+    }
+    await pool.query(
+      `INSERT INTO addresses (id, user_id, label, name, phone, province, district, ward, detail, is_default)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`,
+      [
+        id, req.user.id, b.label || 'home', b.name, b.phone,
+        b.province, b.district, b.ward, b.detail, !!b.isDefault,
+      ]
+    );
+    res.status(201).json({ id, ...b, isDefault: !!b.isDefault });
+  } catch (err) {
+    console.error('Address create error:', err);
+    res.status(500).json({ error: 'Lỗi máy chủ' });
+  }
+});
+
+router.put('/addresses/:id', authRequired, async (req, res) => {
+  const b = req.body || {};
+  try {
+    if (b.isDefault) {
+      await pool.query('UPDATE addresses SET is_default = FALSE WHERE user_id = $1', [req.user.id]);
+    }
+    const result = await pool.query(
+      `UPDATE addresses SET label = $3, name = $4, phone = $5, province = $6,
+         district = $7, ward = $8, detail = $9, is_default = $10
+       WHERE id = $1 AND user_id = $2`,
+      [
+        req.params.id, req.user.id, b.label || 'home', b.name, b.phone,
+        b.province, b.district, b.ward, b.detail, !!b.isDefault,
+      ]
+    );
+    if (result.rowCount === 0) return res.status(404).json({ error: 'Address not found' });
+    res.json({ id: req.params.id, ...b });
+  } catch (err) {
+    console.error('Address update error:', err);
+    res.status(500).json({ error: 'Lỗi máy chủ' });
+  }
+});
+
+router.delete('/addresses/:id', authRequired, async (req, res) => {
+  try {
+    const result = await pool.query(
+      'DELETE FROM addresses WHERE id = $1 AND user_id = $2',
+      [req.params.id, req.user.id]
+    );
+    if (result.rowCount === 0) return res.status(404).json({ error: 'Address not found' });
+    res.json({ message: 'Đã xóa địa chỉ' });
+  } catch (err) {
+    console.error('Address delete error:', err);
+    res.status(500).json({ error: 'Lỗi máy chủ' });
+  }
+});
+
+// ---------------------------------------------------------------------------
+// My reviews
+// ---------------------------------------------------------------------------
+router.get('/reviews', authRequired, async (req, res) => {
+  try {
+    const result = await pool.query(
+      `SELECT r.*, p.name AS product_name, p.slug AS product_slug, p.images
+       FROM reviews r LEFT JOIN products p ON p.id = r.product_id
+       WHERE r.user_id = $1 ORDER BY r.created_at DESC`,
+      [req.user.id]
+    );
+    res.json(result.rows.map((r) => ({
+      id: r.id,
+      productId: r.product_id,
+      productName: r.product_name,
+      productSlug: r.product_slug,
+      productImage: (r.images && r.images[0]) || '',
+      rating: r.rating,
+      comment: r.comment,
+      createdAt: r.created_at,
+      isVerified: !!r.is_verified,
+    })));
+  } catch (err) {
+    console.error('My reviews error:', err);
+    res.status(500).json({ error: 'Lỗi máy chủ' });
+  }
+});
+
 export default router;

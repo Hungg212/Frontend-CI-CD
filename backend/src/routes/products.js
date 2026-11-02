@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { pool } from '../db.js';
+import { authRequired } from '../middleware/auth.js';
 
 const router = Router();
 
@@ -178,20 +179,23 @@ router.get('/:id/reviews', async (req, res) => {
   }
 });
 
-router.post('/:id/reviews', async (req, res) => {
+router.post('/:id/reviews', authRequired, async (req, res) => {
   const { rating, comment } = req.body || {};
   if (!rating || rating < 1 || rating > 5) {
     return res.status(400).json({ error: 'Rating phải từ 1 đến 5' });
   }
   try {
     const id = 'rev_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+    const userName = req.user?.name || 'Khách hàng';
     await pool.query(
-      'INSERT INTO reviews (id, product_id, user_name, rating, comment) VALUES ($1, $2, $3, $4, $5)',
-      [id, req.params.id, 'Khách hàng', rating, comment || '']
+      `INSERT INTO reviews (id, product_id, user_id, user_name, rating, comment)
+       VALUES ($1, $2, $3, $4, $5, $6)`,
+      [id, req.params.id, req.user?.id || null, userName, rating, comment || '']
     );
-    res.json({
-      id, productId: req.params.id, userName: 'Khách hàng',
+    res.status(201).json({
+      id, productId: req.params.id, userName,
       rating, comment: comment || '', createdAt: new Date().toISOString(),
+      isVerified: true,
     });
   } catch (err) {
     console.error('Review post error:', err);

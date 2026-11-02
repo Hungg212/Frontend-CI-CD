@@ -49,7 +49,8 @@ export async function initSchema() {
       district TEXT NOT NULL,
       ward TEXT NOT NULL,
       detail TEXT NOT NULL,
-      is_default BOOLEAN NOT NULL DEFAULT FALSE
+      is_default BOOLEAN NOT NULL DEFAULT FALSE,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
     );
 
     CREATE TABLE IF NOT EXISTS categories (
@@ -139,6 +140,11 @@ export async function initSchema() {
       expires_at TIMESTAMPTZ,
       created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
     );
+
+    -- Lightweight idempotent migrations for tables that already exist.
+    ALTER TABLE addresses ADD COLUMN IF NOT EXISTS created_at TIMESTAMPTZ NOT NULL DEFAULT NOW();
+    ALTER TABLE coupons ADD COLUMN IF NOT EXISTS description TEXT;
+    ALTER TABLE categories ADD COLUMN IF NOT EXISTS product_count INTEGER NOT NULL DEFAULT 0;
   `);
 }
 
