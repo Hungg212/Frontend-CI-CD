@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#5E3C26" />
+      <stop offset="100%" stop-color="#2F1B0E" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)" />
+  <g opacity="0.12" fill="none" stroke="#FEF7E6" stroke-width="3">
+    <circle cx="960" cy="160" r="90" />
+    <circle cx="960" cy="160" r="130" />
+    <circle cx="960" cy="160" r="170" />
+  </g>
+  <g transform="translate(120 190) scale(4)" opacity="0.9">
+    <rect width="32" height="32" rx="6" fill="#FEF7E6" />
+    <path d="M11 11h7a4 4 0 0 1 0 8h-7z" stroke="#5E3C26" stroke-width="1.6" stroke-linejoin="round" />
+    <path d="M22 13a3 3 0 0 1 0 6" stroke="#5E3C26" stroke-width="1.6" stroke-linecap="round" />
+    <path d="M9 22h12" stroke="#5E3C26" stroke-width="1.6" stroke-linecap="round" />
+    <path d="M13 7c-1 1-1 2 0 3M16 7c-1 1-1 2 0 3M19 7c-1 1-1 2 0 3" stroke="#5E3C26" stroke-width="1.4" stroke-linecap="round" />
+  </g>
+  <text x="120" y="430" font-family="Playfair Display, Georgia, serif" font-size="82" fill="#FEF7E6" font-weight="700">
+    Coffee Home Blend
+  </text>
+  <text x="120" y="500" font-family="Inter, Helvetica, Arial, sans-serif" font-size="34" fill="#D9C4A9">
+    Cà phê ·c s£n ViÇt Nam · Rang xay thç công
+  </text>
+  <text x="120" y="556" font-family="Inter, Helvetica, Arial, sans-serif" font-size="26" fill="#B99B78">
+    Giao hàng toàn quÑc · MiÅn phí v­n chuyÃn të 500K
+  </text>
+</svg>
