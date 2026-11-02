@@ -581,7 +581,7 @@ router.get('/stats', async (_req, res) => {
       'SELECT status, COUNT(*)::int AS c FROM orders GROUP BY status'
     )).rows;
     const topProducts = (await pool.query(
-      `SELECT p.id, p.name, p.slug, p.image_url, p.price, p.stock, p.rating,
+      `SELECT p.id, p.name, p.slug, p.price, p.stock, p.rating,
               COALESCE(SUM((item->>'quantity')::int), 0)::int AS sold
        FROM products p
        LEFT JOIN LATERAL (
