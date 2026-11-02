@@ -40,6 +40,9 @@ export default [
       ],
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'warn',
+      // The TypeScript compiler already reports undefined identifiers, and the
+      // automatic JSX runtime means `React` is not a runtime value anymore.
+      'no-undef': 'off',
       'no-console': ['warn', { allow: ['warn', 'error'] }],
     },
   },

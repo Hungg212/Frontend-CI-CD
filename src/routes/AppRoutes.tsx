@@ -22,14 +22,14 @@ const ForgotPasswordPage = lazy(() => import('@/pages/auth/ForgotPasswordPage'))
 const ResetPasswordPage = lazy(() => import('@/pages/auth/ResetPasswordPage'));
 
 const ProfilePage = lazy(() => import('@/pages/profile'));
-const OrdersPage = lazy(() => import('@/pages/orders/OrdersPage'));
-const OrderDetailPage = lazy(() => import('@/pages/orders/OrderDetailPage'));
+const OrdersPage = lazy(() => import('@/pages/profile/orders'));
+const OrderDetailPage = lazy(() => import('@/pages/profile/orders/[id]'));
 const ReviewsPage = lazy(() => import('@/pages/profile/ReviewsPage'));
 const AddressesPage = lazy(() => import('@/pages/profile/AddressesPage'));
 const ProfileSettingsPage = lazy(() => import('@/pages/profile/Settings'));
 
 const CheckoutPage = lazy(() => import('@/pages/checkout/CheckoutPage'));
-const OrderSuccessPage = lazy(() => import('@/pages/checkout/OrderSuccessPage'));
+const OrderSuccessPage = lazy(() => import('@/pages/checkout/OrderSuccess'));
 
 const AdminDashboard = lazy(() => import('@/pages/admin/AdminDashboard'));
 const AdminProducts = lazy(() => import('@/pages/admin/AdminProducts'));

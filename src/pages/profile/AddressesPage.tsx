@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Plus, Pencil, Trash2, MapPin, X, Star } from 'lucide-react';
+import { Plus, Pencil, Trash2, MapPin, X } from 'lucide-react';
 import { Button, Spinner } from '@/components/ui';
 import { useAuthStore } from '@/stores/authStore';
 import { useNotificationStore } from '@/stores/notificationStore';

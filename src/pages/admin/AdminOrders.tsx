@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Search, Eye } from 'lucide-react';
-import { orderApi } from '@/lib/api';
 import { useAuthStore } from '@/stores/authStore';
 import { Button } from '@/components/ui';
 import { useNotificationStore } from '@/stores/notificationStore';

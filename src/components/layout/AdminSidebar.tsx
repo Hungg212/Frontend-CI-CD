@@ -13,14 +13,18 @@ import {
   ChevronRight,
   LogOut,
   Rocket,
+  Tags,
+  Ticket,
 } from 'lucide-react';
 
 const adminNavItems = [
   { href: '/admin', label: 'Tổng quan', icon: LayoutDashboard },
   { href: '/admin/products', label: 'Sản phẩm', icon: Package },
+  { href: '/admin/categories', label: 'Danh mục', icon: Tags },
   { href: '/admin/orders', label: 'Đơn hàng', icon: ShoppingCart },
   { href: '/admin/customers', label: 'Khách hàng', icon: Users },
   { href: '/admin/reviews', label: 'Đánh giá', icon: Star },
+  { href: '/admin/coupons', label: 'Mã giảm giá', icon: Ticket },
   { href: '/admin/messages', label: 'Tin nhắn', icon: MessageSquare },
   { href: '/admin/analytics', label: 'Thống kê', icon: BarChart3 },
   { href: '/admin/devops', label: 'DevOps', icon: Rocket },
