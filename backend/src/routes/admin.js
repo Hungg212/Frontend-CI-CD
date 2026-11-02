@@ -571,11 +571,12 @@ function mapCoupon(r) {
 // ---------------------------------------------------------------------------
 router.get('/stats', async (_req, res) => {
   try {
-    const [products, orders, customers, revenue] = await Promise.all([
+    const [products, orders, customers, revenue, avgRating] = await Promise.all([
       pool.query('SELECT COUNT(*)::int AS c FROM products'),
       pool.query('SELECT COUNT(*)::int AS c FROM orders'),
       pool.query("SELECT COUNT(*)::int AS c FROM users WHERE role = 'customer'"),
       pool.query("SELECT COALESCE(SUM(total),0)::int AS s FROM orders WHERE status <> 'CANCELLED'"),
+      pool.query('SELECT COALESCE(AVG(rating), 0)::real AS a FROM products'),
     ]);
     const byStatus = (await pool.query(
       'SELECT status, COUNT(*)::int AS c FROM orders GROUP BY status'
@@ -606,6 +607,7 @@ router.get('/stats', async (_req, res) => {
       totalOrders: orders.rows[0].c,
       totalCustomers: customers.rows[0].c,
       totalRevenue: revenue.rows[0].s,
+      avgRating: Number(avgRating.rows[0].a) || 0,
       ordersByStatus: Object.fromEntries(byStatus.map((r) => [r.status, r.c])),
       topProducts: topProducts.map((p) => ({
         id: p.id,

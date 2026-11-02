@@ -28,25 +28,9 @@ export default function AdminAnalytics() {
         });
         if (res.ok) {
           setStats(await res.json());
-        } else {
-          setStats({
-            totalRevenue: 1412000,
-            totalOrders: 6,
-            totalCustomers: 2,
-            totalProducts: 28,
-            avgRating: 4.7,
-            ordersByStatus: { PENDING: 1, CONFIRMED: 2, SHIPPED: 1, DELIVERED: 2 },
-          });
         }
       } catch {
-        setStats({
-          totalRevenue: 1412000,
-          totalOrders: 6,
-          totalCustomers: 2,
-          totalProducts: 28,
-          avgRating: 4.7,
-          ordersByStatus: { PENDING: 1, CONFIRMED: 2, SHIPPED: 1, DELIVERED: 2 },
-        });
+        setStats(null);
       }
     };
     load();
@@ -154,13 +138,13 @@ export default function AdminAnalytics() {
           </h2>
           <div className="mt-4 flex items-end gap-3">
             <p className="font-display text-5xl font-bold text-amber-600">
-              {stats?.avgRating?.toFixed(1) || '4.7'}
+              {stats?.avgRating ? stats.avgRating.toFixed(1) : '—'}
             </p>
             <div className="mb-2 flex">
               {Array.from({ length: 5 }).map((_, i) => (
                 <Star
                   key={i}
-                  className={`h-5 w-5 ${i < Math.round(stats?.avgRating || 4.7) ? 'fill-amber-500 text-amber-500' : 'text-coffee-200'}`}
+                  className={`h-5 w-5 ${i < Math.round(stats?.avgRating || 0) ? 'fill-amber-500 text-amber-500' : 'text-coffee-200'}`}
                 />
               ))}
             </div>
