@@ -3,7 +3,10 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Coffee, Star, Truck, Shield, Award, Minus, Plus, ShoppingCart, Heart } from 'lucide-react';
 import { productApi } from '@/lib/api';
 import { useCartStore } from '@/stores/cartStore';
+import { useWishlistStore } from '@/stores/wishlistStore';
+import { useNotificationStore } from '@/stores/notificationStore';
 import { Button, Spinner } from '@/components/ui';
+import type { Product } from '@/types';
 
 interface ProductDetail {
   id: string;
@@ -50,6 +53,9 @@ export default function ProductDetailPage() {
   const [quantity, setQuantity] = useState(1);
   const [activeImage, setActiveImage] = useState(0);
   const { addItem } = useCartStore();
+  const toggleWishlist = useWishlistStore((s) => s.toggleWishlist);
+  const isInWishlist = useWishlistStore((s) => s.isInWishlist(product?.id || ''));
+  const notify = useNotificationStore();
 
   useEffect(() => {
     const fetch = async () => {
@@ -110,6 +116,26 @@ export default function ProductDetailPage() {
   const handleBuyNow = () => {
     handleAdd();
     navigate('/checkout');
+  };
+
+  const handleToggleWishlist = () => {
+    if (!product) return;
+    toggleWishlist({
+      id: product.id,
+      slug: product.slug,
+      name: product.name,
+      price: product.price,
+      salePrice: product.salePrice,
+      images: product.images,
+      imageUrl: product.imageUrl,
+      rating: product.rating,
+      reviewCount: product.reviewCount,
+      stock: product.stock,
+    } as unknown as Product);
+    notify.success(
+      isInWishlist ? 'Đã bỏ yêu thích' : 'Đã thêm vào yêu thích',
+      product.name
+    );
   };
 
   return (
@@ -220,14 +246,21 @@ export default function ProductDetailPage() {
             </div>
 
             <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-              <Button size="lg" onClick={handleAdd} disabled={product.stock === 0} className="flex-1 gap-2">
+              <Button size="lg" onClick={handleAdd} disabled={product.stock === 0} className="gap-2 sm:flex-1">
                 <ShoppingCart className="h-5 w-5" /> Thêm vào giỏ
               </Button>
-              <Button size="lg" variant="outline" onClick={handleBuyNow} disabled={product.stock === 0} className="flex-1">
+              <Button size="lg" variant="outline" onClick={handleBuyNow} disabled={product.stock === 0} className="sm:flex-1">
                 Mua ngay
               </Button>
-              <Button size="lg" variant="outline" aria-label="Yêu thích">
-                <Heart className="h-5 w-5" />
+              <Button
+                size="lg"
+                variant="outline"
+                aria-label="Yêu thích"
+                aria-pressed={isInWishlist}
+                onClick={handleToggleWishlist}
+                className={`shrink-0 ${isInWishlist ? 'border-red-300 text-red-600' : ''}`}
+              >
+                <Heart className={`h-5 w-5 ${isInWishlist ? 'fill-red-500 text-red-500' : ''}`} />
               </Button>
             </div>
 
