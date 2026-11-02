@@ -49,32 +49,7 @@ export default function AdminCoupons() {
         const data: Coupon[] = await res.json();
         setItems(Array.isArray(data) ? data : []);
       } else {
-        setItems([
-          {
-            id: 'c1',
-            code: 'WELCOME10',
-            description: 'Giảm 10%',
-            discountType: 'PERCENTAGE',
-            discountValue: 10,
-            minOrderValue: 200000,
-            maxUses: 1000,
-            usedCount: 23,
-            isActive: true,
-            expiresAt: '2026-12-31',
-          },
-          {
-            id: 'c2',
-            code: 'FREESHIP',
-            description: 'Free ship',
-            discountType: 'FIXED',
-            discountValue: 30000,
-            minOrderValue: 500000,
-            maxUses: 500,
-            usedCount: 89,
-            isActive: true,
-            expiresAt: '2026-12-31',
-          },
-        ]);
+        setItems([]);
       }
     } catch {
       setItems([]);

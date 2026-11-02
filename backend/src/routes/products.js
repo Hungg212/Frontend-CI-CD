@@ -15,7 +15,7 @@ function mapProduct(row) {
     price: row.price,
     salePrice: row.sale_price,
     discount: row.discount,
-    category: row.category_slug,
+    category: row.category_name || row.category_slug,
     categorySlug: row.category_slug,
     imageUrl: images[0] || '',
     images,
@@ -48,50 +48,62 @@ router.get('/', async (req, res) => {
   const params = [];
   let i = 1;
   if (search) {
-    where.push(`(name ILIKE $${i} OR short_description ILIKE $${i + 1})`);
+    where.push(`(p.name ILIKE $${i} OR p.short_description ILIKE $${i + 1})`);
     params.push(`%${search}%`, `%${search}%`);
     i += 2;
   }
   if (category) {
-    where.push(`category_slug = $${i}`);
+    where.push(`p.category_slug = $${i}`);
     params.push(category);
     i += 1;
   }
   if (minPrice) {
-    where.push(`price >= $${i}`);
+    where.push(`p.price >= $${i}`);
     params.push(Number(minPrice));
     i += 1;
   }
   if (maxPrice) {
-    where.push(`price <= $${i}`);
+    where.push(`p.price <= $${i}`);
     params.push(Number(maxPrice));
     i += 1;
   }
   if (featured === 'true') {
-    where.push('is_featured = TRUE');
+    where.push('p.is_featured = TRUE');
   }
 
   const orderMap = {
-    'price-asc': 'price ASC',
-    'price-desc': 'price DESC',
-    price_asc: 'price ASC',
-    price_desc: 'price DESC',
-    rating: 'rating DESC',
-    'rating-desc': 'rating DESC',
-    'averageRating-desc': 'rating DESC',
-    newest: 'created_at DESC',
-    'createdAt-desc': 'created_at DESC',
-    'createdAt-asc': 'created_at ASC',
-    bestseller: 'is_best_seller DESC, rating DESC',
+    'price-asc': 'p.price ASC',
+    'price-desc': 'p.price DESC',
+    price_asc: 'p.price ASC',
+    price_desc: 'p.price DESC',
+    rating: 'p.rating DESC',
+    'rating-desc': 'p.rating DESC',
+    'averageRating-desc': 'p.rating DESC',
+    newest: 'p.created_at DESC',
+    'createdAt-desc': 'p.created_at DESC',
+    'createdAt-asc': 'p.created_at ASC',
+    bestseller: 'p.is_best_seller DESC, p.rating DESC',
   };
-  const order = orderMap[sortBy] || 'created_at DESC';
+  let order = orderMap[sortBy] || 'p.created_at DESC';
+  // Generic sortBy with explicit direction: ?sortBy=price&sortOrder=asc
+  if (!orderMap[sortBy] && /^[a-z_]+$/i.test(String(sortBy))) {
+    const col = String(sortBy).toLowerCase();
+    const allowed = ['price', 'rating', 'created_at', 'name', 'review_count', 'stock'];
+    if (allowed.includes(col)) {
+      const dir = String(sortOrder).toLowerCase() === 'asc' ? 'ASC' : 'DESC';
+      order = `p.${col} ${dir}`;
+    }
+  }
 
   const offset = (Number(page) - 1) * Number(limit);
   const whereClause = where.length ? 'WHERE ' + where.join(' AND ') : '';
-  const sql = `SELECT * FROM products ${whereClause} ORDER BY ${order} LIMIT $${i} OFFSET $${i + 1}`;
+  const sql = `SELECT p.*, c.name AS category_name
+              FROM products p
+              LEFT JOIN categories c ON c.slug = p.category_slug
+              ${whereClause} ORDER BY ${order} LIMIT $${i} OFFSET $${i + 1}`;
   const rows = (await pool.query(sql, [...params, Number(limit), offset])).rows;
   const totalRow = (await pool.query(
-    `SELECT COUNT(*)::int AS c FROM products ${whereClause}`,
+    `SELECT COUNT(*)::int AS c FROM products p ${whereClause}`,
     params
   )).rows[0];
 
@@ -109,28 +121,31 @@ router.get('/', async (req, res) => {
 
 router.get('/featured', async (_req, res) => {
   const rows = (await pool.query(
-    'SELECT * FROM products WHERE is_featured = TRUE ORDER BY rating DESC LIMIT 12'
+    'SELECT p.*, c.name AS category_name FROM products p LEFT JOIN categories c ON c.slug = p.category_slug WHERE p.is_featured = TRUE ORDER BY p.rating DESC LIMIT 12'
   )).rows;
   res.json(rows.map(mapProduct));
 });
 
 router.get('/new-arrivals', async (_req, res) => {
   const rows = (await pool.query(
-    'SELECT * FROM products WHERE is_new_arrival = TRUE ORDER BY created_at DESC LIMIT 12'
+    'SELECT p.*, c.name AS category_name FROM products p LEFT JOIN categories c ON c.slug = p.category_slug WHERE p.is_new_arrival = TRUE ORDER BY p.created_at DESC LIMIT 12'
   )).rows;
   res.json(rows.map(mapProduct));
 });
 
 router.get('/best-sellers', async (_req, res) => {
   const rows = (await pool.query(
-    'SELECT * FROM products WHERE is_best_seller = TRUE ORDER BY rating DESC LIMIT 12'
+    'SELECT p.*, c.name AS category_name FROM products p LEFT JOIN categories c ON c.slug = p.category_slug WHERE p.is_best_seller = TRUE ORDER BY p.rating DESC LIMIT 12'
   )).rows;
   res.json(rows.map(mapProduct));
 });
 
 router.get('/:slug', async (req, res) => {
   try {
-    const result = await pool.query('SELECT * FROM products WHERE slug = $1', [req.params.slug]);
+    const result = await pool.query(
+      'SELECT p.*, c.name AS category_name FROM products p LEFT JOIN categories c ON c.slug = p.category_slug WHERE p.slug = $1',
+      [req.params.slug]
+    );
     if (result.rowCount === 0) {
       return res.status(404).json({ error: 'Product not found' });
     }

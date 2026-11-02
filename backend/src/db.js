@@ -125,6 +125,20 @@ export async function initSchema() {
     );
 
     CREATE INDEX IF NOT EXISTS idx_orders_user ON orders(user_id);
+
+    CREATE TABLE IF NOT EXISTS coupons (
+      id TEXT PRIMARY KEY,
+      code TEXT UNIQUE NOT NULL,
+      description TEXT,
+      type TEXT NOT NULL DEFAULT 'percent',
+      value INTEGER NOT NULL DEFAULT 0,
+      min_order INTEGER NOT NULL DEFAULT 0,
+      usage_limit INTEGER NOT NULL DEFAULT 0,
+      used_count INTEGER NOT NULL DEFAULT 0,
+      is_active BOOLEAN NOT NULL DEFAULT TRUE,
+      expires_at TIMESTAMPTZ,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
   `);
 }
 

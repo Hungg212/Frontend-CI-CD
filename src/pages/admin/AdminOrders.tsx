@@ -55,8 +55,13 @@ export default function AdminOrders() {
   const load = async () => {
     setLoading(true);
     try {
-      const data: AdminOrder[] = (await orderApi.getAll(token)) as AdminOrder[];
-      setItems(Array.isArray(data) ? data : []);
+      const res = await fetch(`/api/admin/orders?limit=100${statusFilter ? `&status=${statusFilter}` : ''}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!res.ok) throw new Error('Không thể tải đơn hàng');
+      const data = await res.json();
+      const list = Array.isArray(data) ? data : data.orders || [];
+      setItems(list);
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : 'Không thể tải đơn hàng';
       notify.error('Lỗi', msg);
