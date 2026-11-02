@@ -567,6 +567,59 @@ function mapCoupon(r) {
 }
 
 // ---------------------------------------------------------------------------
+// Messages (contact form / newsletter)
+// ---------------------------------------------------------------------------
+router.get('/messages', async (_req, res) => {
+  try {
+    const rows = (await pool.query(
+      'SELECT * FROM messages ORDER BY created_at DESC LIMIT 100'
+    )).rows;
+    res.json(rows.map((r) => ({
+      id: r.id,
+      name: r.name,
+      email: r.email,
+      phone: r.phone,
+      subject: r.subject,
+      content: r.content,
+      status: r.status,
+      createdAt: r.created_at,
+    })));
+  } catch (err) {
+    console.error('Admin messages error:', err);
+    res.status(500).json({ error: 'Lỗi máy chủ' });
+  }
+});
+
+router.put('/messages/:id/status', async (req, res) => {
+  try {
+    const { status } = req.body || {};
+    if (!['UNREAD', 'READ', 'REPLIED', 'ARCHIVED'].includes(status)) {
+      return res.status(400).json({ error: 'Trạng thái không hợp lệ' });
+    }
+    const result = await pool.query(
+      'UPDATE messages SET status = $2 WHERE id = $1',
+      [req.params.id, status]
+    );
+    if (result.rowCount === 0) return res.status(404).json({ error: 'Message not found' });
+    res.json({ id: req.params.id, status });
+  } catch (err) {
+    console.error('Admin message status error:', err);
+    res.status(500).json({ error: 'Lỗi máy chủ' });
+  }
+});
+
+router.delete('/messages/:id', async (req, res) => {
+  try {
+    const result = await pool.query('DELETE FROM messages WHERE id = $1', [req.params.id]);
+    if (result.rowCount === 0) return res.status(404).json({ error: 'Message not found' });
+    res.json({ message: 'Đã xóa tin nhắn' });
+  } catch (err) {
+    console.error('Admin message delete error:', err);
+    res.status(500).json({ error: 'Lỗi máy chủ' });
+  }
+});
+
+// ---------------------------------------------------------------------------
 // Stats / Analytics
 // ---------------------------------------------------------------------------
 router.get('/stats', async (_req, res) => {

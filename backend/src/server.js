@@ -28,6 +28,26 @@ app.use('/api/categories', categoryRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/admin', adminRoutes);
 
+// Public contact form → stored as an admin message.
+app.post('/api/messages', async (req, res) => {
+  try {
+    const { name, email, phone, subject, content } = req.body || {};
+    if (!name || !email || !content) {
+      return res.status(400).json({ error: 'Thiếu name, email hoặc nội dung' });
+    }
+    const id = `msg_${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`;
+    await pool.query(
+      `INSERT INTO messages (id, name, email, phone, subject, content, status)
+       VALUES ($1,$2,$3,$4,$5,$6,'UNREAD')`,
+      [id, name, email, phone || '', subject || 'Liên hệ từ website', content]
+    );
+    res.status(201).json({ id, message: 'Đã gửi tin nhắn' });
+  } catch (err) {
+    console.error('Create message error:', err);
+    res.status(500).json({ error: 'Lỗi máy chủ' });
+  }
+});
+
 app.use((err, _req, res, _next) => {
   console.error('Unhandled error:', err);
   res.status(500).json({ error: err.message || 'Internal server error' });

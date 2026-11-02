@@ -6,17 +6,17 @@ import { Input } from '@/components/ui';
 import { Send, MapPin, Phone, Mail, Facebook, Instagram, Youtube, ArrowUp } from 'lucide-react';
 
 const quickLinks = [
-  { href: '/about', label: 'Về chúng tôi' },
+  { href: '/terms', label: 'Về chúng tôi' },
   { href: '/products', label: 'Sản phẩm' },
-  { href: '/blog', label: 'Blog' },
-  { href: '/faq', label: 'Câu hỏi thường gặp' },
+  { href: '/products?sortBy=newest', label: 'Sản phẩm mới' },
+  { href: '/search?q=cà phê', label: 'Tìm kiếm' },
 ];
 
 const categories = [
-  { href: '/products?category=coffee-beans', label: 'Hạt cà phê' },
-  { href: '/products?category=ground-coffee', label: 'Cà phê xay' },
-  { href: '/products?category=instant-coffee', label: 'Cà phê hòa tan' },
-  { href: '/products?category=accessories', label: 'Phụ kiện' },
+  { href: '/category/ca-phe-hat', label: 'Hạt cà phê' },
+  { href: '/category/ca-phe-xay', label: 'Cà phê xay' },
+  { href: '/category/qua-tang', label: 'Cà phê hòa tan' },
+  { href: '/category/phu-kien', label: 'Phụ kiện' },
 ];
 
 const contactInfo = [
@@ -42,12 +42,27 @@ export function Footer() {
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
 
-  const handleSubscribe = (e: React.FormEvent) => {
+  const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (email) {
+    const value = email.trim();
+    if (!value) return;
+    try {
+      const res = await fetch('/api/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: 'Newsletter',
+          email: value,
+          subject: 'Đăng ký nhận tin',
+          content: 'Khách hàng đăng ký nhận tin qua footer.',
+        }),
+      });
+      if (!res.ok) throw new Error('Không gửi được');
       setSubscribed(true);
       setEmail('');
       setTimeout(() => setSubscribed(false), 3000);
+    } catch {
+      setSubscribed(false);
     }
   };
 

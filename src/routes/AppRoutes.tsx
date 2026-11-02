@@ -41,6 +41,7 @@ const AdminCustomers = lazy(() => import('@/pages/admin/AdminCustomers'));
 const AdminCustomerDetail = lazy(() => import('@/pages/admin/AdminCustomerDetail'));
 const AdminCoupons = lazy(() => import('@/pages/admin/AdminCoupons'));
 const AdminReviews = lazy(() => import('@/pages/admin/AdminReviews'));
+const AdminMessages = lazy(() => import('@/pages/admin/AdminMessages'));
 const AdminAnalytics = lazy(() => import('@/pages/admin/AdminAnalytics'));
 const AdminSettings = lazy(() => import('@/pages/admin/AdminSettings'));
 const AdminDevOps = lazy(() => import('@/pages/admin/AdminDevOps'));
@@ -145,6 +146,7 @@ export default function AppRoutes() {
           <Route path="customers/:id" element={<AdminCustomerDetail />} />
           <Route path="coupons" element={<AdminCoupons />} />
           <Route path="reviews" element={<AdminReviews />} />
+          <Route path="messages" element={<AdminMessages />} />
           <Route path="analytics" element={<AdminAnalytics />} />
           <Route path="devops" element={<AdminDevOps />} />
           <Route path="settings" element={<AdminSettings />} />

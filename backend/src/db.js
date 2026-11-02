@@ -145,6 +145,19 @@ export async function initSchema() {
     ALTER TABLE addresses ADD COLUMN IF NOT EXISTS created_at TIMESTAMPTZ NOT NULL DEFAULT NOW();
     ALTER TABLE coupons ADD COLUMN IF NOT EXISTS description TEXT;
     ALTER TABLE categories ADD COLUMN IF NOT EXISTS product_count INTEGER NOT NULL DEFAULT 0;
+
+    CREATE TABLE IF NOT EXISTS messages (
+      id TEXT PRIMARY KEY,
+      name TEXT NOT NULL,
+      email TEXT NOT NULL,
+      phone TEXT,
+      subject TEXT,
+      content TEXT NOT NULL,
+      status TEXT NOT NULL DEFAULT 'UNREAD',
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_messages_status ON messages(status);
   `);
 }
 
