@@ -142,7 +142,9 @@ export function useOrders(pageSize = 5): UseOrdersReturn {
     };
   }, [token, setOrders]);
 
-  const orders = apiOrders ?? storeOrders;
+  // While authenticated we must never fall back to the seeded mock orders:
+  // the list stays empty until the API responds.
+  const orders = token ? (apiOrders ?? []) : storeOrders;
 
   const filteredOrders = useMemo(() => {
     const predicate = filterMap[filter];

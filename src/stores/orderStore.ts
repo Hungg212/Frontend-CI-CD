@@ -1,7 +1,6 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import type { Order, OrderStatus, CreateOrderData, CreateReviewData, Review } from '../types';
-import { orders as initialOrders } from '../data/orders';
 import { generateId, generateOrderNumber } from '../utils/formatters';
 
 interface OrderState {
@@ -21,7 +20,7 @@ interface OrderState {
 export const useOrderStore = create<OrderState>()(
   persist(
     (set, get) => ({
-      orders: initialOrders,
+      orders: [],
       currentOrder: null,
 
       createOrder: (data) => {
@@ -164,7 +163,7 @@ export const useOrderStore = create<OrderState>()(
         return newReview;
       },
 
-      resetOrders: () => set({ orders: initialOrders, currentOrder: null }),
+      resetOrders: () => set({ orders: [], currentOrder: null }),
       setCurrentOrder: (order) => set({ currentOrder: order }),
       // Replace the list with data coming from the backend.
       setOrders: (orders) => set({ orders }),
