@@ -581,14 +581,19 @@ router.get('/stats', async (_req, res) => {
       'SELECT status, COUNT(*)::int AS c FROM orders GROUP BY status'
     )).rows;
     const topProducts = (await pool.query(
-      `SELECT p.id, p.name, p.slug, p.price, p.stock, p.rating,
-              COALESCE(SUM((item->>'quantity')::int), 0)::int AS sold
+      `WITH sold AS (
+         SELECT item.value->>'productId' AS pid,
+                SUM((item.value->>'quantity')::int)::int AS qty
+         FROM orders o
+         CROSS JOIN LATERAL jsonb_array_elements(o.items) AS item(value)
+         WHERE o.status <> 'CANCELLED'
+         GROUP BY 1
+       )
+       SELECT p.id, p.name, p.slug, p.price, p.stock, p.rating,
+              COALESCE(s.qty, 0)::int AS sold
        FROM products p
-       LEFT JOIN LATERAL (
-         SELECT items FROM orders o, jsonb_array_elements(o.items) item
-         WHERE item->>'productId' = p.id AND o.status <> 'CANCELLED'
-       ) x ON TRUE
-       GROUP BY p.id ORDER BY sold DESC, p.rating DESC LIMIT 5`
+       LEFT JOIN sold s ON s.pid = p.id
+       ORDER BY sold DESC, p.rating DESC LIMIT 5`
     )).rows;
     const recentOrders = (await pool.query(
       `SELECT o.id, o.order_number, o.total, o.status, o.created_at, u.name AS customer_name
