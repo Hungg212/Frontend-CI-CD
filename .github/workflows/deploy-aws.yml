@@ -1,6 +1,12 @@
 name: Deploy AWS
 
-# Manual + on push to main. Requires the github-oidc stack (see infra/aws/README.md).
+# Manual + on push to main. Deploys the API to EC2 (via SSM Run Command) and
+# the frontend to S3 + CloudFront.
+#
+# Credentials: this AWS account is inside an organization whose service control
+# policy denies sts:AssumeRoleWithWebIdentity, so OIDC federation cannot be
+# used here. The workflow therefore authenticates with a dedicated IAM user
+# whose access keys live in repository secrets.
 on:
   push:
     branches: [main]
@@ -11,54 +17,37 @@ concurrency:
   cancel-in-progress: false
 
 permissions:
-  id-token: write # OIDC -> assume the deploy role
   contents: read
 
 env:
-  AWS_REGION: ap-southeast-1
+  AWS_REGION: ap-southeast-2
+  AWS_DEFAULT_REGION: ap-southeast-2
   NODE_VERSION: '20'
 
 jobs:
   deploy:
     name: Deploy frontend + API to AWS
     runs-on: ubuntu-latest
-    # Skip cleanly until the OIDC role and stack names are configured (see
-    # infra/aws/README.md section 4). Without this guard, every push to main
-    # would fail on a missing secret.
-    if: vars.FRONTEND_STACK_NAME != '' && vars.BACKEND_STACK_NAME != ''
+    # Skip cleanly until the resource identifiers and the AWS keys are set.
+    # Without this guard, every push to main would fail on a missing secret.
+    if: vars.AWS_BUCKET != '' && vars.AWS_DISTRIBUTION_ID != '' && secrets.AWS_ACCESS_KEY_ID != ''
     steps:
       - uses: actions/checkout@v4
 
-      - name: Configure AWS credentials (OIDC)
+      - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
-          role-session-name: gha-deploy-${{ github.run_id }}
 
-      - name: Resolve stack outputs
-        id: stacks
-        run: |
-          set -euo pipefail
-          backend="${{ vars.BACKEND_STACK_NAME }}"
-          frontend="${{ vars.FRONTEND_STACK_NAME }}"
-          {
-            echo "bucket=$(aws cloudformation describe-stacks --stack-name "$frontend" \
-              --query "Stacks[0].Outputs[?OutputKey=='BucketName'].OutputValue" --output text)"
-            echo "dist_id=$(aws cloudformation describe-stacks --stack-name "$frontend" \
-              --query "Stacks[0].Outputs[?OutputKey=='DistributionId'].OutputValue" --output text)"
-            echo "site_url=$(aws cloudformation describe-stacks --stack-name "$frontend" \
-              --query "Stacks[0].Outputs[?OutputKey=='FrontendUrl'].OutputValue" --output text)"
-            echo "instance_id=$(aws cloudformation describe-stacks --stack-name "$backend" \
-              --query "Stacks[0].Outputs[?OutputKey=='InstanceId'].OutputValue" --output text)"
-          } >> "$GITHUB_OUTPUT"
-
-      # ---------------------------------------------------------------- API
+      # ------------------------------------------------------------ API
       - name: Deploy API (SSM Run Command)
         run: |
           set -euo pipefail
+          instance_id="${{ vars.AWS_INSTANCE_ID }}"
           command_id=$(aws ssm send-command \
-            --instance-ids "${{ steps.stacks.outputs.instance_id }}" \
+            --instance-ids "$instance_id" \
             --document-name AWS-RunShellScript \
             --comment "deploy ${GITHUB_SHA::7}" \
             --parameters 'commands=["sudo bash /opt/coffee/app/infra/aws/remote/deploy-api.sh"]' \
@@ -67,21 +56,21 @@ jobs:
 
           for i in $(seq 1 60); do
             status=$(aws ssm get-command-invocation --command-id "$command_id" \
-              --instance-id "${{ steps.stacks.outputs.instance_id }}" \
+              --instance-id "$instance_id" \
               --query 'Status' --output text 2>/dev/null || echo Pending)
             echo "attempt $i: $status"
             case "$status" in
               Success) break ;;
               Failed|Cancelled|TimedOut)
                 aws ssm get-command-invocation --command-id "$command_id" \
-                  --instance-id "${{ steps.stacks.outputs.instance_id }}" \
+                  --instance-id "$instance_id" \
                   --query '{out:StandardOutputContent,err:StandardErrorContent}' --output json
                 exit 1 ;;
             esac
             sleep 10
           done
 
-      # ----------------------------------------------------------- Frontend
+      # --------------------------------------------------------- Frontend
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
@@ -102,7 +91,7 @@ jobs:
       - name: Upload to S3
         run: |
           set -euo pipefail
-          bucket="${{ steps.stacks.outputs.bucket }}"
+          bucket="${{ vars.AWS_BUCKET }}"
           aws s3 sync dist "s3://$bucket" --delete --exclude 'index.html' --exclude '*.map' \
             --cache-control 'public,max-age=31536000,immutable'
           aws s3 cp dist/index.html "s3://$bucket/index.html" \
@@ -112,12 +101,12 @@ jobs:
       - name: Invalidate CloudFront
         run: |
           aws cloudfront create-invalidation \
-            --distribution-id "${{ steps.stacks.outputs.dist_id }}" --paths '/*'
+            --distribution-id "${{ vars.AWS_DISTRIBUTION_ID }}" --paths '/*'
 
       - name: Smoke test
         run: |
           set -euo pipefail
-          site="${{ steps.stacks.outputs.site_url }}"
+          site="${{ vars.AWS_SITE_URL }}"
           echo "checking $site/api/health"
           for i in $(seq 1 10); do
             if curl -fsS "$site/api/health"; then echo; exit 0; fi
@@ -130,6 +119,6 @@ jobs:
           {
             echo "### Deployed"
             echo ""
-            echo "- Site: ${{ steps.stacks.outputs.site_url }}"
+            echo "- Site: ${{ vars.AWS_SITE_URL }}"
             echo "- Commit: \`${GITHUB_SHA::7}\`"
           } >> "$GITHUB_STEP_SUMMARY"
