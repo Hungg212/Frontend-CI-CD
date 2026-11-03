@@ -28,9 +28,10 @@ jobs:
   deploy:
     name: Deploy frontend + API to AWS
     runs-on: ubuntu-latest
-    # Skip cleanly until the resource identifiers and the AWS keys are set.
-    # Without this guard, every push to main would fail on a missing secret.
-    if: vars.AWS_BUCKET != '' && vars.AWS_DISTRIBUTION_ID != '' && secrets.AWS_ACCESS_KEY_ID != ''
+    # Skip cleanly until the resource identifiers are set. (The `secrets`
+    # context is not available in a job-level `if`, so the key check happens
+    # in the credential step instead.)
+    if: vars.AWS_BUCKET != '' && vars.AWS_DISTRIBUTION_ID != ''
     steps:
       - uses: actions/checkout@v4
 
