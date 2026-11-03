@@ -115,6 +115,15 @@ export const categoryApi = {
     request<unknown>(`/categories/${slug}`),
 };
 
+// Coupons
+export const couponApi = {
+  getAll: () =>
+    request<unknown[]>('/coupons'),
+
+  validate: (code: string) =>
+    request<unknown>(`/coupons/validate?code=${encodeURIComponent(code)}`),
+};
+
 // Orders
 export const orderApi = {
   create: (data: unknown, token: string) =>
@@ -184,7 +193,7 @@ export const adminApi = {
     }),
 
   getUsers: (token: string) =>
-    request<unknown[]>('/admin/users', { token }),
+    request<unknown[]>('/admin/customers', { token }),
 
   getCategories: (token: string) =>
     request<unknown[]>('/admin/categories', { token }),

@@ -28,6 +28,7 @@ export default function CheckoutPage() {
   const shippingFee = useCartStore((s) => s.getShippingFee());
   const total = useCartStore((s) => s.getTotal());
   const discount = useCartStore((s) => s.getDiscount());
+  const appliedCoupon = useCartStore((s) => s.appliedCoupon);
   const clearCart = useCartStore((s) => s.clearCart);
   const user = useAuthStore((s) => s.user);
   const token = useAuthStore((s) => s.token);
@@ -83,9 +84,8 @@ export default function CheckoutPage() {
         },
         paymentMethod: payment,
         note: form.note,
-        subtotal,
-        shippingFee,
-        discount,
+        // The server recomputes subtotal/shipping/discount; only the code is sent.
+        couponCode: appliedCoupon?.code,
       };
       // If not logged in, create a quick guest order via /api/orders without auth — fallback to localStorage
       const headers: Record<string, string> = { 'Content-Type': 'application/json' };

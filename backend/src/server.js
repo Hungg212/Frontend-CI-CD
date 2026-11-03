@@ -8,6 +8,7 @@ import productRoutes from './routes/products.js';
 import categoryRoutes from './routes/categories.js';
 import orderRoutes from './routes/orders.js';
 import adminRoutes from './routes/admin.js';
+import couponRoutes from './routes/coupons.js';
 
 const app = express();
 app.use(cors());
@@ -27,6 +28,7 @@ app.use('/api/products', productRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/coupons', couponRoutes);
 
 // Public contact form → stored as an admin message.
 app.post('/api/messages', async (req, res) => {

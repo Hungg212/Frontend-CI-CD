@@ -4,9 +4,13 @@ import { authRequired, optionalAuth } from '../middleware/auth.js';
 
 const router = Router();
 
+const FREE_SHIPPING_THRESHOLD = 500000;
+const STANDARD_SHIPPING_FEE = 30000;
+
 // Guest checkout is allowed: user_id may be NULL for orders placed without login.
 router.post('/', optionalAuth, async (req, res) => {
-  const { items, shippingAddress, paymentMethod, note, shippingFee = 0, discount = 0 } = req.body || {};
+  const { items, shippingAddress, paymentMethod, note, shippingFee, discount, couponCode } =
+    req.body || {};
   if (!items || !Array.isArray(items) || items.length === 0) {
     return res.status(400).json({ error: 'Giỏ hàng trống' });
   }
@@ -35,7 +39,32 @@ router.post('/', optionalAuth, async (req, res) => {
     }
 
     const realSubtotal = lineItems.reduce((s, it) => s + it.price * it.quantity, 0);
-    const total = realSubtotal + Number(shippingFee) - Number(discount);
+
+    // Shipping fee is decided by the server, never by the client.
+    const realShippingFee = realSubtotal >= FREE_SHIPPING_THRESHOLD ? 0 : STANDARD_SHIPPING_FEE;
+
+    // Discount comes from a coupon the server validates; a raw client-provided
+    // amount is ignored so it cannot be tampered with.
+    let realDiscount = 0;
+    let appliedCoupon = null;
+    if (couponCode) {
+      const code = String(couponCode).trim().toUpperCase();
+      const cRes = await pool.query('SELECT * FROM coupons WHERE code = $1', [code]);
+      if (cRes.rowCount > 0) {
+        const c = cRes.rows[0];
+        const expired = c.expires_at && new Date(c.expires_at).getTime() < Date.now();
+        const exhausted = c.usage_limit > 0 && c.used_count >= c.usage_limit;
+        if (c.is_active && !expired && !exhausted && realSubtotal >= c.min_order) {
+          realDiscount =
+            c.type === 'fixed'
+              ? Math.min(c.value, realSubtotal)
+              : Math.floor((realSubtotal * c.value) / 100);
+          appliedCoupon = c.code;
+        }
+      }
+    }
+
+    const total = Math.max(0, realSubtotal + realShippingFee - realDiscount);
 
     const id = uid('ord_');
     const orderNumber = 'CHB' + Date.now().toString().slice(-8);
@@ -49,15 +78,21 @@ router.post('/', optionalAuth, async (req, res) => {
        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)`,
       [
         id, orderNumber, req.user ? req.user.id : null, JSON.stringify(lineItems),
-        realSubtotal, Number(shippingFee), Number(discount), total,
+        realSubtotal, realShippingFee, realDiscount, total,
         status, paymentMethod, paymentStatus,
         JSON.stringify(shippingAddress), note || null,
       ]
     );
 
+    if (appliedCoupon) {
+      await pool.query('UPDATE coupons SET used_count = used_count + 1 WHERE code = $1', [
+        appliedCoupon,
+      ]);
+    }
+
     res.json({
       id, orderNumber, items: lineItems,
-      subtotal: realSubtotal, shippingFee: Number(shippingFee), discount: Number(discount), total,
+      subtotal: realSubtotal, shippingFee: realShippingFee, discount: realDiscount, total,
       status, paymentMethod, paymentStatus,
       shippingAddress, note,
       createdAt: new Date().toISOString(),

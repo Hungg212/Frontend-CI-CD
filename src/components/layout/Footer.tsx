@@ -13,10 +13,12 @@ const quickLinks = [
 ];
 
 const categories = [
-  { href: '/category/ca-phe-hat', label: 'Hạt cà phê' },
+  { href: '/category/ca-phe-hat', label: 'Cà phê hạt' },
   { href: '/category/ca-phe-xay', label: 'Cà phê xay' },
-  { href: '/category/qua-tang', label: 'Cà phê hòa tan' },
+  { href: '/category/ca-phe-rang-moc', label: 'Cà phê rang mộc' },
+  { href: '/category/ca-phe-goi', label: 'Cà phê gói' },
   { href: '/category/phu-kien', label: 'Phụ kiện' },
+  { href: '/category/qua-tang', label: 'Quà tặng' },
 ];
 
 const contactInfo = [

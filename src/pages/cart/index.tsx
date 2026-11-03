@@ -7,7 +7,7 @@ import { Card } from '@/components/ui/Card';
 import { CouponInput } from '@/components/cart/CouponInput';
 import { useCartStore } from '@/stores/cartStore';
 import { useUIStore } from '@/stores/uiStore';
-import { findCouponByCode } from '@/data/coupons';
+import { couponApi } from '@/lib/api';
 import { CartItemRow } from './CartItemRow';
 import type { Coupon } from '@/types';
 
@@ -54,19 +54,24 @@ const CartPage: React.FC = () => {
   const total = Math.max(0, subtotal + shippingFee - discount);
 
   const handleApplyCoupon = async (code: string) => {
-    await new Promise((r) => setTimeout(r, 400));
-    const coupon = findCouponByCode(code);
-    if (!coupon) {
-      return { success: false, message: 'Mã giảm giá không tồn tại hoặc đã hết hạn' };
+    try {
+      const data = (await couponApi.validate(code)) as Coupon;
+      if (!data) {
+        return { success: false, message: 'Mã giảm giá không tồn tại hoặc đã hết hạn' };
+      }
+      if (subtotal < data.minOrderValue) {
+        return {
+          success: false,
+          message: `Đơn hàng tối thiểu ${formatCurrency(data.minOrderValue)} để áp dụng mã này`,
+        };
+      }
+      applyCoupon(data);
+      return { success: true, message: 'Áp dụng mã giảm giá thành công', coupon: data };
+    } catch (err) {
+      const message =
+        err instanceof Error ? err.message : 'Mã giảm giá không tồn tại hoặc đã hết hạn';
+      return { success: false, message };
     }
-    if (subtotal < coupon.minOrderValue) {
-      return {
-        success: false,
-        message: `Đơn hàng tối thiểu ${formatCurrency(coupon.minOrderValue)} để áp dụng mã này`,
-      };
-    }
-    applyCoupon(coupon);
-    return { success: true, message: 'Áp dụng mã giảm giá thành công', coupon };
   };
 
   const handleCheckout = () => {
