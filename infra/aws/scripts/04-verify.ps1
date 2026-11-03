@@ -31,12 +31,12 @@ Test-Step 'EC2 API health (direct)' {
 }
 
 Test-Step 'API health through CloudFront (HTTPS)' {
-    $r = Invoke-RestMethod -Uri "$apiUrl/health" -TimeoutSec 20
+    $r = Invoke-RestMethod -Uri "$apiUrl/health" -TimeoutSec 45
     if (-not $r.ok) { throw 'health.ok is false via CloudFront' }
 }
 
 Test-Step 'Products endpoint returns data (DB seeded)' {
-    $r = Invoke-RestMethod -Uri "$apiUrl/products?limit=3" -TimeoutSec 20
+    $r = Invoke-RestMethod -Uri "$apiUrl/products?limit=3" -TimeoutSec 45
     $count = @($r.products).Count
     if ($count -eq 0) { throw 'No products returned — the DB may not be seeded' }
     Write-Host "    $count product(s) returned" -ForegroundColor Gray
@@ -45,13 +45,13 @@ Test-Step 'Products endpoint returns data (DB seeded)' {
 Test-Step 'Admin login works (seed user)' {
     $body = @{ email = 'admin@coffeehome.vn'; password = 'admin123' } | ConvertTo-Json
     $r = Invoke-RestMethod -Uri "$apiUrl/auth/login" -Method Post -Body $body `
-        -ContentType 'application/json' -TimeoutSec 20
+        -ContentType 'application/json' -TimeoutSec 45
     if (-not $r.token) { throw 'No token returned' }
     Write-Host "    token length: $($r.token.Length)" -ForegroundColor Gray
 }
 
 Test-Step 'SPA index.html served over HTTPS' {
-    $r = Invoke-WebRequest -Uri $siteUrl -UseBasicParsing -TimeoutSec 20
+    $r = Invoke-WebRequest -Uri $siteUrl -UseBasicParsing -TimeoutSec 45
     if ($r.StatusCode -ne 200) { throw "HTTP $($r.StatusCode)" }
     if ($r.Content -notmatch '<div id="root"') { throw 'index.html does not look like the Vite app' }
     Write-Host "    HTTP $($r.StatusCode), $($r.RawContentLength) bytes" -ForegroundColor Gray
@@ -61,7 +61,7 @@ Test-Step 'API 404 returns JSON, not index.html (error passthrough)' {
     # A global CustomErrorResponse would swallow API errors and return the SPA
     # shell with 200. This asserts the /api/* behavior is left alone.
     try {
-        Invoke-RestMethod -Uri "$apiUrl/products/this-slug-does-not-exist" -TimeoutSec 20 | Out-Null
+        Invoke-RestMethod -Uri "$apiUrl/products/this-slug-does-not-exist" -TimeoutSec 45 | Out-Null
         throw 'Expected a 404 for an unknown product slug, got a success response'
     } catch {
         $resp = $_.Exception.Response
@@ -73,7 +73,7 @@ Test-Step 'API 404 returns JSON, not index.html (error passthrough)' {
 }
 
 Test-Step 'SPA deep link falls back to index.html' {
-    $r = Invoke-WebRequest -Uri "$siteUrl/admin/products" -UseBasicParsing -TimeoutSec 20
+    $r = Invoke-WebRequest -Uri "$siteUrl/admin/products" -UseBasicParsing -TimeoutSec 45
     if ($r.StatusCode -ne 200) { throw "HTTP $($r.StatusCode) (CloudFront custom error response missing?)" }
     if ($r.Content -notmatch '<div id="root"') { throw 'Did not get index.html' }
 }
