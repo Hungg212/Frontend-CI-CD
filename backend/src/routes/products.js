@@ -49,9 +49,17 @@ router.get('/', async (req, res) => {
   const params = [];
   let i = 1;
   if (search) {
-    where.push(`(p.name ILIKE $${i} OR p.short_description ILIKE $${i + 1})`);
-    params.push(`%${search}%`, `%${search}%`);
-    i += 2;
+    // unaccent() makes the search diacritic-insensitive ("da lat" -> "Đà Lạt").
+    // origin/tags/flavor notes are included so "geisha" or "dac lat" also match.
+    where.push(
+      `(unaccent(p.name) ILIKE unaccent($${i})
+        OR unaccent(p.short_description) ILIKE unaccent($${i + 1})
+        OR unaccent(COALESCE(p.origin, '')) ILIKE unaccent($${i + 2})
+        OR unaccent(COALESCE(p.tags::text, '')) ILIKE unaccent($${i + 3})
+        OR unaccent(COALESCE(p.flavor_notes::text, '')) ILIKE unaccent($${i + 4}))`
+    );
+    params.push(`%${search}%`, `%${search}%`, `%${search}%`, `%${search}%`, `%${search}%`);
+    i += 5;
   }
   if (category) {
     where.push(`p.category_slug = $${i}`);

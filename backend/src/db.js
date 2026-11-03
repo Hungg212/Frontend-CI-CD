@@ -159,6 +159,15 @@ export async function initSchema() {
 
     CREATE INDEX IF NOT EXISTS idx_messages_status ON messages(status);
   `);
+
+  // Vietnamese-aware search: strip diacritics so "da lat" finds "Đà Lạt".
+  // unaccent lives in the contrib extension; it must be created by a
+  // superuser, so failures are tolerated and the search simply stays exact.
+  try {
+    await pool.query('CREATE EXTENSION IF NOT EXISTS unaccent');
+  } catch (err) {
+    console.warn('Could not enable the unaccent extension:', err.message);
+  }
 }
 
 export function uid(prefix = '') {
