@@ -19,6 +19,7 @@ type LoginData = z.infer<typeof loginSchema>;
 
 const DEMO_ACCOUNTS = [
   { label: 'Admin', email: 'admin@coffeehome.vn', password: 'admin123' },
+  { label: 'Khách hàng', email: 'demo@coffeehome.vn', password: 'demo1234' },
 ];
 
 const LoginPage: React.FC = () => {

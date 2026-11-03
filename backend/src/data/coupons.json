@@ -1,0 +1,62 @@
+[
+  {
+    "id": "coupon-1",
+    "code": "WELCOME10",
+    "description": "Giảm 10% cho đơn hàng đầu tiên",
+    "type": "percent",
+    "value": 10,
+    "minOrder": 200000,
+    "usageLimit": 1000,
+    "usedCount": 0,
+    "isActive": true,
+    "expiresAt": "2027-12-31T23:59:59.000Z"
+  },
+  {
+    "id": "coupon-2",
+    "code": "FREESHIP",
+    "description": "Giảm 30.000đ phí vận chuyển",
+    "type": "fixed",
+    "value": 30000,
+    "minOrder": 300000,
+    "usageLimit": 500,
+    "usedCount": 0,
+    "isActive": true,
+    "expiresAt": "2027-12-31T23:59:59.000Z"
+  },
+  {
+    "id": "coupon-3",
+    "code": "VIP20",
+    "description": "Giảm 20% cho khách hàng VIP",
+    "type": "percent",
+    "value": 20,
+    "minOrder": 500000,
+    "usageLimit": 200,
+    "usedCount": 0,
+    "isActive": true,
+    "expiresAt": "2027-12-31T23:59:59.000Z"
+  },
+  {
+    "id": "coupon-4",
+    "code": "COFFEE50K",
+    "description": "Giảm trực tiếp 50.000đ",
+    "type": "fixed",
+    "value": 50000,
+    "minOrder": 400000,
+    "usageLimit": 300,
+    "usedCount": 0,
+    "isActive": true,
+    "expiresAt": "2027-12-31T23:59:59.000Z"
+  },
+  {
+    "id": "coupon-5",
+    "code": "NEWUSER15",
+    "description": "Giảm 15% cho khách hàng mới",
+    "type": "percent",
+    "value": 15,
+    "minOrder": 100000,
+    "usageLimit": 2000,
+    "usedCount": 0,
+    "isActive": true,
+    "expiresAt": "2027-12-31T23:59:59.000Z"
+  }
+]

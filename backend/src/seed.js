@@ -72,6 +72,26 @@ async function main() {
       );
     }
 
+    // Seed coupons so the storefront has working discount codes.
+    const coupons = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/coupons.json'), 'utf8'));
+    console.log(`Seeding ${coupons.length} coupons...`);
+    for (const c of coupons) {
+      await client.query(
+        `INSERT INTO coupons
+          (id, code, description, type, value, min_order, usage_limit, used_count, is_active, expires_at)
+         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)
+         ON CONFLICT (code) DO UPDATE SET
+           description = EXCLUDED.description, type = EXCLUDED.type, value = EXCLUDED.value,
+           min_order = EXCLUDED.min_order, usage_limit = EXCLUDED.usage_limit,
+           is_active = EXCLUDED.is_active, expires_at = EXCLUDED.expires_at`,
+        [
+          c.id, c.code.toUpperCase(), c.description || '', c.type || 'percent',
+          c.value || 0, c.minOrder || 0, c.usageLimit || 0, c.usedCount || 0,
+          c.isActive !== false, c.expiresAt || null,
+        ]
+      );
+    }
+
     // Seed admin + demo customer
     const adminId = uid('usr_');
     const customerId = uid('usr_');
