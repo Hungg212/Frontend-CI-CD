@@ -426,7 +426,15 @@ describe('orderStore', () => {
     it('should set current order', () => {
       const { result } = renderHook(() => useOrderStore());
 
-      const order = result.current.orders[0];
+      // The store starts empty (real orders come from the API), so create one.
+      let order = result.current.orders[0];
+      act(() => {
+        order = result.current.createOrder({
+          items: [{ product: mockProduct, quantity: 1 }],
+          shippingAddress: mockAddress,
+          paymentMethod: 'COD',
+        });
+      });
 
       act(() => {
         result.current.setCurrentOrder(order);
@@ -438,7 +446,14 @@ describe('orderStore', () => {
     it('should clear current order', () => {
       const { result } = renderHook(() => useOrderStore());
 
-      const order = result.current.orders[0];
+      let order = result.current.orders[0];
+      act(() => {
+        order = result.current.createOrder({
+          items: [{ product: mockProduct, quantity: 1 }],
+          shippingAddress: mockAddress,
+          paymentMethod: 'COD',
+        });
+      });
 
       act(() => {
         result.current.setCurrentOrder(order);

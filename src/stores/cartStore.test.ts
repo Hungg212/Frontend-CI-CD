@@ -2,37 +2,19 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { act } from 'react-dom/test-utils';
 import { renderHook } from '@testing-library/react';
 import { useCartStore } from './cartStore';
-import type { Product, Coupon } from '../types';
+import type { Coupon } from '../types';
 
-const mockProduct: Product = {
-  id: 'prod-1',
-  name: 'Cà Phê Arabica',
+const item = (overrides: Partial<Parameters<ReturnType<typeof useCartStore.getState>['addItem']>[0]> = {}) => ({
+  productId: 'prod-1',
   slug: 'ca-phe-arabica',
-  description: 'Cà phê Arabica chất lượng cao',
-  shortDescription: 'Cà phê Arabica',
-  price: 250000,
-  salePrice: 200000,
-  category: 'Single Origin',
-  categorySlug: 'single-origin',
-  images: ['/arabica.jpg'],
-  rating: 4.5,
-  reviewCount: 120,
-  stock: 100,
-  sku: 'CFA-001',
-  tags: ['arabica', 'viet nam'],
-  origin: 'Việt Nam',
-  roastLevel: 'Medium',
-  flavorNotes: ['Hoa quả', 'Chua nhẹ'],
-  brewingMethod: ['Pour over', 'French press'],
+  name: 'Cà Phê Arabica',
+  imageUrl: '/arabica.jpg',
+  price: 200000,
   weight: '250g',
-  isFeatured: true,
-  isNewArrival: false,
-  isBestSeller: true,
-  createdAt: '2025-01-01T00:00:00Z',
-  updatedAt: '2025-01-01T00:00:00Z',
-};
+  ...overrides,
+});
 
-const _createMockCoupon = (overrides: Partial<Coupon> = {}): Coupon => ({
+const coupon = (overrides: Partial<Coupon> = {}): Coupon => ({
   id: 'coupon-1',
   code: 'TEST10',
   type: 'PERCENT',
@@ -52,6 +34,7 @@ describe('cartStore', () => {
     const { result } = renderHook(() => useCartStore());
     act(() => {
       result.current.clearCart();
+      result.current.removeCoupon();
     });
   });
 
@@ -60,19 +43,7 @@ describe('cartStore', () => {
       const { result } = renderHook(() => useCartStore());
 
       act(() => {
-        result.current.addItem(
-          {
-            id: 'item-1',
-            productId: 'prod-1',
-            name: 'Cà Phê Arabica',
-            slug: 'ca-phe-arabica',
-            image: '/arabica.jpg',
-            price: 200000,
-            weight: '250g',
-            product: mockProduct,
-          },
-          2
-        );
+        result.current.addItem(item(), 2);
       });
 
       expect(result.current.items).toHaveLength(1);
@@ -80,64 +51,31 @@ describe('cartStore', () => {
       expect(result.current.items[0].name).toBe('Cà Phê Arabica');
     });
 
-    it('should increase quantity if item already exists', () => {
+    it('should increase the quantity when the same product is added again', () => {
       const { result } = renderHook(() => useCartStore());
 
       act(() => {
-        result.current.addItem(
-          {
-            id: 'item-1',
-            productId: 'prod-1',
-            name: 'Cà Phê Arabica',
-            slug: 'ca-phe-arabica',
-            image: '/arabica.jpg',
-            price: 200000,
-            weight: '250g',
-            product: mockProduct,
-          },
-          1
-        );
-        result.current.addItem(
-          {
-            id: 'item-1',
-            productId: 'prod-1',
-            name: 'Cà Phê Arabica',
-            slug: 'ca-phe-arabica',
-            image: '/arabica.jpg',
-            price: 200000,
-            weight: '250g',
-            product: mockProduct,
-          },
-          2
-        );
+        result.current.addItem(item(), 2);
+      });
+      act(() => {
+        result.current.addItem(item(), 1);
       });
 
       expect(result.current.items).toHaveLength(1);
       expect(result.current.items[0].quantity).toBe(3);
     });
-  });
 
-  describe('addProduct', () => {
-    it('should add a product to the cart', () => {
+    it('should add different products as separate items', () => {
       const { result } = renderHook(() => useCartStore());
 
       act(() => {
-        result.current.addProduct(mockProduct, 1);
+        result.current.addItem(item(), 1);
       });
-
-      expect(result.current.items).toHaveLength(1);
-      expect(result.current.items[0].productId).toBe(mockProduct.id);
-      expect(result.current.items[0].price).toBe(mockProduct.salePrice);
-    });
-
-    it('should use salePrice when available', () => {
-      const { result } = renderHook(() => useCartStore());
-
       act(() => {
-        result.current.addProduct(mockProduct, 1);
+        result.current.addItem(item({ productId: 'prod-2', name: 'Cà Phê Robusta' }), 1);
       });
 
-      expect(result.current.items[0].price).toBe(mockProduct.salePrice);
+      expect(result.current.items).toHaveLength(2);
     });
   });
 
@@ -146,23 +84,26 @@ describe('cartStore', () => {
       const { result } = renderHook(() => useCartStore());
 
       act(() => {
-        result.current.addItem(
-          {
-            id: 'item-1',
-            productId: 'prod-1',
-            name: 'Cà Phê Arabica',
-            slug: 'ca-phe-arabica',
-            image: '/arabica.jpg',
-            price: 200000,
-            weight: '250g',
-            product: mockProduct,
-          },
-          1
-        );
-        result.current.removeItem('item-1');
+        result.current.addItem(item(), 1);
+      });
+      act(() => {
+        result.current.removeItem('prod-1');
       });
 
       expect(result.current.items).toHaveLength(0);
+    });
+
+    it('should ignore an unknown product id', () => {
+      const { result } = renderHook(() => useCartStore());
+
+      act(() => {
+        result.current.addItem(item(), 1);
+      });
+      act(() => {
+        result.current.removeItem('does-not-exist');
+      });
+
+      expect(result.current.items).toHaveLength(1);
     });
   });
 
@@ -171,43 +112,23 @@ describe('cartStore', () => {
       const { result } = renderHook(() => useCartStore());
 
       act(() => {
-        result.current.addItem(
-          {
-            id: 'item-1',
-            productId: 'prod-1',
-            name: 'Cà Phê Arabica',
-            slug: 'ca-phe-arabica',
-            image: '/arabica.jpg',
-            price: 200000,
-            weight: '250g',
-            product: mockProduct,
-          },
-          1
-        );
-        result.current.updateQuantity('item-1', 5);
+        result.current.addItem(item(), 1);
+      });
+      act(() => {
+        result.current.updateQuantity('prod-1', 5);
       });
 
       expect(result.current.items[0].quantity).toBe(5);
     });
 
-    it('should remove item if quantity is 0 or less', () => {
+    it('should remove the item when the quantity drops to zero', () => {
       const { result } = renderHook(() => useCartStore());
 
       act(() => {
-        result.current.addItem(
-          {
-            id: 'item-1',
-            productId: 'prod-1',
-            name: 'Cà Phê Arabica',
-            slug: 'ca-phe-arabica',
-            image: '/arabica.jpg',
-            price: 200000,
-            weight: '250g',
-            product: mockProduct,
-          },
-          1
-        );
-        result.current.updateQuantity('item-1', 0);
+        result.current.addItem(item(), 1);
+      });
+      act(() => {
+        result.current.updateQuantity('prod-1', 0);
       });
 
       expect(result.current.items).toHaveLength(0);
@@ -215,36 +136,14 @@ describe('cartStore', () => {
   });
 
   describe('clearCart', () => {
-    it('should clear all items from the cart', () => {
+    it('should empty the cart but keep the applied coupon', () => {
       const { result } = renderHook(() => useCartStore());
 
       act(() => {
-        result.current.addItem(
-          {
-            id: 'item-1',
-            productId: 'prod-1',
-            name: 'Cà Phê Arabica',
-            slug: 'ca-phe-arabica',
-            image: '/arabica.jpg',
-            price: 200000,
-            weight: '250g',
-            product: mockProduct,
-          },
-          2
-        );
-        result.current.addItem(
-          {
-            id: 'item-2',
-            productId: 'prod-2',
-            name: 'Cà Phê Robusta',
-            slug: 'ca-phe-robusta',
-            image: '/robusta.jpg',
-            price: 150000,
-            weight: '250g',
-            product: mockProduct,
-          },
-          1
-        );
+        result.current.addItem(item(), 2);
+        result.current.applyCoupon(coupon());
+      });
+      act(() => {
         result.current.clearCart();
       });
 
@@ -252,201 +151,108 @@ describe('cartStore', () => {
     });
   });
 
-  describe('applyCoupon', () => {
-    it('should apply a valid coupon', async () => {
-      const { result } = renderHook(() => useCartStore());
-
-      // First add items to cart
-      act(() => {
-        result.current.addItem(
-          {
-            id: 'item-1',
-            productId: 'prod-1',
-            name: 'Cà Phê Arabica',
-            slug: 'ca-phe-arabica',
-            image: '/arabica.jpg',
-            price: 200000,
-            weight: '250g',
-            product: mockProduct,
-          },
-          1
-        );
-      });
-
-      // Apply WELCOME10 coupon (10% off, min order 200000)
-      const response = await act(async () => {
-        return result.current.applyCoupon('WELCOME10');
-      });
-
-      expect(response.success).toBe(true);
-    });
-
-    it('should reject coupon when subtotal is below minimum', async () => {
-      const { result } = renderHook(() => useCartStore());
-
-      // Add a cheap item
-      act(() => {
-        result.current.addItem(
-          {
-            id: 'item-1',
-            productId: 'prod-1',
-            name: 'Cà Phê Arabica',
-            slug: 'ca-phe-arabica',
-            image: '/arabica.jpg',
-            price: 50000,
-            weight: '250g',
-            product: mockProduct,
-          },
-          1
-        );
-      });
-
-      // Apply WELCOME10 coupon (min order 200000)
-      const response = await act(async () => {
-        return result.current.applyCoupon('WELCOME10');
-      });
-
-      expect(response.success).toBe(false);
-      expect(response.message).toContain('tối thiểu');
-    });
-
-    it('should reject non-existent coupon', async () => {
-      const { result } = renderHook(() => useCartStore());
-
-      const response = await act(async () => {
-        return result.current.applyCoupon('INVALID');
-      });
-
-      expect(response.success).toBe(false);
-    });
-  });
-
-  describe('getSubtotal', () => {
-    it('should calculate correct subtotal', () => {
+  describe('totals', () => {
+    it('should return the total number of items', () => {
       const { result } = renderHook(() => useCartStore());
 
       act(() => {
-        result.current.addItem(
-          {
-            id: 'item-1',
-            productId: 'prod-1',
-            name: 'Cà Phê Arabica',
-            slug: 'ca-phe-arabica',
-            image: '/arabica.jpg',
-            price: 200000,
-            weight: '250g',
-            product: mockProduct,
-          },
-          2
-        ); // 2 x 200000 = 400000
-        result.current.addItem(
-          {
-            id: 'item-2',
-            productId: 'prod-2',
-            name: 'Cà Phê Robusta',
-            slug: 'ca-phe-robusta',
-            image: '/robusta.jpg',
-            price: 150000,
-            weight: '250g',
-            product: mockProduct,
-          },
-          1
-        ); // 1 x 150000 = 150000
+        result.current.addItem(item(), 2);
+      });
+      act(() => {
+        result.current.addItem(item({ productId: 'prod-2' }), 3);
       });
 
-      expect(result.current.getSubtotal()).toBe(550000);
+      expect(result.current.getItemCount()).toBe(2);
+      expect(result.current.getTotalCount()).toBe(5);
     });
 
-    it('should return 0 for empty cart', () => {
-      const { result } = renderHook(() => useCartStore());
-      expect(result.current.getSubtotal()).toBe(0);
-    });
-  });
-
-  describe('getTotal', () => {
-    it('should include shipping fee when subtotal is below 500000', () => {
+    it('should calculate the subtotal from the item prices', () => {
       const { result } = renderHook(() => useCartStore());
 
       act(() => {
-        result.current.addItem(
-          {
-            id: 'item-1',
-            productId: 'prod-1',
-            name: 'Cà Phê Arabica',
-            slug: 'ca-phe-arabica',
-            image: '/arabica.jpg',
-            price: 200000,
-            weight: '250g',
-            product: mockProduct,
-          },
-          2
-        ); // 400000 - no free shipping
+        result.current.addItem(item(), 2);
       });
 
       expect(result.current.getSubtotal()).toBe(400000);
-      expect(result.current.getShippingFee()).toBe(30000);
-      expect(result.current.getTotal()).toBe(430000);
     });
 
-    it('should have free shipping when subtotal >= 500000', () => {
+    it('should charge a flat shipping fee below the free-shipping threshold', () => {
       const { result } = renderHook(() => useCartStore());
 
       act(() => {
-        result.current.addItem(
-          {
-            id: 'item-1',
-            productId: 'prod-1',
-            name: 'Cà Phê Arabica',
-            slug: 'ca-phe-arabica',
-            image: '/arabica.jpg',
-            price: 200000,
-            weight: '250g',
-            product: mockProduct,
-          },
-          3
-        ); // 600000 - free shipping
+        result.current.addItem(item(), 1);
       });
 
-      expect(result.current.getSubtotal()).toBe(600000);
+      expect(result.current.getShippingFee()).toBe(30000);
+    });
+
+    it('should ship free at or above 500.000 VND', () => {
+      const { result } = renderHook(() => useCartStore());
+
+      act(() => {
+        result.current.addItem(item(), 3);
+      });
+
       expect(result.current.getShippingFee()).toBe(0);
-      expect(result.current.getTotal()).toBe(600000);
     });
   });
 
-  describe('getItemCount', () => {
-    it('should return total number of items', () => {
+  describe('coupons', () => {
+    it('should apply a valid coupon', () => {
       const { result } = renderHook(() => useCartStore());
 
       act(() => {
-        result.current.addItem(
-          {
-            id: 'item-1',
-            productId: 'prod-1',
-            name: 'Cà Phê Arabica',
-            slug: 'ca-phe-arabica',
-            image: '/arabica.jpg',
-            price: 200000,
-            weight: '250g',
-            product: mockProduct,
-          },
-          2
-        );
-        result.current.addItem(
-          {
-            id: 'item-2',
-            productId: 'prod-2',
-            name: 'Cà Phê Robusta',
-            slug: 'ca-phe-robusta',
-            image: '/robusta.jpg',
-            price: 150000,
-            weight: '250g',
-            product: mockProduct,
-          },
-          3
-        );
+        result.current.applyCoupon(coupon());
       });
 
-      expect(result.current.getItemCount()).toBe(5);
+      expect(result.current.appliedCoupon?.code).toBe('TEST10');
+    });
+
+    it('should calculate a percentage discount', () => {
+      const { result } = renderHook(() => useCartStore());
+
+      act(() => {
+        result.current.addItem(item(), 1);
+        result.current.applyCoupon(coupon({ type: 'PERCENT', value: 10, maxDiscount: undefined }));
+      });
+
+      expect(result.current.getDiscount()).toBe(20000);
+    });
+
+    it('should cap a percentage discount at maxDiscount', () => {
+      const { result } = renderHook(() => useCartStore());
+
+      act(() => {
+        result.current.addItem(item(), 10);
+        result.current.applyCoupon(coupon({ type: 'PERCENT', value: 10, maxDiscount: 50000 }));
+      });
+
+      expect(result.current.getDiscount()).toBe(50000);
+    });
+
+    it('should calculate a fixed discount', () => {
+      const { result } = renderHook(() => useCartStore());
+
+      act(() => {
+        result.current.addItem(item(), 1);
+        result.current.applyCoupon(coupon({ type: 'FIXED', value: 30000 }));
+      });
+
+      expect(result.current.getDiscount()).toBe(30000);
+    });
+
+    it('should remove the coupon', () => {
+      const { result } = renderHook(() => useCartStore());
+
+      act(() => {
+        result.current.applyCoupon(coupon());
+      });
+      act(() => {
+        result.current.removeCoupon();
+      });
+
+      expect(result.current.appliedCoupon).toBeNull();
+      expect(result.current.getDiscount()).toBe(0);
     });
   });
 });

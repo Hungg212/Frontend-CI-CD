@@ -1,3 +1,4 @@
+import { couponApi } from '@/lib/api';
 import type { Coupon } from '@/types';
 
 export type ShippingMethod = 'STANDARD' | 'EXPRESS' | 'SAME_DAY';
@@ -37,88 +38,19 @@ export function calculateShipping(
   return baseFee;
 }
 
-const MOCK_COUPONS: Record<string, Coupon> = {
-  WELCOME10: {
-    id: 'cpn-001',
-    code: 'WELCOME10',
-    type: 'PERCENT',
-    value: 10,
-    minOrderValue: 100000,
-    maxDiscount: 50000,
-    usedCount: 0,
-    usageLimit: 1000,
-    validFrom: '2026-01-01T00:00:00Z',
-    validTo: '2026-12-31T23:59:59Z',
-    isActive: true,
-  },
-  COFFEE50K: {
-    id: 'cpn-002',
-    code: 'COFFEE50K',
-    type: 'FIXED',
-    value: 50000,
-    minOrderValue: 200000,
-    usedCount: 0,
-    usageLimit: 500,
-    validFrom: '2026-01-01T00:00:00Z',
-    validTo: '2026-12-31T23:59:59Z',
-    isActive: true,
-  },
-  FREESHIP: {
-    id: 'cpn-003',
-    code: 'FREESHIP',
-    type: 'FIXED',
-    value: 25000,
-    minOrderValue: 0,
-    usedCount: 0,
-    usageLimit: 2000,
-    validFrom: '2026-01-01T00:00:00Z',
-    validTo: '2026-12-31T23:59:59Z',
-    isActive: true,
-  },
-  VIP20: {
-    id: 'cpn-004',
-    code: 'VIP20',
-    type: 'PERCENT',
-    value: 20,
-    minOrderValue: 500000,
-    maxDiscount: 200000,
-    usedCount: 0,
-    usageLimit: 200,
-    validFrom: '2026-01-01T00:00:00Z',
-    validTo: '2026-12-31T23:59:59Z',
-    isActive: true,
-  },
-};
-
-function delay(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
+// Validate a coupon against the backend, which owns the real codes, expiry
+// dates and usage counters.
 export async function validateCoupon(code: string): Promise<Coupon> {
-  await delay(300);
   const normalizedCode = code.trim().toUpperCase();
-  const coupon = MOCK_COUPONS[normalizedCode];
-
+  const coupon = (await couponApi.validate(normalizedCode)) as Coupon;
   if (!coupon) {
     throw new Error('Mã giảm giá không tồn tại');
   }
-  if (!coupon.isActive) {
-    throw new Error('Mã giảm giá đã hết hiệu lực');
-  }
-  if (coupon.usageLimit && coupon.usedCount >= coupon.usageLimit) {
-    throw new Error('Mã giảm giá đã hết lượt sử dụng');
-  }
-  const now = new Date();
-  if (now < new Date(coupon.validFrom) || now > new Date(coupon.validTo)) {
-    throw new Error('Mã giảm giá không trong thời gian áp dụng');
-  }
-
   return coupon;
 }
 
 export async function applyCoupon(code: string, subtotal: number): Promise<CouponResult> {
   try {
-    await delay(400);
     const coupon = await validateCoupon(code);
 
     if (subtotal < coupon.minOrderValue) {
